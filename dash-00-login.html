@@ -586,7 +586,7 @@ function doLogin() {
       errPwd.classList.add('show');
       const left = Math.max(0, 5 - attempts);
       document.getElementById('attempts-left').textContent = left > 0 ? `${left} tentativas restantes.` : 'Conta bloqueada.';
-      if (attempts >= 5) {
+      if (attempts >= 5) {0
         document.getElementById('btn-login').disabled = true;
         showToast('Conta bloqueada após 5 tentativas.', 'error');
       }
@@ -618,7 +618,15 @@ function setupTwoFaInputs() {
 
 function doSuccess() {
   showToast('Autenticado com sucesso. Redirecionando...', 'success');
-  setTimeout(() => { window.location.href = 'dash-index.html'; }, 900);
+
+  setTimeout(() => {
+    if (window.parent) {
+      window.parent.postMessage({ goTo: 'visao-geral' }, '*');
+    } else {
+      // fallback (caso abra direto o HTML)
+      window.location.href = 'dash-01-visao-geral.html';
+    }
+  }, 900);
 }
 
 function doLoginGovBr() {
