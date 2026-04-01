@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>V3R1 · Performance</title>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap"></noscript>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased}
+:root{
+  --pri:#252d7a;--pri-50:#eceeff;--pri-100:#d8daff;--pri-400:#5c66d4;--pri-600:#3d4592;--pri-800:#252d7a;
+  --em:#168821;--em-50:#e6f4e8;--em-400:#1a9e27;
+  --am:#C48C14;--am-50:#fdf3dc;--am-400:#C48C14;--am-800:#7a5600;
+  --co:#E52207;--co-50:#fdecea;--co-400:#E52207;--co-800:#8c1200;
+  --bg:#f8f9ff;--surface:#ffffff;--sur-low:#f1f3fb;--sur-mid:#eceef6;--sur-high:#e6e8f0;
+  --text-h:#181c21;--text-b:#464651;--text-m:#595c7c;--text-s:#767682;--border:#d8dae8;
+  --font-d:'Plus Jakarta Sans',sans-serif;--font-b:'DM Sans',sans-serif;--font-m:'JetBrains Mono',monospace;
+  --sh-card:0 1px 3px rgba(37,45,122,.08),0 4px 16px rgba(37,45,122,.04);
+  --sidebar-w:220px;--topbar-h:52px;
+}
+html,body{height:100%;overflow:hidden;font-family:var(--font-b);background:var(--bg);color:var(--text-h)}
+.dash-shell{display:grid;grid-template-columns:var(--sidebar-w) 1fr;grid-template-rows:var(--topbar-h) 1fr;grid-template-areas:"sidebar topbar" "sidebar content";height:100vh;overflow:hidden}
+.rainbow-bar{position:fixed;top:0;left:0;right:0;height:3px;z-index:100;background:linear-gradient(90deg,var(--pri-800),var(--pri-400),var(--em-400),var(--pri-400),var(--pri-800));box-shadow:0 1px 8px rgba(37,45,122,.25)}
+.sidebar{grid-area:sidebar;background:var(--pri-800);display:flex;flex-direction:column;height:100vh;box-shadow:2px 0 24px rgba(37,45,122,.08);padding-top:3px;position:relative;z-index:50;overflow:hidden}
+.sb-logo{display:flex;align-items:center;gap:10px;padding:16px 18px 14px;border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0}
+.sb-logo-mark{width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,var(--pri-400),var(--pri-600));border:1px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sb-logo-text{font-family:var(--font-d);font-size:15px;font-weight:800;color:#fff;letter-spacing:2px}
+.sb-logo-badge{font-family:var(--font-m);font-size:7px;color:rgba(255,255,255,.45);letter-spacing:1px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:4px;padding:1px 5px;margin-left:auto}
+.sb-nav{flex:1;padding:10px;display:flex;flex-direction:column;gap:2px;overflow-y:auto}
+.sb-nav::-webkit-scrollbar{display:none}
+.sb-section-label{font-family:var(--font-m);font-size:8px;font-weight:700;color:rgba(255,255,255,.25);letter-spacing:1.5px;text-transform:uppercase;padding:8px 8px 4px}
+.sb-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;font-size:12px;font-weight:500;color:rgba(255,255,255,.5);cursor:pointer;transition:all .15s;text-decoration:none;border:none;background:none;width:100%;text-align:left}
+.sb-item:hover{background:rgba(255,255,255,.06);color:rgba(255,255,255,.8)}
+.sb-item.active{background:rgba(92,102,212,.25);color:#fff;font-weight:600;border:1px solid rgba(92,102,212,.35)}
+.sb-item svg{flex-shrink:0;opacity:.7}
+.sb-item.active svg{opacity:1}
+.sb-item-label{flex:1}
+.sb-badge{font-family:var(--font-m);font-size:8px;font-weight:700;background:var(--co-400);color:#fff;border-radius:9999px;padding:1px 6px;min-width:16px;text-align:center}
+.sb-footer{border-top:1px solid rgba(255,255,255,.08);padding:12px 10px;flex-shrink:0}
+.sb-user{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;cursor:pointer}
+.sb-user:hover{background:rgba(255,255,255,.06)}
+.sb-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--pri-400),var(--pri-600));border:1.5px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--font-d);font-size:11px;font-weight:800;color:#fff}
+.sb-user-info{flex:1;min-width:0}
+.sb-user-name{font-size:11px;font-weight:600;color:rgba(255,255,255,.85);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-user-role{font-family:var(--font-m);font-size:8px;color:rgba(255,255,255,.35);margin-top:1px}
+.sb-online{width:7px;height:7px;border-radius:50%;background:var(--em-400);flex-shrink:0}
+.topbar{grid-area:topbar;height:var(--topbar-h);background:rgba(248,249,255,.92);backdrop-filter:blur(18px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;padding:0 24px;position:sticky;top:0;z-index:40;padding-top:3px}
+.topbar-title{font-family:var(--font-d);font-size:15px;font-weight:800;color:var(--text-h);flex:1}
+.topbar-divider{width:1px;height:20px;background:var(--border)}
+.topbar-btn{width:34px;height:34px;border-radius:10px;background:var(--sur-low);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-m)}
+.topbar-avatar{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--pri-50),var(--pri-100));border:1.5px solid var(--pri-100);display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-size:11px;font-weight:800;color:var(--pri-800);cursor:pointer}
+.content{grid-area:content;overflow-y:auto;padding:20px 24px;background:var(--bg)}
+.content::-webkit-scrollbar{width:6px}
+.content::-webkit-scrollbar-track{background:transparent}
+.content::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+.period-pills{display:flex;gap:4px}
+.period-pill{font-family:var(--font-b);font-size:11px;font-weight:600;padding:4px 12px;border-radius:9999px;background:transparent;border:1px solid var(--border);color:var(--text-m);cursor:pointer;transition:all .15s}
+.period-pill.active{background:var(--pri-800);color:#fff;border-color:var(--pri-800)}
+
+.kpi-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:18px}
+.kpi-card{background:var(--surface);border-radius:14px;padding:14px 16px;box-shadow:var(--sh-card);border:1px solid var(--border);border-top:3px solid var(--border)}
+.kpi-card.blue{border-top-color:var(--pri-400)}
+.kpi-card.green{border-top-color:var(--em-400)}
+.kpi-card.amber{border-top-color:var(--am-400)}
+.kpi-card.red{border-top-color:var(--co-400)}
+.kpi-card.purple{border-top-color:#7c3aed}
+.kpi-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-s);margin-bottom:6px}
+.kpi-value{font-family:var(--font-d);font-size:24px;font-weight:800;color:var(--text-h);line-height:1}
+.kpi-change{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;margin-top:6px;padding:2px 7px;border-radius:9999px}
+.kpi-change.up{background:var(--em-50);color:var(--em)}
+.kpi-change.up-bad{background:var(--co-50);color:var(--co-400)}
+.kpi-change.down-good{background:var(--em-50);color:var(--em)}
+
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px}
+.panel{background:var(--surface);border-radius:14px;border:1px solid var(--border);box-shadow:var(--sh-card);overflow:hidden}
+.panel-header{padding:14px 16px 0;display:flex;align-items:center;justify-content:space-between}
+.panel-title{font-family:var(--font-d);font-size:12px;font-weight:800;color:var(--text-h)}
+.panel-subtitle{font-size:10px;color:var(--text-s);margin-top:2px}
+.panel-body{padding:12px 16px 16px}
+
+.badge{display:inline-flex;align-items:center;gap:4px;font-family:var(--font-b);font-size:10px;font-weight:700;padding:2px 8px;border-radius:9999px}
+.badge-ok{background:var(--em-50);color:var(--em);border:1px solid rgba(22,136,33,.15)}
+.badge-warn{background:var(--am-50);color:var(--am-800);border:1px solid rgba(196,140,20,.2)}
+.badge-err{background:var(--co-50);color:var(--co-800);border:1px solid rgba(229,34,7,.15)}
+.badge-info{background:var(--pri-50);color:var(--pri-600);border:1px solid var(--pri-100)}
+.mono-sm{font-family:var(--font-m);font-size:9px;color:var(--text-s)}
+.btn-secondary{background:var(--sur-mid);border:1px solid var(--border);border-radius:9999px;padding:6px 14px;font-size:11px;font-weight:600;color:var(--text-b);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.btn-secondary:hover{background:var(--sur-high)}
+
+/* SVG charts */
+.chart-svg-wrap{width:100%;overflow:visible}
+.bar-chart-wrap{display:flex;flex-direction:column;gap:0}
+
+/* Rank table */
+.rank-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--sur-low)}
+.rank-row:last-child{border-bottom:none}
+.rank-num{font-family:var(--font-d);font-size:13px;font-weight:800;color:var(--text-s);min-width:20px}
+.rank-avatar{width:32px;height:32px;border-radius:9px;background:var(--pri-50);display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-size:10px;font-weight:800;color:var(--pri-800);flex-shrink:0}
+.rank-info{flex:1;min-width:0}
+.rank-name{font-size:12px;font-weight:700;color:var(--text-h)}
+.rank-sub{font-size:10px;color:var(--text-s);margin-top:1px}
+.rank-val{font-family:var(--font-d);font-size:16px;font-weight:800;color:var(--text-h)}
+.rank-bar-wrap{flex:1;height:4px;background:var(--sur-high);border-radius:2px;overflow:hidden;max-width:80px}
+.rank-bar-fill{height:100%;border-radius:2px;background:var(--pri-400)}
+
+/* Donut */
+.donut-wrap{display:flex;align-items:center;gap:20px}
+.donut-legend{display:flex;flex-direction:column;gap:8px}
+.leg-item{display:flex;align-items:center;gap:8px}
+.leg-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.leg-label{font-size:11px;color:var(--text-m)}
+.leg-val{font-size:11px;font-weight:700;color:var(--text-h);margin-left:auto}
+
+/* Heatmap */
+.heatmap-grid{display:grid;gap:3px}
+.hm-cell{border-radius:3px;cursor:pointer;transition:opacity .15s}
+.hm-cell:hover{opacity:.8}
+.hm-label{font-family:var(--font-m);font-size:8px;color:var(--text-s);text-align:center}
+
+/* Progress bar */
+.progress-bar{height:5px;background:var(--sur-high);border-radius:3px;overflow:hidden;margin-top:4px}
+.progress-fill{height:100%;border-radius:3px;transition:width .6s ease}
+
+/* data-table mini */
+.data-table{width:100%;border-collapse:collapse}
+.data-table thead th{font-size:10px;font-weight:700;color:var(--text-s);text-align:left;text-transform:uppercase;letter-spacing:.7px;padding:8px 10px;background:var(--sur-low);border-bottom:1px solid var(--border)}
+.data-table tbody td{font-size:11px;color:var(--text-b);padding:8px 10px;border-bottom:1px solid var(--sur-low)}
+.data-table tbody tr:last-child td{border-bottom:none}
+.data-table tbody tr:hover td{background:var(--sur-low);cursor:pointer}
+</style>
+</head>
+<body>
+<div class="rainbow-bar"></div>
+<div class="dash-shell">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sb-logo">
+      <img src="logo-white.svg" alt="">
+      <!-- <span class="sb-logo-text">V3R1</span> -->
+      <span class="sb-logo-badge">WEB</span>
+    </div>
+    <nav class="sb-nav">
+      <div class="sb-section-label">Principal</div>
+      <button class="sb-item" onclick="goTo('visao-geral')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg><span class="sb-item-label">Visão geral</span></button>
+      <button class="sb-item" onclick="goTo('monitoramento')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="2"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg><span class="sb-item-label">Monitoramento</span><span class="sb-badge">3</span></button>
+      <button class="sb-item" onclick="goTo('tatica')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg><span class="sb-item-label">Análise tática</span></button>
+      <button class="sb-item" onclick="goTo('inteligencia')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg><span class="sb-item-label">Inteligência</span></button>
+      <div class="sb-section-label" style="margin-top:4px">Operacional</div>
+      <button class="sb-item" onclick="goTo('busca')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span class="sb-item-label">Busca avançada</span></button>
+      <button class="sb-item active" onclick="goTo('performance')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span class="sb-item-label">Performance</span></button>
+      <div class="sb-section-label" style="margin-top:4px">Sistema</div>
+      <button class="sb-item" onclick="goTo('configuracoes')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12.22 2h-.44a2 2 0 00-2 2v.18a2 2 0 01-1 1.73l-.43.25a2 2 0 01-2 0l-.15-.08a2 2 0 00-2.73.73l-.22.38a2 2 0 00.73 2.73l.15.1a2 2 0 011 1.72v.51a2 2 0 01-1 1.74l-.15.09a2 2 0 00-.73 2.73l.22.38a2 2 0 002.73.73l.15-.08a2 2 0 012 0l.43.25a2 2 0 011 1.73V20a2 2 0 002 2h.44a2 2 0 002-2v-.18a2 2 0 011-1.73l.43-.25a2 2 0 012 0l.15.08a2 2 0 002.73-.73l.22-.39a2 2 0 00-.73-2.73l-.15-.08a2 2 0 01-1-1.74v-.5a2 2 0 011-1.74l.15-.09a2 2 0 00.73-2.73l-.22-.38a2 2 0 00-2.73-.73l-.15.08a2 2 0 01-2 0l-.43-.25a2 2 0 01-1-1.73V4a2 2 0 00-2-2z"/><circle cx="12" cy="12" r="3"/></svg><span class="sb-item-label">Configurações</span></button>
+    </nav>
+    <div class="sb-footer">
+      <div class="sb-user">
+        <div class="sb-avatar">GL</div>
+        <div class="sb-user-info"><div class="sb-user-name">Gestor Lima</div><div class="sb-user-role">GESTOR · ES</div></div>
+        <div class="sb-online"></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <h1 class="topbar-title">Performance operacional</h1>
+    <div class="period-pills">
+      <button class="period-pill" onclick="setPeriod(this)">Hoje</button>
+      <button class="period-pill" onclick="setPeriod(this)">7 dias</button>
+      <button class="period-pill active" onclick="setPeriod(this)">30 dias</button>
+      <button class="period-pill" onclick="setPeriod(this)">Trimestre</button>
+    </div>
+    <div class="topbar-divider"></div>
+    <button class="btn-secondary" style="font-size:11px;padding:5px 12px">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Exportar relatório
+    </button>
+    <button class="topbar-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg></button>
+    <div class="topbar-avatar">GL</div>
+  </header>
+
+  <!-- CONTENT -->
+  <main class="content">
+
+    <!-- KPIs -->
+    <div class="kpi-grid">
+      <div class="kpi-card blue">
+        <div class="kpi-label">Total verificações</div>
+        <div class="kpi-value">1.247</div>
+        <div class="kpi-change up">↑ 12% vs. mês ant.</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="kpi-label">Taxa aprovação</div>
+        <div class="kpi-value">95,8%</div>
+        <div class="kpi-change up">↑ 0,4%</div>
+      </div>
+      <div class="kpi-card red">
+        <div class="kpi-label">Divergências</div>
+        <div class="kpi-value">52</div>
+        <div class="kpi-change up-bad">↑ 4 vs. mês ant.</div>
+      </div>
+      <div class="kpi-card amber">
+        <div class="kpi-label">Tempo médio</div>
+        <div class="kpi-value">3m42s</div>
+        <div class="kpi-change down-good">↓ 18s</div>
+      </div>
+      <div class="kpi-card purple">
+        <div class="kpi-label">Agentes ativos</div>
+        <div class="kpi-value">47</div>
+        <div class="kpi-change up">↑ 3</div>
+      </div>
+    </div>
+
+    <!-- Linha 1: Gráfico de volume + Donut resultados -->
+    <div class="grid-2" style="margin-bottom:16px">
+      <div class="panel">
+        <div class="panel-header">
+          <div><div class="panel-title">Volume de verificações</div><div class="panel-subtitle">Últimos 30 dias</div></div>
+          <div style="display:flex;gap:6px">
+            <span style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text-s)"><span style="display:inline-block;width:10px;height:3px;border-radius:2px;background:var(--pri-400)"></span>Verificações</span>
+            <span style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text-s)"><span style="display:inline-block;width:10px;height:3px;border-radius:2px;background:var(--co-400)"></span>Divergências</span>
+          </div>
+        </div>
+        <div class="panel-body">
+          <svg id="lineChart" viewBox="0 0 460 120" xmlns="http://www.w3.org/2000/svg" style="width:100%;overflow:visible"></svg>
+          <div style="display:flex;justify-content:space-between;margin-top:4px">
+            <span class="mono-sm">01/03</span><span class="mono-sm">08/03</span><span class="mono-sm">15/03</span><span class="mono-sm">22/03</span><span class="mono-sm">Hoje</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header"><div><div class="panel-title">Distribuição de resultados</div><div class="panel-subtitle">30 dias · 1.247 verificações</div></div></div>
+        <div class="panel-body">
+          <div class="donut-wrap">
+            <svg width="120" height="120" viewBox="0 0 42 42" style="flex-shrink:0">
+              <circle cx="21" cy="21" r="15.9" fill="none" stroke="var(--sur-high)" stroke-width="5"/>
+              <!-- compatível 95.8% = 141.7 de 147.8 -->
+              <circle cx="21" cy="21" r="15.9" fill="none" stroke="var(--em-400)" stroke-width="5" stroke-dasharray="90.8 56" stroke-dashoffset="37" stroke-linecap="round"/>
+              <!-- atenção 7.1% = 10.5 -->
+              <circle cx="21" cy="21" r="15.9" fill="none" stroke="var(--am-400)" stroke-width="5" stroke-dasharray="10 137.5" stroke-dashoffset="-54" stroke-linecap="round"/>
+              <!-- divergente 4.2% = 6.2 -->
+              <circle cx="21" cy="21" r="15.9" fill="none" stroke="var(--co-400)" stroke-width="5" stroke-dasharray="6 141.5" stroke-dashoffset="-64" stroke-linecap="round"/>
+              <text x="21" y="19" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="6" font-weight="800" fill="var(--text-h)">95.8%</text>
+              <text x="21" y="25" text-anchor="middle" font-family="DM Sans" font-size="3.5" fill="var(--text-s)">aprovação</text>
+            </svg>
+            <div class="donut-legend" style="flex:1">
+              <div class="leg-item"><div class="leg-dot" style="background:var(--em-400)"></div><span class="leg-label">Compatível</span><span class="leg-val" style="color:var(--em)">1.106 <span style="font-size:10px;font-weight:400;color:var(--text-s)">(88.7%)</span></span></div>
+              <div class="leg-item"><div class="leg-dot" style="background:var(--am-400)"></div><span class="leg-label">Atenção</span><span class="leg-val" style="color:var(--am-800)">89 <span style="font-size:10px;font-weight:400;color:var(--text-s)">(7.1%)</span></span></div>
+              <div class="leg-item"><div class="leg-dot" style="background:var(--co-400)"></div><span class="leg-label">Divergente</span><span class="leg-val" style="color:var(--co-800)">52 <span style="font-size:10px;font-weight:400;color:var(--text-s)">(4.2%)</span></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Linha 2: Ranking agentes + Por unidade -->
+    <div class="grid-2" style="margin-bottom:16px">
+      <div class="panel">
+        <div class="panel-header">
+          <div><div class="panel-title">Ranking de agentes</div><div class="panel-subtitle">Por volume · 30 dias</div></div>
+          <button class="btn-secondary" style="font-size:10px;padding:4px 10px" onclick="goTo('busca')">Ver todos →</button>
+        </div>
+        <div class="panel-body">
+          <div class="rank-row"><span class="rank-num" style="color:var(--am-400)">1</span><div class="rank-avatar" style="background:var(--em-50);color:var(--em)">JS</div><div class="rank-info"><div class="rank-name">Ag. Santos</div><div class="rank-sub">Vitória · 98.1% aprovação</div><div class="progress-bar"><div class="progress-fill" style="width:100%;background:var(--em-400)"></div></div></div><div><div class="rank-val">347</div><span class="mono-sm">verif.</span></div></div>
+          <div class="rank-row"><span class="rank-num" style="color:var(--text-s)">2</span><div class="rank-avatar">AL</div><div class="rank-info"><div class="rank-name">Ag. Lima</div><div class="rank-sub">Cariacica · 96.2% aprovação</div><div class="progress-bar"><div class="progress-fill" style="width:85%;background:var(--pri-400)"></div></div></div><div><div class="rank-val">294</div><span class="mono-sm">verif.</span></div></div>
+          <div class="rank-row"><span class="rank-num" style="color:var(--text-s)">3</span><div class="rank-avatar">RC</div><div class="rank-info"><div class="rank-name">Ag. Costa</div><div class="rank-sub">Vila Velha · 94.8% aprovação</div><div class="progress-bar"><div class="progress-fill" style="width:70%;background:var(--pri-400)"></div></div></div><div><div class="rank-val">241</div><span class="mono-sm">verif.</span></div></div>
+          <div class="rank-row"><span class="rank-num" style="color:var(--text-s)">4</span><div class="rank-avatar">MR</div><div class="rank-info"><div class="rank-name">Ag. Rocha</div><div class="rank-sub">Vitória · 91.3% aprovação</div><div class="progress-bar"><div class="progress-fill" style="width:58%;background:var(--am-400)"></div></div></div><div><div class="rank-val">198</div><span class="mono-sm">verif.</span></div></div>
+          <div class="rank-row"><span class="rank-num" style="color:var(--text-s)">5</span><div class="rank-avatar">FF</div><div class="rank-info"><div class="rank-name">Ag. Ferreira</div><div class="rank-sub">Serra · 89.7% aprovação</div><div class="progress-bar"><div class="progress-fill" style="width:48%;background:var(--am-400)"></div></div></div><div><div class="rank-val">167</div><span class="mono-sm">verif.</span></div></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header"><div><div class="panel-title">Por unidade operacional</div><div class="panel-subtitle">Volume e taxa de divergência</div></div></div>
+        <div class="panel-body">
+          <svg id="barChart" viewBox="0 0 380 160" xmlns="http://www.w3.org/2000/svg" style="width:100%"></svg>
+          <div style="margin-top:12px">
+            <table class="data-table">
+              <thead><tr><th>Unidade</th><th>Verif.</th><th>Compat.</th><th>Diverg.</th><th>Taxa</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Vitória</strong></td><td>412</td><td style="color:var(--em);font-weight:700">398</td><td style="color:var(--co-400);font-weight:700">14</td><td><span class="badge badge-ok" style="font-size:9px">3.4%</span></td></tr>
+                <tr><td><strong>Serra</strong></td><td>331</td><td style="color:var(--em);font-weight:700">317</td><td style="color:var(--co-400);font-weight:700">14</td><td><span class="badge badge-ok" style="font-size:9px">4.2%</span></td></tr>
+                <tr><td><strong>Cariacica</strong></td><td>287</td><td style="color:var(--em);font-weight:700">272</td><td style="color:var(--am-800);font-weight:700">15</td><td><span class="badge badge-warn" style="font-size:9px">5.2%</span></td></tr>
+                <tr><td><strong>Vila Velha</strong></td><td>217</td><td style="color:var(--em);font-weight:700">198</td><td style="color:var(--co-400);font-weight:700">19</td><td><span class="badge badge-err" style="font-size:9px">8.8%</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Linha 3: Mapa de calor por hora/dia + Tempo médio -->
+    <div class="grid-2" style="margin-bottom:16px">
+      <div class="panel">
+        <div class="panel-header"><div><div class="panel-title">Atividade por dia/hora</div><div class="panel-subtitle">Heatmap de verificações · 30 dias</div></div></div>
+        <div class="panel-body">
+          <div style="display:flex;gap:8px;align-items:flex-start">
+            <div style="display:flex;flex-direction:column;gap:6px;padding-top:22px">
+              <span class="mono-sm" style="line-height:13px">Seg</span>
+              <span class="mono-sm" style="line-height:13px">Ter</span>
+              <span class="mono-sm" style="line-height:13px">Qua</span>
+              <span class="mono-sm" style="line-height:13px">Qui</span>
+              <span class="mono-sm" style="line-height:13px">Sex</span>
+              <span class="mono-sm" style="line-height:13px">Sáb</span>
+              <span class="mono-sm" style="line-height:13px">Dom</span>
+            </div>
+            <div style="flex:1">
+              <div style="display:flex;gap:4px;margin-bottom:4px">
+                <span class="mono-sm" style="width:26px;text-align:center">6h</span>
+                <span class="mono-sm" style="width:26px;text-align:center">8h</span>
+                <span class="mono-sm" style="width:26px;text-align:center">10h</span>
+                <span class="mono-sm" style="width:26px;text-align:center">12h</span>
+                <span class="mono-sm" style="width:26px;text-align:center">14h</span>
+                <span class="mono-sm" style="width:26px;text-align:center">16h</span>
+                <span class="mono-sm" style="width:26px;text-align:center">18h</span>
+                <span class="mono-sm" style="width:26px;text-align:center">20h</span>
+              </div>
+              <div id="heatmap"></div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:10px;justify-content:flex-end">
+            <span class="mono-sm">Menos</span>
+            <div style="width:12px;height:12px;border-radius:3px;background:var(--pri-50)"></div>
+            <div style="width:12px;height:12px;border-radius:3px;background:var(--pri-100)"></div>
+            <div style="width:12px;height:12px;border-radius:3px;background:rgba(92,102,212,.4)"></div>
+            <div style="width:12px;height:12px;border-radius:3px;background:var(--pri-400)"></div>
+            <div style="width:12px;height:12px;border-radius:3px;background:var(--pri-800)"></div>
+            <span class="mono-sm">Mais</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header"><div><div class="panel-title">Tempo médio por etapa</div><div class="panel-subtitle">Média dos últimos 30 dias</div></div></div>
+        <div class="panel-body">
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+                <div style="display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:var(--pri-400);display:inline-block"></span><span style="font-size:12px;color:var(--text-b)">Login → Câmera</span></div>
+                <span style="font-family:var(--font-m);font-size:11px;font-weight:700;color:var(--text-h)">0m22s</span>
+              </div>
+              <div class="progress-bar" style="height:7px"><div class="progress-fill" style="width:10%;background:var(--pri-400)"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+                <div style="display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:var(--pri-400);display:inline-block"></span><span style="font-size:12px;color:var(--text-b)">Captura placa</span></div>
+                <span style="font-family:var(--font-m);font-size:11px;font-weight:700;color:var(--text-h)">0m38s</span>
+              </div>
+              <div class="progress-bar" style="height:7px"><div class="progress-fill" style="width:18%;background:var(--pri-400)"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+                <div style="display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:var(--em-400);display:inline-block"></span><span style="font-size:12px;color:var(--text-b)">Captura assistida (chassi+VIN+vidros)</span></div>
+                <span style="font-family:var(--font-m);font-size:11px;font-weight:700;color:var(--text-h)">1m54s</span>
+              </div>
+              <div class="progress-bar" style="height:7px"><div class="progress-fill" style="width:52%;background:var(--em-400)"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+                <div style="display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:var(--am-400);display:inline-block"></span><span style="font-size:12px;color:var(--text-b)">Revisão final</span></div>
+                <span style="font-family:var(--font-m);font-size:11px;font-weight:700;color:var(--text-h)">0m45s</span>
+              </div>
+              <div class="progress-bar" style="height:7px"><div class="progress-fill" style="width:21%;background:var(--am-400)"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+                <div style="display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:var(--co-400);display:inline-block"></span><span style="font-size:12px;color:var(--text-b)">Assinatura</span></div>
+                <span style="font-family:var(--font-m);font-size:11px;font-weight:700;color:var(--text-h)">0m03s</span>
+              </div>
+              <div class="progress-bar" style="height:7px"><div class="progress-fill" style="width:2%;background:var(--co-400)"></div></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:10px 12px;background:var(--pri-50);border-radius:10px;border:1px solid var(--pri-100)">
+              <span style="font-size:12px;font-weight:700;color:var(--pri-800)">Total médio</span>
+              <span style="font-family:var(--font-m);font-size:13px;font-weight:800;color:var(--pri-800)">3m42s</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div style="display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid var(--sur-high)">
+      <span class="mono-sm">V3R1 PERFORMANCE · v2.4.1</span>
+      <span class="mono-sm" id="fbar">LAST_SYNC: – · <span style="color:var(--em-400)">ONLINE</span></span>
+    </div>
+  </main>
+</div>
+
+<script>
+function goTo(r){try{if(window.parent&&window.parent.goTo)window.parent.goTo(r);else{const M={'visao-geral':'dash-01-visao-geral.html','monitoramento':'dash-02-monitoramento.html','tatica':'dash-03-tatica.html','inteligencia':'dash-04-inteligencia.html','detalhe':'dash-05-detalhe.html','performance':'dash-06-performance.html','busca':'dash-07-busca.html','configuracoes':'dash-08-configuracoes.html'};if(M[r])window.location.href=M[r];}}catch(e){window.postMessage({goTo:r},'*')}}
+
+function setPeriod(btn){document.querySelectorAll('.period-pill').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+
+// Line chart
+(function(){
+  const verif=[28,35,42,38,55,61,48,52,67,70,58,63,72,65,80,74,68,77,85,79,88,82,91,86,95,90,84,93,98,88];
+  const diverg=[1,2,3,1,4,3,2,3,5,4,3,4,5,3,6,5,4,5,6,4,7,5,8,6,7,5,4,6,7,5];
+  const W=460,H=100,pad=10;
+  const mx=Math.max(...verif);
+  const pts1=verif.map((v,i)=>[pad+i*(W-2*pad)/(verif.length-1),H-pad-(v/mx)*(H-2*pad)]);
+  const pts2=diverg.map((v,i)=>[pad+i*(W-2*pad)/(diverg.length-1),H-pad-(v/mx)*(H-2*pad)]);
+  const line=pts=>pts.map((p,i)=>(i?'L':'M')+p[0]+' '+p[1]).join(' ');
+  const area=pts=>'M'+pts[0][0]+' '+H+' '+pts.map(p=>'L'+p[0]+' '+p[1]).join(' ')+' L'+pts[pts.length-1][0]+' '+H+' Z';
+  const svg=document.getElementById('lineChart');
+  // grid
+  [0.25,0.5,0.75,1].forEach(f=>{const y=pad+(1-f)*(H-2*pad);svg.insertAdjacentHTML('beforeend',`<line x1="${pad}" y1="${y}" x2="${W-pad}" y2="${y}" stroke="var(--sur-high)" stroke-width="0.5"/>`)});
+  svg.insertAdjacentHTML('beforeend',`
+    <defs>
+      <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--pri-400)" stop-opacity=".2"/><stop offset="1" stop-color="var(--pri-400)" stop-opacity="0"/></linearGradient>
+      <linearGradient id="g2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--co-400)" stop-opacity=".15"/><stop offset="1" stop-color="var(--co-400)" stop-opacity="0"/></linearGradient>
+    </defs>
+    <path d="${area(pts1)}" fill="url(#g1)"/>
+    <path d="${line(pts1)}" fill="none" stroke="var(--pri-400)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="${area(pts2)}" fill="url(#g2)"/>
+    <path d="${line(pts2)}" fill="none" stroke="var(--co-400)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4,2"/>
+  `);
+})();
+
+// Bar chart (unidades)
+(function(){
+  const data=[{label:'Vitória',v:412,color:'var(--pri-400)'},{label:'Serra',v:331,color:'var(--pri-600)'},{label:'Cariacica',v:287,color:'var(--am-400)'},{label:'Vila Velha',v:217,color:'var(--co-400)'}];
+  const mx=450,W=380,H=130,pad=30;
+  const bw=(W-2*pad)/data.length*0.6,gap=(W-2*pad)/data.length;
+  const svg=document.getElementById('barChart');
+  [0,0.25,0.5,0.75,1].forEach(f=>{const y=H-pad-(f*(H-pad-10));svg.insertAdjacentHTML('beforeend',`<line x1="${pad}" y1="${y}" x2="${W-10}" y2="${y}" stroke="var(--sur-high)" stroke-width="0.5"/><text x="${pad-4}" y="${y+3}" text-anchor="end" font-family="JetBrains Mono" font-size="7" fill="var(--text-s)">${Math.round(f*mx)}</text>`)});
+  data.forEach((d,i)=>{
+    const x=pad+i*gap+(gap-bw)/2;
+    const bh=(d.v/mx)*(H-pad-10);
+    const y=H-pad-bh;
+    svg.insertAdjacentHTML('beforeend',`
+      <rect x="${x}" y="${y}" width="${bw}" height="${bh}" rx="4" fill="${d.color}" opacity="0.75"/>
+      <text x="${x+bw/2}" y="${y-4}" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="8" font-weight="800" fill="var(--text-h)">${d.v}</text>
+      <text x="${x+bw/2}" y="${H-pad+12}" text-anchor="middle" font-family="DM Sans" font-size="8" fill="var(--text-m)">${d.label}</text>
+    `);
+  });
+})();
+
+// Heatmap
+(function(){
+  const days=7,hours=8;
+  const heat=[[1,3,7,8,9,6,4,1],[2,5,9,10,10,8,5,2],[1,4,8,9,8,7,3,1],[2,6,10,10,9,8,4,2],[1,5,9,8,8,7,3,1],[0,1,2,3,2,1,0,0],[0,0,1,1,1,0,0,0]];
+  const wrap=document.getElementById('heatmap');
+  let html='<div style="display:flex;flex-direction:column;gap:4px">';
+  heat.forEach(row=>{
+    html+='<div style="display:flex;gap:4px">';
+    row.forEach(v=>{
+      const opa=v===0?0:0.06+v/10*0.94;
+      html+=`<div style="width:26px;height:13px;border-radius:3px;background:var(--pri-800);opacity:${opa.toFixed(2)};cursor:pointer" title="${v} verificações"></div>`;
+    });
+    html+='</div>';
+  });
+  html+='</div>';
+  wrap.innerHTML=html;
+})();
+
+function tick(){const t=new Date().toTimeString().slice(0,8);const f=document.getElementById('fbar');if(f)f.innerHTML='LAST_SYNC: '+t+' · <span style="color:var(--em-400)">ONLINE</span>';}
+tick();setInterval(tick,1000);
+</script>
+</body>
+</html>

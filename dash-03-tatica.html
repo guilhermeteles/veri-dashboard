@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>V3R1 · Análise Tática</title>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap"></noscript>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased}
+:root{
+  --pri:#252d7a;--pri-50:#eceeff;--pri-100:#d8daff;--pri-400:#5c66d4;--pri-600:#3d4592;--pri-800:#252d7a;
+  --em:#168821;--em-50:#e6f4e8;--em-400:#1a9e27;
+  --am:#C48C14;--am-50:#fdf3dc;--am-400:#C48C14;--am-800:#7a5600;
+  --co:#E52207;--co-50:#fdecea;--co-400:#E52207;--co-800:#8c1200;
+  --bg:#f8f9ff;--surface:#ffffff;--sur-low:#f1f3fb;--sur-mid:#eceef6;--sur-high:#e6e8f0;
+  --text-h:#181c21;--text-b:#464651;--text-m:#595c7c;--text-s:#767682;--border:#d8dae8;
+  --font-d:'Plus Jakarta Sans',sans-serif;--font-b:'DM Sans',sans-serif;--font-m:'JetBrains Mono',monospace;
+  --sh-card:0 1px 3px rgba(37,45,122,.08),0 4px 16px rgba(37,45,122,.04);
+  --sidebar-w:220px;--topbar-h:52px;
+}
+html,body{height:100%;overflow:hidden;font-family:var(--font-b);background:var(--bg);color:var(--text-h)}
+.dash-shell{display:grid;grid-template-columns:var(--sidebar-w) 1fr;grid-template-rows:var(--topbar-h) 1fr;grid-template-areas:"sidebar topbar" "sidebar content";height:100vh;overflow:hidden}
+.rainbow-bar{position:fixed;top:0;left:0;right:0;height:3px;z-index:100;background:linear-gradient(90deg,var(--pri-800),var(--pri-400),var(--em-400),var(--pri-400),var(--pri-800))}
+.sidebar{grid-area:sidebar;background:var(--pri-800);display:flex;flex-direction:column;height:100vh;box-shadow:2px 0 24px rgba(37,45,122,.08);padding-top:3px;position:relative;z-index:50;overflow:hidden}
+.sb-logo{display:flex;align-items:center;gap:10px;padding:16px 18px 14px;border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0}
+.sb-logo-mark{width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,var(--pri-400),var(--pri-600));border:1px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sb-logo-text{font-family:var(--font-d);font-size:15px;font-weight:800;color:#fff;letter-spacing:2px}
+.sb-logo-badge{font-family:var(--font-m);font-size:7px;color:rgba(255,255,255,.45);letter-spacing:1px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:4px;padding:1px 5px;margin-left:auto}
+.sb-nav{flex:1;padding:10px;display:flex;flex-direction:column;gap:2px;overflow-y:auto}
+.sb-nav::-webkit-scrollbar{display:none}
+.sb-section-label{font-family:var(--font-m);font-size:8px;font-weight:700;color:rgba(255,255,255,.25);letter-spacing:1.5px;text-transform:uppercase;padding:8px 8px 4px}
+.sb-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;font-size:12px;font-weight:500;color:rgba(255,255,255,.5);cursor:pointer;transition:all .15s;text-decoration:none;border:none;background:none;width:100%;text-align:left}
+.sb-item:hover{background:rgba(255,255,255,.06);color:rgba(255,255,255,.8)}
+.sb-item.active{background:rgba(92,102,212,.25);color:#fff;font-weight:600;border:1px solid rgba(92,102,212,.35)}
+.sb-item svg{flex-shrink:0;opacity:.7}
+.sb-item.active svg{opacity:1}
+.sb-item-label{flex:1}
+.sb-badge{font-family:var(--font-m);font-size:8px;font-weight:700;background:var(--co-400);color:#fff;border-radius:9999px;padding:1px 6px;min-width:16px;text-align:center}
+.sb-footer{border-top:1px solid rgba(255,255,255,.08);padding:12px 10px;flex-shrink:0}
+.sb-user{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;cursor:pointer}
+.sb-user:hover{background:rgba(255,255,255,.06)}
+.sb-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--pri-400),var(--pri-600));border:1.5px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--font-d);font-size:11px;font-weight:800;color:#fff}
+.sb-user-info{flex:1;min-width:0}
+.sb-user-name{font-size:11px;font-weight:600;color:rgba(255,255,255,.85);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-user-role{font-family:var(--font-m);font-size:8px;color:rgba(255,255,255,.35);margin-top:1px}
+.sb-online{width:7px;height:7px;border-radius:50%;background:var(--em-400);flex-shrink:0}
+.topbar{grid-area:topbar;height:var(--topbar-h);background:rgba(248,249,255,.92);backdrop-filter:blur(18px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;padding:0 24px;position:sticky;top:0;z-index:40;padding-top:3px}
+.topbar-title{font-family:var(--font-d);font-size:15px;font-weight:800;color:var(--text-h);flex:1}
+.topbar-divider{width:1px;height:20px;background:var(--border)}
+.topbar-btn{width:34px;height:34px;border-radius:10px;background:var(--sur-low);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-m)}
+.topbar-avatar{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--pri-50),var(--pri-100));border:1.5px solid var(--pri-100);display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-size:11px;font-weight:800;color:var(--pri-800);cursor:pointer}
+.content{grid-area:content;overflow-y:auto;padding:20px 24px;background:var(--bg)}
+.content::-webkit-scrollbar{width:6px}
+.content::-webkit-scrollbar-track{background:transparent}
+.content::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.period-pills{display:flex;gap:4px}
+.period-pill{font-size:11px;font-weight:600;padding:4px 12px;border-radius:9999px;background:transparent;border:1px solid var(--border);color:var(--text-m);cursor:pointer;transition:all .15s}
+.period-pill.active{background:var(--pri-800);color:#fff;border-color:var(--pri-800)}
+.scope-select{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:var(--text-b);background:var(--sur-low);border:1px solid var(--border);border-radius:9999px;padding:4px 12px;cursor:pointer}
+
+/* KPI strip */
+.kpi-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}
+.kpi-card{background:var(--surface);border-radius:14px;padding:14px 16px;box-shadow:var(--sh-card);border:1px solid var(--border);border-top:3px solid var(--border)}
+.kpi-card.blue{border-top-color:var(--pri-400)}
+.kpi-card.red{border-top-color:var(--co-400)}
+.kpi-card.amber{border-top-color:var(--am-400)}
+.kpi-card.green{border-top-color:var(--em-400)}
+.kpi-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-s);margin-bottom:6px}
+.kpi-value{font-family:var(--font-d);font-size:24px;font-weight:800;color:var(--text-h);line-height:1}
+.kpi-change{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;margin-top:6px;padding:2px 7px;border-radius:9999px}
+.kpi-change.up-bad{background:var(--co-50);color:var(--co-400)}
+.kpi-change.down-good{background:var(--em-50);color:var(--em)}
+.kpi-change.up{background:var(--em-50);color:var(--em)}
+
+/* Layout */
+.main-grid{display:grid;grid-template-columns:1fr 360px;gap:16px;margin-bottom:16px}
+.panel{background:var(--surface);border-radius:14px;border:1px solid var(--border);box-shadow:var(--sh-card);overflow:hidden;margin-bottom:16px}
+.panel:last-child{margin-bottom:0}
+.panel-header{padding:14px 18px 0;display:flex;align-items:center;justify-content:space-between}
+.panel-title{font-family:var(--font-d);font-size:13px;font-weight:800;color:var(--text-h)}
+.panel-subtitle{font-size:10px;color:var(--text-s);margin-top:2px}
+.panel-body{padding:14px 18px 18px}
+
+.badge{display:inline-flex;align-items:center;gap:4px;font-family:var(--font-b);font-size:10px;font-weight:700;padding:2px 8px;border-radius:9999px}
+.badge-ok{background:var(--em-50);color:var(--em);border:1px solid rgba(22,136,33,.15)}
+.badge-warn{background:var(--am-50);color:var(--am-800);border:1px solid rgba(196,140,20,.2)}
+.badge-err{background:var(--co-50);color:var(--co-800);border:1px solid rgba(229,34,7,.15)}
+.badge-info{background:var(--pri-50);color:var(--pri-600);border:1px solid var(--pri-100)}
+.mono-sm{font-family:var(--font-m);font-size:9px;color:var(--text-s)}
+.mono{font-family:var(--font-m);font-size:11px;color:var(--text-m)}
+
+.btn-secondary{background:var(--sur-mid);border:1px solid var(--border);border-radius:9999px;padding:6px 14px;font-size:11px;font-weight:600;color:var(--text-b);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.btn-secondary:hover{background:var(--sur-high)}
+
+/* Map */
+.map-canvas{position:relative;background:linear-gradient(160deg,#e8ecf8,#eef0fa);border-radius:12px;overflow:hidden}
+.map-canvas::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 28px,rgba(37,45,122,.035) 28px,rgba(37,45,122,.035) 29px),repeating-linear-gradient(90deg,transparent,transparent 28px,rgba(37,45,122,.035) 28px,rgba(37,45,122,.035) 29px)}
+.map-label-chip{position:absolute;font-family:var(--font-m);font-size:8px;font-weight:700;padding:2px 8px;border-radius:9999px;backdrop-filter:blur(6px);cursor:pointer;transition:transform .15s}
+.map-label-chip:hover{transform:scale(1.08)}
+.heat-blob{position:absolute;border-radius:50%;filter:blur(18px);pointer-events:none;transition:opacity .3s}
+.map-legend{display:flex;align-items:center;gap:6px;margin-top:10px;justify-content:flex-end}
+
+/* Alert list */
+.alert-item{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--sur-low)}
+.alert-item:last-child{border-bottom:none}
+.alert-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.alert-dot.red{background:var(--co-400);box-shadow:0 0 5px rgba(229,34,7,.5)}
+.alert-dot.amber{background:var(--am-400)}
+.alert-text{font-size:12px;color:var(--text-b);line-height:1.4}
+.alert-meta{font-size:10px;color:var(--text-s);margin-top:2px}
+
+/* Progress bar */
+.progress-bar{height:5px;background:var(--sur-high);border-radius:3px;overflow:hidden;margin-top:4px}
+.progress-fill{height:100%;border-radius:3px}
+
+/* Table */
+.data-table{width:100%;border-collapse:collapse}
+.data-table thead th{font-size:10px;font-weight:700;color:var(--text-s);text-align:left;text-transform:uppercase;letter-spacing:.7px;padding:10px 14px;background:var(--sur-low);border-bottom:1px solid var(--border);cursor:pointer;user-select:none;white-space:nowrap}
+.data-table thead th:hover{background:var(--sur-mid)}
+.data-table thead th.sorted{color:var(--pri-600)}
+.data-table tbody td{font-size:12px;color:var(--text-b);padding:10px 14px;border-bottom:1px solid var(--sur-low)}
+.data-table tbody tr:last-child td{border-bottom:none}
+.data-table tbody tr:hover td{background:var(--sur-low);cursor:pointer}
+.data-table tbody tr.top td{background:rgba(229,34,7,.025)}
+
+/* Trend spark */
+.spark{display:inline-flex;align-items:flex-end;gap:1px;height:16px;vertical-align:middle}
+.spark-bar{width:4px;border-radius:1px 1px 0 0;background:var(--pri-400);opacity:.6}
+.spark-bar.hi{opacity:1;background:var(--co-400)}
+</style>
+</head>
+<body>
+<div class="rainbow-bar"></div>
+<div class="dash-shell">
+  <aside class="sidebar">
+    <div class="sb-logo">
+      <img src="logo-white.svg" alt="">
+      <!-- <span class="sb-logo-text">V3R1</span> -->
+      <span class="sb-logo-badge">WEB</span>
+    </div>
+    <nav class="sb-nav">
+      <div class="sb-section-label">Principal</div>
+      <button class="sb-item" onclick="goTo('visao-geral')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg><span class="sb-item-label">Visão geral</span></button>
+      <button class="sb-item" onclick="goTo('monitoramento')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="2"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg><span class="sb-item-label">Monitoramento</span><span class="sb-badge">3</span></button>
+      <button class="sb-item active" onclick="goTo('tatica')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg><span class="sb-item-label">Análise tática</span></button>
+      <button class="sb-item" onclick="goTo('inteligencia')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg><span class="sb-item-label">Inteligência</span></button>
+      <div class="sb-section-label" style="margin-top:4px">Operacional</div>
+      <button class="sb-item" onclick="goTo('busca')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span class="sb-item-label">Busca avançada</span></button>
+      <button class="sb-item" onclick="goTo('performance')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span class="sb-item-label">Performance</span></button>
+      <div class="sb-section-label" style="margin-top:4px">Sistema</div>
+      <button class="sb-item" onclick="goTo('configuracoes')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12.22 2h-.44a2 2 0 00-2 2v.18a2 2 0 01-1 1.73l-.43.25a2 2 0 01-2 0l-.15-.08a2 2 0 00-2.73.73l-.22.38a2 2 0 00.73 2.73l.15.1a2 2 0 011 1.72v.51a2 2 0 01-1 1.74l-.15.09a2 2 0 00-.73 2.73l.22.38a2 2 0 002.73.73l.15-.08a2 2 0 012 0l.43.25a2 2 0 011 1.73V20a2 2 0 002 2h.44a2 2 0 002-2v-.18a2 2 0 011-1.73l.43-.25a2 2 0 012 0l.15.08a2 2 0 002.73-.73l.22-.39a2 2 0 00-.73-2.73l-.15-.08a2 2 0 01-1-1.74v-.5a2 2 0 011-1.74l.15-.09a2 2 0 00.73-2.73l-.22-.38a2 2 0 00-2.73-.73l-.15.08a2 2 0 01-2 0l-.43-.25a2 2 0 01-1-1.73V4a2 2 0 00-2-2z"/><circle cx="12" cy="12" r="3"/></svg><span class="sb-item-label">Configurações</span></button>
+    </nav>
+    <div class="sb-footer">
+      <div class="sb-user">
+        <div class="sb-avatar">GL</div>
+        <div class="sb-user-info"><div class="sb-user-name">Gestor Lima</div><div class="sb-user-role">GESTOR · ES</div></div>
+        <div class="sb-online"></div>
+      </div>
+    </div>
+  </aside>
+
+  <header class="topbar">
+    <h1 class="topbar-title">Análise tática · ES</h1>
+    <div class="period-pills">
+      <button class="period-pill" onclick="setPeriod(this)">Hoje</button>
+      <button class="period-pill" onclick="setPeriod(this)">7 dias</button>
+      <button class="period-pill active" onclick="setPeriod(this)">30 dias</button>
+      <button class="period-pill" onclick="setPeriod(this)">Trimestre</button>
+    </div>
+    <div class="topbar-divider"></div>
+    <div class="scope-select">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      ES · Todas unidades
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="topbar-divider"></div>
+    <button class="btn-secondary" style="font-size:11px;padding:5px 12px">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Exportar
+    </button>
+    <button class="topbar-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg></button>
+    <div class="topbar-avatar">GL</div>
+  </header>
+
+  <main class="content">
+    <!-- KPI strip -->
+    <div class="kpi-strip">
+      <div class="kpi-card blue"><div class="kpi-label">Total verificações</div><div class="kpi-value">1.247</div><div class="kpi-change up">↑ 12%</div></div>
+      <div class="kpi-card red"><div class="kpi-label">Divergências</div><div class="kpi-value">52</div><div class="kpi-change up-bad">↑ 8%</div></div>
+      <div class="kpi-card amber"><div class="kpi-label">Municípios com alerta</div><div class="kpi-value">3</div><div class="kpi-change up-bad">+1 vs. mês ant.</div></div>
+      <div class="kpi-card green"><div class="kpi-label">Taxa média ES</div><div class="kpi-value">4.2%</div><div class="kpi-change down-good">↓ 0.3%</div></div>
+    </div>
+
+    <!-- Main: mapa + alertas -->
+    <div class="main-grid">
+      <!-- Mapa ES -->
+      <div class="panel" style="margin-bottom:0">
+        <div class="panel-header">
+          <div><div class="panel-title">Mapa de calor · Espírito Santo</div><div class="panel-subtitle">Concentração de divergências por região</div></div>
+          <div style="display:flex;gap:6px;align-items:center">
+            <button class="btn-secondary" style="font-size:10px;padding:3px 10px" id="btn-verif" onclick="setLayer('verif',this)">Volume</button>
+            <button class="btn-secondary" style="font-size:10px;padding:3px 10px;background:var(--co-50);color:var(--co-800);border-color:rgba(229,34,7,.2)" id="btn-diverg" onclick="setLayer('diverg',this)">Divergências</button>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="map-canvas" style="height:380px" id="mapCanvas">
+
+            <!-- Blobs de calor (relativo ao ES) -->
+            <!-- Vila Velha / Vitória (centro-sul costeiro) -->
+            <div class="heat-blob" id="blob-vv" style="width:120px;height:120px;background:var(--co-400);top:52%;left:60%;opacity:.45;transform:translate(-50%,-50%)"></div>
+            <!-- Cariacica -->
+            <div class="heat-blob" id="blob-ca" style="width:90px;height:90px;background:var(--am-400);top:48%;left:52%;opacity:.4;transform:translate(-50%,-50%)"></div>
+            <!-- Serra -->
+            <div class="heat-blob" id="blob-se" style="width:75px;height:75px;background:var(--am-400);top:40%;left:64%;opacity:.35;transform:translate(-50%,-50%)"></div>
+            <!-- Linhares (norte, menor) -->
+            <div class="heat-blob" id="blob-li" style="width:50px;height:50px;background:var(--pri-400);top:22%;left:55%;opacity:.3;transform:translate(-50%,-50%)"></div>
+            <!-- Cachoeiro (sul) -->
+            <div class="heat-blob" id="blob-cd" style="width:40px;height:40px;background:var(--em-400);top:72%;left:48%;opacity:.3;transform:translate(-50%,-50%)"></div>
+
+            <!-- Rótulos das cidades -->
+            <div class="map-label-chip" style="top:55%;left:61%;transform:translate(-50%,-50%);background:rgba(229,34,7,.85);color:#fff;z-index:5" onclick="highlightCity('vila-velha')">Vila Velha · 8.8%</div>
+            <div class="map-label-chip" style="top:48%;left:56%;transform:translate(-50%,-50%);background:rgba(196,140,20,.85);color:#fff;z-index:5" onclick="highlightCity('cariacica')">Cariacica · 5.2%</div>
+            <div class="map-label-chip" style="top:42%;left:67%;transform:translate(-50%,-50%);background:rgba(196,140,20,.85);color:#fff;z-index:5" onclick="highlightCity('serra')">Serra · 4.2%</div>
+            <div class="map-label-chip" style="top:38%;left:61%;transform:translate(-50%,-50%);background:rgba(37,45,122,.7);color:#fff;z-index:5" onclick="highlightCity('vitoria')">Vitória · 3.4%</div>
+            <div class="map-label-chip" style="top:22%;left:58%;transform:translate(-50%,-50%);background:rgba(37,45,122,.6);color:#fff;z-index:5" onclick="highlightCity('linhares')">Linhares · 2.1%</div>
+            <div class="map-label-chip" style="top:72%;left:46%;transform:translate(-50%,-50%);background:rgba(26,158,39,.7);color:#fff;z-index:5" onclick="highlightCity('cachoeiro')">Cachoeiro · 1.3%</div>
+
+            <!-- Rótulo do estado -->
+            <div style="position:absolute;top:8px;left:12px;font-family:var(--font-m);font-size:10px;font-weight:700;color:var(--text-s);letter-spacing:1.5px;z-index:5">ESTADO · ES</div>
+
+            <!-- Escala gradiente -->
+            <div style="position:absolute;bottom:10px;right:12px;display:flex;flex-direction:column;align-items:flex-end;gap:4px;z-index:5">
+              <div style="display:flex;align-items:center;gap:6px">
+                <span class="mono-sm">Maior risco</span>
+                <div style="width:60px;height:8px;border-radius:4px;background:linear-gradient(90deg,var(--em-400),var(--am-400),var(--co-400))"></div>
+                <span class="mono-sm">Menor</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Alertas táticos -->
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div class="panel" style="margin-bottom:0">
+          <div class="panel-header"><div><div class="panel-title">Alertas táticos</div><div class="panel-subtitle">Regiões com tendência de alta</div></div><span class="badge badge-err">3</span></div>
+          <div class="panel-body">
+            <div class="alert-item">
+              <div class="alert-dot red"></div>
+              <div>
+                <div class="alert-text" style="font-weight:700">Vila Velha · Concentração crescente</div>
+                <div class="alert-meta">8.8% divergência · +2.3pp vs. mês ant. · 19 casos</div>
+                <div style="margin-top:5px"><button class="btn-secondary" style="font-size:10px;padding:3px 10px" onclick="goTo('busca')">Ver verificações →</button></div>
+              </div>
+            </div>
+            <div class="alert-item">
+              <div class="alert-dot amber"></div>
+              <div>
+                <div class="alert-text" style="font-weight:700">Cariacica · Alta nos fins de semana</div>
+                <div class="alert-meta">5.2% divergência · Pico Sab/Dom · 15 casos</div>
+                <div style="margin-top:5px"><button class="btn-secondary" style="font-size:10px;padding:3px 10px" onclick="goTo('busca')">Ver verificações →</button></div>
+              </div>
+            </div>
+            <div class="alert-item">
+              <div class="alert-dot amber"></div>
+              <div>
+                <div class="alert-text" style="font-weight:700">Serra · Padrão suspeito de adulteração</div>
+                <div class="alert-meta">4.2% divergência · Honda/VW · 14 casos</div>
+                <div style="margin-top:5px"><button class="btn-secondary" style="font-size:10px;padding:3px 10px" onclick="goTo('inteligencia')">Ver grafo →</button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel" style="margin-bottom:0">
+          <div class="panel-header"><div class="panel-title">Top marcas divergentes</div><div class="panel-subtitle">Últimos 30 dias</div></div>
+          <div class="panel-body">
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:12px;font-weight:600">Honda</span><span class="mono" style="font-weight:700;color:var(--co-400)">18</span></div><div class="progress-bar"><div class="progress-fill" style="width:100%;background:var(--co-400)"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:12px;font-weight:600">VW</span><span class="mono" style="font-weight:700;color:var(--am-800)">14</span></div><div class="progress-bar"><div class="progress-fill" style="width:78%;background:var(--am-400)"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:12px;font-weight:600">Fiat</span><span class="mono" style="font-weight:700;color:var(--am-800)">11</span></div><div class="progress-bar"><div class="progress-fill" style="width:61%;background:var(--am-400)"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:12px;font-weight:600">Ford</span><span class="mono" style="font-weight:700;color:var(--text-m)">6</span></div><div class="progress-bar"><div class="progress-fill" style="width:33%;background:var(--pri-400)"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:12px;font-weight:600">Toyota</span><span class="mono" style="font-weight:700;color:var(--text-m)">3</span></div><div class="progress-bar"><div class="progress-fill" style="width:17%;background:var(--pri-400)"></div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabela por município -->
+    <div class="panel">
+      <div class="panel-header">
+        <div><div class="panel-title">Tabela por município</div><div class="panel-subtitle">Todas as cidades · ordenável</div></div>
+        <div style="display:flex;gap:8px">
+          <input type="text" placeholder="Filtrar cidade..." style="font-size:11px;padding:5px 12px;border:1px solid var(--border);border-radius:9999px;background:var(--sur-low);color:var(--text-h);outline:none" oninput="filterTable(this.value)">
+          <button class="btn-secondary" style="font-size:11px;padding:5px 12px">Exportar CSV</button>
+        </div>
+      </div>
+      <div class="panel-body" style="padding:0">
+        <table class="data-table" id="muni-table">
+          <thead>
+            <tr>
+              <th onclick="sortMuni('rank')"># <span style="opacity:.4">↕</span></th>
+              <th onclick="sortMuni('nome')">Município <span style="opacity:.4">↕</span></th>
+              <th onclick="sortMuni('total')">Verificações <span style="opacity:.4">↕</span></th>
+              <th onclick="sortMuni('compat')">Compatível <span style="opacity:.4">↕</span></th>
+              <th onclick="sortMuni('atencao')">Atenção <span style="opacity:.4">↕</span></th>
+              <th onclick="sortMuni('diverg')">Divergentes <span style="opacity:.4">↕</span></th>
+              <th onclick="sortMuni('taxa')" class="sorted">Taxa div. <span style="opacity:1">↓</span></th>
+              <th>Tendência</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="muni-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid var(--sur-high)">
+      <span class="mono-sm">V3R1 TÁTICA · v2.4.1</span>
+      <span class="mono-sm" id="fbar-tatica">SYNC: – · <span style="color:var(--em-400)">ONLINE</span></span>
+    </div>
+  </main>
+</div>
+
+<script>
+function goTo(r){try{if(window.parent&&window.parent.goTo)window.parent.goTo(r);else{const M={'visao-geral':'dash-01-visao-geral.html','monitoramento':'dash-02-monitoramento.html','tatica':'dash-03-tatica.html','inteligencia':'dash-04-inteligencia.html','detalhe':'dash-05-detalhe.html','performance':'dash-06-performance.html','busca':'dash-07-busca.html','configuracoes':'dash-08-configuracoes.html'};if(M[r])window.location.href=M[r];}}catch(e){window.postMessage({goTo:r},'*')}}
+function setPeriod(btn){document.querySelectorAll('.period-pill').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+function setLayer(l,btn){document.querySelectorAll('#btn-verif,#btn-diverg').forEach(b=>{b.style.background='';b.style.color='';b.style.borderColor=''});btn.style.background='var(--pri-50)';btn.style.color='var(--pri-600)';btn.style.borderColor='var(--pri-100)';}
+function highlightCity(c){console.log('highlight',c)}
+
+const MUNIS=[
+  {rank:1,nome:'Vila Velha',total:217,compat:178,atencao:20,diverg:19,taxa:8.8,trend:[3,4,5,4,6,7,8],status:'alert'},
+  {rank:2,nome:'Cariacica',total:287,compat:252,atencao:20,diverg:15,taxa:5.2,trend:[2,3,3,4,4,5,5],status:'alert'},
+  {rank:3,nome:'Serra',total:331,compat:299,atencao:18,diverg:14,taxa:4.2,trend:[2,3,4,3,4,4,5],status:'warn'},
+  {rank:4,nome:'Vitória',total:412,compat:382,atencao:16,diverg:14,taxa:3.4,trend:[3,3,4,3,4,3,4],status:'ok'},
+  {rank:5,nome:'Guarapari',total:89,compat:83,atencao:4,diverg:2,taxa:2.2,trend:[1,1,2,1,2,2,1],status:'ok'},
+  {rank:6,nome:'Linhares',total:112,compat:105,atencao:5,diverg:2,taxa:1.8,trend:[1,2,1,2,1,2,2],status:'ok'},
+  {rank:7,nome:'Colatina',total:76,compat:72,atencao:3,diverg:1,taxa:1.3,trend:[1,1,1,1,1,1,1],status:'ok'},
+  {rank:8,nome:'Cachoeiro de Itapemirim',total:58,compat:55,atencao:2,diverg:1,taxa:1.3,trend:[1,0,1,0,1,1,1],status:'ok'},
+  {rank:9,nome:'São Mateus',total:44,compat:43,atencao:1,diverg:0,taxa:0.0,trend:[0,0,0,0,0,0,0],status:'ok'},
+  {rank:10,nome:'Aracruz',total:32,compat:32,atencao:0,diverg:0,taxa:0.0,trend:[0,0,0,0,0,0,0],status:'ok'},
+];
+
+let muniData=[...MUNIS];
+let muniSort={col:'taxa',dir:-1};
+
+function badgeForStatus(s){return s==='alert'?'badge-err':s==='warn'?'badge-warn':'badge-ok'}
+function labelForStatus(s){return s==='alert'?'Alerta':s==='warn'?'Atenção':'Normal'}
+function sparkHTML(trend,status){const mx=Math.max(...trend,1);return '<span class="spark">'+trend.map((v,i)=>`<div class="spark-bar${i===trend.length-1&&v===Math.max(...trend)?' hi':''}" style="height:${Math.max(2,Math.round((v/mx)*16))}px"></div>`).join('')+'</span>';}
+function taxaColor(t){return t>=7?'var(--co-400)':t>=4?'var(--am-800)':'var(--em)'}
+
+function renderMuni(){
+  const tbody=document.getElementById('muni-body');
+  tbody.innerHTML=muniData.map(r=>`
+    <tr class="${r.status==='alert'?'top':''}" onclick="goTo('busca')" style="cursor:pointer">
+      <td style="font-family:var(--font-m);font-size:10px;color:var(--text-s)">${r.rank}</td>
+      <td style="font-weight:700;color:var(--text-h)">${r.nome}</td>
+      <td style="font-family:var(--font-m);font-size:11px">${r.total}</td>
+      <td style="color:var(--em);font-weight:600">${r.compat}</td>
+      <td style="color:var(--am-800);font-weight:600">${r.atencao}</td>
+      <td style="color:var(--co-800);font-weight:600">${r.diverg}</td>
+      <td><span style="font-family:var(--font-m);font-size:12px;font-weight:800;color:${taxaColor(r.taxa)}">${r.taxa.toFixed(1)}%</span></td>
+      <td>${sparkHTML(r.trend,r.status)}</td>
+      <td><span class="badge ${badgeForStatus(r.status)}" style="font-size:9px">${labelForStatus(r.status)}</span></td>
+    </tr>`).join('');
+}
+
+function sortMuni(col){
+  if(muniSort.col===col)muniSort.dir*=-1;else{muniSort.col=col;muniSort.dir=-1;}
+  muniData.sort((a,b)=>{let va=a[col],vb=b[col];if(typeof va==='string')return muniSort.dir*(va.localeCompare(vb));return muniSort.dir*(va-vb);});
+  renderMuni();
+}
+
+function filterTable(q){
+  muniData=MUNIS.filter(r=>r.nome.toLowerCase().includes(q.toLowerCase()));
+  renderMuni();
+}
+
+renderMuni();
+
+function tick(){const t=new Date().toTimeString().slice(0,8);const f=document.getElementById('fbar-tatica');if(f)f.innerHTML='SYNC: '+t+' · <span style="color:var(--em-400)">ONLINE</span>';}
+tick();setInterval(tick,1000);
+</script>
+</body>
+</html>

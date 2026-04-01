@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>V3R1 · Detalhe da Verificação</title>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap"></noscript>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased}
+:root{
+  --pri:#252d7a;--pri-50:#eceeff;--pri-100:#d8daff;--pri-400:#5c66d4;--pri-600:#3d4592;--pri-800:#252d7a;
+  --em:#168821;--em-50:#e6f4e8;--em-400:#1a9e27;
+  --am:#C48C14;--am-50:#fdf3dc;--am-400:#C48C14;--am-800:#7a5600;
+  --co:#E52207;--co-50:#fdecea;--co-400:#E52207;--co-800:#8c1200;
+  --bg:#f8f9ff;--surface:#ffffff;--sur-low:#f1f3fb;--sur-mid:#eceef6;--sur-high:#e6e8f0;
+  --text-h:#181c21;--text-b:#464651;--text-m:#595c7c;--text-s:#767682;--border:#d8dae8;
+  --font-d:'Plus Jakarta Sans',sans-serif;--font-b:'DM Sans',sans-serif;--font-m:'JetBrains Mono',monospace;
+  --sh-card:0 1px 3px rgba(37,45,122,.08),0 4px 16px rgba(37,45,122,.04);
+  --sidebar-w:220px;--topbar-h:52px;
+}
+html,body{height:100%;overflow:hidden;font-family:var(--font-b);background:var(--bg);color:var(--text-h)}
+.dash-shell{display:grid;grid-template-columns:var(--sidebar-w) 1fr;grid-template-rows:var(--topbar-h) 1fr;grid-template-areas:"sidebar topbar" "sidebar content";height:100vh;overflow:hidden}
+.rainbow-bar{position:fixed;top:0;left:0;right:0;height:3px;z-index:100;background:linear-gradient(90deg,var(--pri-800),var(--pri-400),var(--em-400),var(--pri-400),var(--pri-800));box-shadow:0 1px 8px rgba(37,45,122,.25)}
+.sidebar{grid-area:sidebar;background:var(--pri-800);display:flex;flex-direction:column;height:100vh;box-shadow:2px 0 24px rgba(37,45,122,.08);padding-top:3px;position:relative;z-index:50;overflow:hidden}
+.sb-logo{display:flex;align-items:center;gap:10px;padding:16px 18px 14px;border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0}
+.sb-logo-mark{width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,var(--pri-400),var(--pri-600));border:1px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sb-logo-text{font-family:var(--font-d);font-size:15px;font-weight:800;color:#fff;letter-spacing:2px}
+.sb-logo-badge{font-family:var(--font-m);font-size:7px;color:rgba(255,255,255,.45);letter-spacing:1px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:4px;padding:1px 5px;margin-left:auto}
+.sb-nav{flex:1;padding:10px;display:flex;flex-direction:column;gap:2px;overflow-y:auto}
+.sb-nav::-webkit-scrollbar{display:none}
+.sb-section-label{font-family:var(--font-m);font-size:8px;font-weight:700;color:rgba(255,255,255,.25);letter-spacing:1.5px;text-transform:uppercase;padding:8px 8px 4px}
+.sb-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;font-size:12px;font-weight:500;color:rgba(255,255,255,.5);cursor:pointer;transition:all .15s;text-decoration:none;border:none;background:none;width:100%;text-align:left}
+.sb-item:hover{background:rgba(255,255,255,.06);color:rgba(255,255,255,.8)}
+.sb-item.active{background:rgba(92,102,212,.25);color:#fff;font-weight:600;border:1px solid rgba(92,102,212,.35)}
+.sb-item svg{flex-shrink:0;opacity:.7}
+.sb-item.active svg{opacity:1}
+.sb-item-label{flex:1}
+.sb-badge{font-family:var(--font-m);font-size:8px;font-weight:700;background:var(--co-400);color:#fff;border-radius:9999px;padding:1px 6px;min-width:16px;text-align:center}
+.sb-footer{border-top:1px solid rgba(255,255,255,.08);padding:12px 10px;flex-shrink:0}
+.sb-user{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;cursor:pointer}
+.sb-user:hover{background:rgba(255,255,255,.06)}
+.sb-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--pri-400),var(--pri-600));border:1.5px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--font-d);font-size:11px;font-weight:800;color:#fff}
+.sb-user-info{flex:1;min-width:0}
+.sb-user-name{font-size:11px;font-weight:600;color:rgba(255,255,255,.85);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-user-role{font-family:var(--font-m);font-size:8px;color:rgba(255,255,255,.35);margin-top:1px}
+.sb-online{width:7px;height:7px;border-radius:50%;background:var(--em-400);flex-shrink:0}
+.topbar{grid-area:topbar;height:var(--topbar-h);background:rgba(248,249,255,.92);backdrop-filter:blur(18px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;padding:0 24px;position:sticky;top:0;z-index:40;padding-top:3px}
+.topbar-title{font-family:var(--font-d);font-size:15px;font-weight:800;color:var(--text-h)}
+.topbar-divider{width:1px;height:20px;background:var(--border)}
+.topbar-btn{width:34px;height:34px;border-radius:10px;background:var(--sur-low);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-m)}
+.topbar-avatar{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--pri-50),var(--pri-100));border:1.5px solid var(--pri-100);display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-size:11px;font-weight:800;color:var(--pri-800);cursor:pointer}
+.content{grid-area:content;overflow-y:auto;padding:20px 24px;background:var(--bg)}
+.content::-webkit-scrollbar{width:6px}
+.content::-webkit-scrollbar-track{background:transparent}
+.content::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+/* Layout */
+.detail-grid{display:grid;grid-template-columns:1fr 340px;gap:20px}
+.panel{background:var(--surface);border-radius:14px;border:1px solid var(--border);box-shadow:var(--sh-card);overflow:hidden;margin-bottom:16px}
+.panel-header{padding:14px 18px 0;display:flex;align-items:center;justify-content:space-between}
+.panel-title{font-family:var(--font-d);font-size:13px;font-weight:800;color:var(--text-h)}
+.panel-subtitle{font-size:10px;color:var(--text-s);margin-top:2px}
+.panel-body{padding:14px 18px 18px}
+
+/* Hero */
+.hero-panel{background:linear-gradient(135deg,var(--pri-800),var(--pri-600));border-radius:14px;padding:20px 22px;margin-bottom:16px;position:relative;overflow:hidden;box-shadow:0 8px 24px rgba(37,45,122,.3)}
+.hero-panel::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px);background-size:100% 3px}
+
+/* Breadcrumb */
+.breadcrumb{display:flex;align-items:center;gap:6px;margin-bottom:16px}
+.bc-item{font-size:11px;color:var(--text-s);cursor:pointer}
+.bc-item:hover{color:var(--text-m)}
+.bc-item.current{color:var(--text-h);font-weight:600}
+.bc-sep{color:var(--border)}
+
+/* Data rows */
+.data-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--sur-low)}
+.data-row:last-child{border-bottom:none}
+.data-label{font-size:12px;color:var(--text-m)}
+.data-value{font-size:12px;font-weight:600;color:var(--text-h)}
+.data-mono{font-family:var(--font-m);font-size:11px;color:var(--text-h)}
+
+/* Badges */
+.badge{display:inline-flex;align-items:center;gap:4px;font-family:var(--font-b);font-size:10px;font-weight:700;padding:3px 10px;border-radius:9999px}
+.badge-ok{background:var(--em-50);color:var(--em);border:1px solid rgba(22,136,33,.15)}
+.badge-warn{background:var(--am-50);color:var(--am-800);border:1px solid rgba(196,140,20,.2)}
+.badge-err{background:var(--co-50);color:var(--co-800);border:1px solid rgba(229,34,7,.15)}
+.badge-info{background:var(--pri-50);color:var(--pri-600);border:1px solid var(--pri-100)}
+
+/* Evidence thumbs */
+.evidence-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.evidence-thumb{border-radius:10px;overflow:hidden;position:relative;cursor:zoom-in;background:var(--sur-high);aspect-ratio:4/3}
+.evidence-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.evidence-label{position:absolute;bottom:6px;left:6px;font-family:var(--font-m);font-size:8px;font-weight:700;color:#fff;background:rgba(0,0,0,.55);padding:2px 7px;border-radius:9999px;backdrop-filter:blur(6px)}
+.evidence-score{position:absolute;top:6px;right:6px;font-family:var(--font-m);font-size:9px;font-weight:700;padding:2px 7px;border-radius:9999px}
+
+/* Score ring */
+.score-ring-wrap{display:flex;flex-direction:column;align-items:center;gap:4px}
+
+/* Timeline */
+.timeline-item{display:flex;gap:12px;padding-bottom:14px;position:relative}
+.timeline-item::before{content:'';position:absolute;top:20px;left:9px;width:2px;height:calc(100% - 8px);background:var(--sur-high)}
+.timeline-item:last-child::before{display:none}
+.tl-dot{width:20px;height:20px;border-radius:50%;background:var(--sur-high);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;position:relative;z-index:1}
+.tl-dot.ok{background:var(--em-50);border-color:var(--em-400)}
+.tl-dot.warn{background:var(--am-50);border-color:var(--am-400)}
+.tl-dot.err{background:var(--co-50);border-color:var(--co-400)}
+.tl-body{flex:1;min-width:0}
+.tl-title{font-size:12px;font-weight:700;color:var(--text-h)}
+.tl-meta{font-size:10px;color:var(--text-s);margin-top:2px}
+.tl-value{font-family:var(--font-m);font-size:10px;color:var(--text-m);margin-top:3px;padding:4px 8px;background:var(--sur-low);border-radius:6px;display:inline-block}
+
+/* SHA box */
+.sha-box{background:var(--sur-low);border-radius:10px;padding:10px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;border:1px solid var(--border)}
+.sha-box:hover{background:var(--sur-mid)}
+.sha-text{font-family:var(--font-m);font-size:9px;color:var(--pri-800);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1}
+
+.btn-primary{background:linear-gradient(135deg,var(--pri-800),var(--pri-600));color:#fff;border-radius:9999px;padding:8px 18px;font-family:var(--font-b);font-size:12px;font-weight:600;box-shadow:0 4px 12px rgba(37,45,122,.25);cursor:pointer;display:inline-flex;align-items:center;gap:7px;border:none;transition:opacity .15s}
+.btn-secondary{background:var(--sur-mid);border:1px solid var(--border);border-radius:9999px;padding:7px 16px;font-size:12px;font-weight:600;color:var(--text-b);cursor:pointer;display:inline-flex;align-items:center;gap:7px}
+.btn-danger{background:var(--co-50);border:1px solid rgba(229,34,7,.2);border-radius:9999px;padding:7px 14px;font-size:12px;font-weight:600;color:var(--co-800);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+
+.mono-sm{font-family:var(--font-m);font-size:9px;color:var(--text-s)}
+.mono{font-family:var(--font-m);font-size:11px;color:var(--text-m)}
+
+/* Fullscreen thumb overlay */
+#imgOverlay{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.88);display:none;align-items:center;justify-content:center;backdrop-filter:blur(8px);cursor:zoom-out}
+#imgOverlay.open{display:flex}
+#imgOverlay img{max-width:80vw;max-height:80vh;border-radius:12px;object-fit:contain}
+</style>
+</head>
+<body>
+<div class="rainbow-bar"></div>
+<div class="dash-shell">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sb-logo">
+      <img src="logo-white.svg" alt="">
+      <!-- <span class="sb-logo-text">V3R1</span> -->
+      <span class="sb-logo-badge">WEB</span>
+    </div>
+    <nav class="sb-nav">
+      <div class="sb-section-label">Principal</div>
+      <button class="sb-item" onclick="goTo('visao-geral')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg><span class="sb-item-label">Visão geral</span></button>
+      <button class="sb-item" onclick="goTo('monitoramento')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="2"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg><span class="sb-item-label">Monitoramento</span><span class="sb-badge">3</span></button>
+      <button class="sb-item" onclick="goTo('tatica')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg><span class="sb-item-label">Análise tática</span></button>
+      <button class="sb-item" onclick="goTo('inteligencia')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg><span class="sb-item-label">Inteligência</span></button>
+      <div class="sb-section-label" style="margin-top:4px">Operacional</div>
+      <button class="sb-item active" onclick="goTo('busca')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span class="sb-item-label">Busca avançada</span></button>
+      <button class="sb-item" onclick="goTo('performance')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span class="sb-item-label">Performance</span></button>
+      <div class="sb-section-label" style="margin-top:4px">Sistema</div>
+      <button class="sb-item" onclick="goTo('configuracoes')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12.22 2h-.44a2 2 0 00-2 2v.18a2 2 0 01-1 1.73l-.43.25a2 2 0 01-2 0l-.15-.08a2 2 0 00-2.73.73l-.22.38a2 2 0 00.73 2.73l.15.1a2 2 0 011 1.72v.51a2 2 0 01-1 1.74l-.15.09a2 2 0 00-.73 2.73l.22.38a2 2 0 002.73.73l.15-.08a2 2 0 012 0l.43.25a2 2 0 011 1.73V20a2 2 0 002 2h.44a2 2 0 002-2v-.18a2 2 0 011-1.73l.43-.25a2 2 0 012 0l.15.08a2 2 0 002.73-.73l.22-.39a2 2 0 00-.73-2.73l-.15-.08a2 2 0 01-1-1.74v-.5a2 2 0 011-1.74l.15-.09a2 2 0 00.73-2.73l-.22-.38a2 2 0 00-2.73-.73l-.15.08a2 2 0 01-2 0l-.43-.25a2 2 0 01-1-1.73V4a2 2 0 00-2-2z"/><circle cx="12" cy="12" r="3"/></svg><span class="sb-item-label">Configurações</span></button>
+    </nav>
+    <div class="sb-footer">
+      <div class="sb-user">
+        <div class="sb-avatar">MR</div>
+        <div class="sb-user-info"><div class="sb-user-name">Analista Rocha</div><div class="sb-user-role">INVESTIGADOR · ES</div></div>
+        <div class="sb-online"></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <button class="btn-secondary" style="font-size:11px;padding:5px 12px" onclick="goTo('busca')">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      Voltar
+    </button>
+    <div class="topbar-divider"></div>
+    <h1 class="topbar-title" style="flex:none">Detalhe da verificação</h1>
+    <div class="topbar-divider"></div>
+    <span class="mono-sm" style="color:var(--pri-400)">#VERI-9928-X</span>
+    <span class="badge badge-err" style="font-size:10px">Divergente</span>
+    <div style="flex:1"></div>
+    <button class="btn-secondary" style="font-size:11px;padding:5px 12px">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Exportar PDF
+    </button>
+    <button class="topbar-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg></button>
+    <div class="topbar-avatar">MR</div>
+  </header>
+
+  <!-- CONTENT -->
+  <main class="content">
+
+    <!-- Hero -->
+    <div class="hero-panel">
+      <div style="position:relative;z-index:1;display:flex;align-items:flex-start;justify-content:space-between;gap:20px">
+        <div style="flex:1">
+          <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Veículo · #VERI-9928-X</div>
+          <div style="font-family:var(--font-d);font-size:24px;font-weight:800;color:#fff;letter-spacing:-0.3px;margin-bottom:6px">Honda Civic 2020</div>
+          <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+            <div style="display:flex;align-items:center;gap:6px">
+              <span style="font-size:11px;color:rgba(255,255,255,.6)">Placa</span>
+              <span style="font-family:var(--font-m);font-size:14px;font-weight:800;color:#fff;background:rgba(255,255,255,.12);padding:2px 10px;border-radius:6px">GHT-3A12</span>
+            </div>
+            <div style="width:1px;height:16px;background:rgba(255,255,255,.2)"></div>
+            <div style="display:flex;align-items:center;gap:6px">
+              <span style="font-size:11px;color:rgba(255,255,255,.6)">Cor</span>
+              <span style="font-size:12px;font-weight:600;color:#fff">Prata metálico</span>
+            </div>
+            <div style="width:1px;height:16px;background:rgba(255,255,255,.2)"></div>
+            <div style="display:flex;align-items:center;gap:6px">
+              <span style="font-size:11px;color:rgba(255,255,255,.6)">Combustível</span>
+              <span style="font-size:12px;font-weight:600;color:#fff">Flex</span>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+            <span style="display:inline-flex;align-items:center;gap:5px;background:rgba(229,34,7,.2);border:1px solid rgba(229,34,7,.4);border-radius:9999px;padding:3px 10px;font-size:10px;font-weight:700;color:#ffb3aa">
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+              Divergência VIN detectada
+            </span>
+            <span style="display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:9999px;padding:3px 10px;font-size:10px;font-weight:700;color:rgba(255,255,255,.7)">DENATRAN</span>
+            <span style="display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:9999px;padding:3px 10px;font-size:10px;font-weight:700;color:rgba(255,255,255,.7)">RENAVAM</span>
+          </div>
+        </div>
+        <!-- Score ring -->
+        <div class="score-ring-wrap">
+          <svg width="80" height="80" viewBox="0 0 56 56">
+            <circle cx="28" cy="28" r="23" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="5"/>
+            <circle cx="28" cy="28" r="23" fill="none" stroke="var(--co-400)" stroke-width="5" stroke-dasharray="130 14.5" stroke-dashoffset="36" stroke-linecap="round" transform="rotate(-90 28 28)"/>
+            <text x="28" y="33" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="16" font-weight="800" fill="white">87</text>
+          </svg>
+          <span style="font-family:var(--font-m);font-size:9px;color:rgba(255,255,255,.5)">SCORE RISCO</span>
+          <span class="badge badge-err" style="font-size:10px;margin-top:2px">Divergente</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main grid -->
+    <div class="detail-grid">
+
+      <!-- Left column -->
+      <div>
+        <!-- Evidências fotográficas -->
+        <div class="panel">
+          <div class="panel-header">
+            <div><div class="panel-title">Evidências fotográficas</div><div class="panel-subtitle">4 capturas · 23/03/2026 14:22</div></div>
+            <span class="badge badge-err">1 anomalia</span>
+          </div>
+          <div class="panel-body">
+            <div class="evidence-grid">
+              <div class="evidence-thumb" onclick="openImg('/assets/fotos/traseira-captura.png')">
+                <div style="width:100%;height:100%;background:linear-gradient(135deg,#1a2260,#2a35a0);display:flex;align-items:center;justify-content:center">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="1.5"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                </div>
+                <div class="evidence-label">PLACA TRASEIRA</div>
+                <div class="evidence-score" style="background:var(--em-50);color:var(--em)">99.9%</div>
+              </div>
+              <div class="evidence-thumb" onclick="openImg('/assets/fotos/chassi-captura.png')" style="border:2px solid var(--co-400)">
+                <div style="width:100%;height:100%;background:linear-gradient(135deg,#2d0a0a,#5c1010);display:flex;align-items:center;justify-content:center">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(229,34,7,.6)" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                </div>
+                <div class="evidence-label" style="background:rgba(229,34,7,.7)">CHASSI · ANOMALIA</div>
+                <div class="evidence-score" style="background:var(--co-50);color:var(--co-800)">Divergente</div>
+              </div>
+              <div class="evidence-thumb" onclick="openImg('/assets/fotos/vin-captura.png')">
+                <div style="width:100%;height:100%;background:linear-gradient(135deg,#0a1a2d,#102040);display:flex;align-items:center;justify-content:center">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="1.5"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M7 8h4M7 12h6"/></svg>
+                </div>
+                <div class="evidence-label">ETIQUETA VIN</div>
+                <div class="evidence-score" style="background:var(--em-50);color:var(--em)">96.1%</div>
+              </div>
+              <div class="evidence-thumb" onclick="openImg('/assets/fotos/vidro-captura.png')">
+                <div style="width:100%;height:100%;background:linear-gradient(135deg,#0d1a10,#152218);display:flex;align-items:center;justify-content:center">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(26,158,39,.4)" stroke-width="1.5"><rect x="2" y="3" width="20" height="16" rx="2"/><path d="M2 7h20M2 12h20"/></svg>
+                </div>
+                <div class="evidence-label">VIDRO LATERAL</div>
+                <div class="evidence-score" style="background:var(--em-50);color:var(--em)">91.8%</div>
+              </div>
+            </div>
+            <!-- Divergência destacada -->
+            <div style="background:var(--co-50);border:1px solid rgba(229,34,7,.2);border-radius:10px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--co-400)" stroke-width="2" style="flex-shrink:0;margin-top:1px"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              <div>
+                <div style="font-size:12px;font-weight:700;color:var(--co-800);margin-bottom:3px">Adulteração de chassi detectada</div>
+                <div style="font-size:11px;color:var(--text-b);line-height:1.5">Raspagem detectada na gravação original. Espaçamento irregular entre caracteres (Δ 0.12mm) e profundidade inconsistente (0.28mm vs. padrão 0.45mm).</div>
+                <div style="display:flex;gap:6px;margin-top:6px">
+                  <span class="badge badge-err" style="font-size:9px">Adulteração</span>
+                  <span class="badge" style="background:var(--co-50);color:var(--co-800);border:1px solid rgba(229,34,7,.15);font-size:9px">Score IA: 87</span>
+                  <span class="badge" style="background:var(--co-50);color:var(--co-800);border:1px solid rgba(229,34,7,.15);font-size:9px">Confiança: 94.2%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Análise por componente -->
+        <div class="panel">
+          <div class="panel-header"><div class="panel-title">Análise por componente</div></div>
+          <div class="panel-body" style="padding:0">
+            <div class="timeline-item" style="padding:12px 18px 14px">
+              <div class="tl-dot err"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="var(--co-400)" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+              <div class="tl-body">
+                <div class="tl-title">Chassi</div>
+                <div class="tl-meta">Gravação adulterada · Score 87 · Confiança 94.2%</div>
+                <div class="tl-value" style="color:var(--co-800)">9BD195A4XL5678302 ≠ 9BD195B8XL5678302 (esperado)</div>
+              </div>
+              <span class="badge badge-err" style="font-size:9px">Divergente</span>
+            </div>
+            <div class="timeline-item" style="padding:12px 18px 14px">
+              <div class="tl-dot ok"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="var(--em)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <div class="tl-body">
+                <div class="tl-title">Etiqueta VIN</div>
+                <div class="tl-meta">Compatível · Score 13 · Confiança 96.1%</div>
+                <div class="tl-value">9BD195B8XL5678302 ✓ Confere</div>
+              </div>
+              <span class="badge badge-ok" style="font-size:9px">Compatível</span>
+            </div>
+            <div class="timeline-item" style="padding:12px 18px 14px">
+              <div class="tl-dot ok"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="var(--em)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <div class="tl-body">
+                <div class="tl-title">Vidros</div>
+                <div class="tl-meta">Compatível · Score 8 · Confiança 91.8%</div>
+                <div class="tl-value">DOT 451 AS1 · 6/6 vidros verificados</div>
+              </div>
+              <span class="badge badge-ok" style="font-size:9px">Compatível</span>
+            </div>
+            <div class="timeline-item" style="padding:12px 18px 14px">
+              <div class="tl-dot ok"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="var(--em)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <div class="tl-body">
+                <div class="tl-title">Placa traseira (OCR)</div>
+                <div class="tl-meta">Compatível · Score 2 · Confiança 99.9%</div>
+                <div class="tl-value">GHT-3A12 ✓ Confere com RENAVAM</div>
+              </div>
+              <span class="badge badge-ok" style="font-size:9px">Compatível</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dados do veículo (RENAVAM) -->
+        <div class="panel">
+          <div class="panel-header"><div><div class="panel-title">Dados do veículo · RENAVAM</div><div class="panel-subtitle">Consultado em 23/03/2026 14:22</div></div><span class="badge badge-ok">Sem restrições</span></div>
+          <div class="panel-body">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 24px">
+              <div class="data-row"><span class="data-label">Marca / Modelo</span><span class="data-value">Honda Civic EXL</span></div>
+              <div class="data-row"><span class="data-label">Ano/Modelo</span><span class="data-value">2020/2020</span></div>
+              <div class="data-row"><span class="data-label">RENAVAM</span><span class="data-mono">01123456789</span></div>
+              <div class="data-row"><span class="data-label">Categoria</span><span class="data-value">Particular</span></div>
+              <div class="data-row"><span class="data-label">Combustível</span><span class="data-value">Flex</span></div>
+              <div class="data-row"><span class="data-label">Cor</span><span class="data-value">Prata</span></div>
+              <div class="data-row"><span class="data-label">Chassi (RENAVAM)</span><span class="data-mono" style="color:var(--em)">9BD195B8XL56…302</span></div>
+              <div class="data-row"><span class="data-label">Chassi (verificado)</span><span class="data-mono" style="color:var(--co-400)">9BD195A4XL56…302</span></div>
+              <div class="data-row"><span class="data-label">Proprietário</span><span class="data-value">M. O. Souza</span></div>
+              <div class="data-row"><span class="data-label">UF</span><span class="data-value">ES</span></div>
+              <div class="data-row"><span class="data-label">CRLV</span><span class="data-value" style="color:var(--em)">Válido · 2026</span></div>
+              <div class="data-row"><span class="data-label">Seguro obrigatório</span><span class="data-value" style="color:var(--em)">Ativo</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right column -->
+      <div>
+
+        <!-- Metadados da verificação -->
+        <div class="panel">
+          <div class="panel-header"><div class="panel-title">Metadados</div></div>
+          <div class="panel-body">
+            <div class="data-row"><span class="data-label">ID da verificação</span><span class="data-mono" style="color:var(--pri-600)">#VERI-9928-X</span></div>
+            <div class="data-row"><span class="data-label">Data / Hora</span><span class="data-value">23/03/2026 · 14:22</span></div>
+            <div class="data-row"><span class="data-label">Agente</span><span class="data-value">Ag. Lima · MAT-22041</span></div>
+            <div class="data-row"><span class="data-label">Unidade</span><span class="data-value">Cariacica · ES</span></div>
+            <div class="data-row"><span class="data-label">Duração</span><span class="data-mono">4m12s</span></div>
+            <div class="data-row"><span class="data-label">Qualidade imagens</span><span class="data-value" style="color:var(--em)">96.4%</span></div>
+            <div class="data-row"><span class="data-label">Assinatura</span><span class="badge badge-ok" style="font-size:9px">ICP-Brasil</span></div>
+            <div class="data-row"><span class="data-label">Status</span><span class="badge badge-err" style="font-size:9px">Divergente</span></div>
+          </div>
+        </div>
+
+        <!-- Timeline processo -->
+        <div class="panel">
+          <div class="panel-header"><div class="panel-title">Progresso do processo</div></div>
+          <div class="panel-body">
+            <div style="display:flex;justify-content:space-between;position:relative;margin-bottom:8px">
+              <div style="position:absolute;top:9px;left:9px;right:9px;height:2px;background:var(--sur-high)"></div>
+              <div style="position:absolute;top:9px;left:9px;width:60%;height:2px;background:var(--pri-400)"></div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:4px;position:relative;z-index:1">
+                <div style="width:20px;height:20px;border-radius:50%;background:var(--em-400);display:flex;align-items:center;justify-content:center"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+                <span class="mono-sm">14:14<br>Início</span>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:4px;position:relative;z-index:1">
+                <div style="width:20px;height:20px;border-radius:50%;background:var(--em-400);display:flex;align-items:center;justify-content:center"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+                <span class="mono-sm">14:18<br>Marcações</span>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:4px;position:relative;z-index:1">
+                <div style="width:20px;height:20px;border-radius:50%;background:var(--co-50);border:2px solid var(--co-400);display:flex;align-items:center;justify-content:center"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--co-400)" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+                <span class="mono-sm" style="color:var(--co-400)">14:22<br>Divergência</span>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:4px;position:relative;z-index:1">
+                <div style="width:20px;height:20px;border-radius:50%;background:var(--sur-high);border:2px solid var(--border)"></div>
+                <span class="mono-sm">–<br>Assinatura</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Integridade -->
+        <div class="panel">
+          <div class="panel-header"><div class="panel-title">Integridade do dossiê</div></div>
+          <div class="panel-body">
+            <div class="sha-box" onclick="copySHA()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-s)" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+              <div style="flex:1;min-width:0">
+                <div style="font-size:9px;font-weight:700;color:var(--text-s);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px">SHA-256</div>
+                <div class="sha-text" id="sha-val">a7b3c44298fc1c149afbf4c8996fb9242...</div>
+              </div>
+              <svg id="sha-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-s)" stroke-width="1.8"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+            </div>
+            <div style="margin-top:10px;display:flex;flex-direction:column;gap:5px">
+              <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--sur-low)"><span style="font-size:11px;color:var(--text-m)">Assinatura digital</span><span class="badge badge-err" style="font-size:9px">Pendente</span></div>
+              <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--sur-low)"><span style="font-size:11px;color:var(--text-m)">Registro no blockchain</span><span class="badge badge-err" style="font-size:9px">Pendente</span></div>
+              <div style="display:flex;justify-content:space-between;padding:6px 0"><span style="font-size:11px;color:var(--text-m)">Notificação DENATRAN</span><span class="badge badge-ok" style="font-size:9px">Enviada</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ações -->
+        <div class="panel">
+          <div class="panel-header"><div class="panel-title">Ações</div></div>
+          <div class="panel-body" style="display:flex;flex-direction:column;gap:8px">
+            <button class="btn-primary" style="width:100%;justify-content:center">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Assinar laudo
+            </button>
+            <button class="btn-secondary" style="width:100%;justify-content:center">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Exportar PDF completo
+            </button>
+            <button class="btn-secondary" style="width:100%;justify-content:center" onclick="goTo('inteligencia')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+              Ver conexões no grafo
+            </button>
+            <button class="btn-danger" style="width:100%;justify-content:center">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/></svg>
+              Escalar para investigação
+            </button>
+          </div>
+        </div>
+
+      </div><!-- /right col -->
+    </div><!-- /detail-grid -->
+
+    <!-- Footer -->
+    <div style="display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid var(--sur-high)">
+      <span class="mono-sm">V3R1 DETALHE · #VERI-9928-X</span>
+      <span class="mono-sm">Ag. Lima · <span style="color:var(--co-400)">DIVERGENTE</span></span>
+    </div>
+
+  </main>
+</div>
+
+<!-- Image overlay -->
+<div id="imgOverlay" onclick="closeImg()">
+  <img id="overlayImg" src="" alt="">
+</div>
+
+<script>
+function goTo(r){try{if(window.parent&&window.parent.goTo)window.parent.goTo(r);else{const M={'visao-geral':'dash-01-visao-geral.html','monitoramento':'dash-02-monitoramento.html','tatica':'dash-03-tatica.html','inteligencia':'dash-04-inteligencia.html','detalhe':'dash-05-detalhe.html','performance':'dash-06-performance.html','busca':'dash-07-busca.html','configuracoes':'dash-08-configuracoes.html'};if(M[r])window.location.href=M[r];}}catch(e){window.postMessage({goTo:r},'*')}}
+
+function openImg(src){
+  document.getElementById('overlayImg').src=src;
+  document.getElementById('imgOverlay').classList.add('open');
+}
+function closeImg(){document.getElementById('imgOverlay').classList.remove('open');}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeImg();});
+
+function copySHA(){
+  const sha='a7b3c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855';
+  navigator.clipboard&&navigator.clipboard.writeText(sha);
+  const box=document.querySelector('.sha-box');
+  const icon=document.getElementById('sha-icon');
+  box.style.background='var(--em-50)';
+  icon.innerHTML='<polyline points="20 6 9 17 4 12"/>';
+  icon.style.stroke='var(--em)';
+  setTimeout(()=>{box.style.background='';icon.innerHTML='<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>';icon.style.stroke='';},2000);
+}
+</script>
+</body>
+</html>
