@@ -572,13 +572,9 @@ function doLogin() {
     btn.classList.remove('loading');
 
     // Aceita mat+senha demo OU qualquer mat com pwd não vazia (protótipo)
-    if (mat && pwd) {
+    if (mat === 'veri' && pwd === 'sejaveri') {
       // Simula 2FA para perfis Admin
-      if (mat.startsWith('ADM') || mat === 'MAT-00001') {
-        show2FA();
-      } else {
-        doSuccess();
-      }
+      show2FA();
     } else {
       attempts++;
       document.getElementById('senha').classList.add('error');
@@ -586,7 +582,7 @@ function doLogin() {
       errPwd.classList.add('show');
       const left = Math.max(0, 5 - attempts);
       document.getElementById('attempts-left').textContent = left > 0 ? `${left} tentativas restantes.` : 'Conta bloqueada.';
-      if (attempts >= 5) {0
+      if (attempts >= 5) {
         document.getElementById('btn-login').disabled = true;
         showToast('Conta bloqueada após 5 tentativas.', 'error');
       }
@@ -631,12 +627,18 @@ function doSuccess() {
 
 function doLoginGovBr() {
   const btn = document.querySelector('.btn-govbr');
-  btn.style.opacity = '.6';btn.style.pointerEvents = 'none';
-  btn.innerHTML = '<div style="width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite"></div><span>Redirecionando para GOV.BR...</span>';
+
+  btn.style.opacity = '.6';
+  btn.style.pointerEvents = 'none';
+
+  btn.innerHTML = '<span>Integração GOV.BR em desenvolvimento</span>';
+
   setTimeout(() => {
-    btn.style.opacity = '';btn.style.pointerEvents = '';
-    doSuccess();
-  }, 1500);
+    btn.style.opacity = '';
+    btn.style.pointerEvents = '';
+    
+    showToast('Login via GOV.BR indisponível no momento.', 'error');
+  }, 1200);
 }
 
 function clearErrors() {
