@@ -77,6 +77,7 @@ html,body{
   padding:48px 56px;
   border-right:1px solid rgba(255,255,255,.06);
   position:relative;overflow:hidden;
+  align-items: end;
 }
 
 /* animated grid lines on left */
@@ -87,7 +88,7 @@ html,body{
   pointer-events:none;
 }
 
-.brand-top{display:flex;align-items:center;gap:14px;justify-content: start;}
+.brand-top{display:flex;align-items:center;gap:14px;}
 .brand-mark{
   /* width:44px;height:44px;border-radius:14px; */
   background:linear-gradient(135deg,var(--pri-400),var(--pri-600));
@@ -146,8 +147,8 @@ html,body{
 
 /* ── Right panel (form) ───────────────────────────────────── */
 .right-panel{
-  width:460px;flex-shrink:0;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  flex:1;flex-shrink:0;
+  display:flex;flex-direction:column;align-items:start;justify-content:center;
   padding:40px 48px;
   position:relative;
 }
