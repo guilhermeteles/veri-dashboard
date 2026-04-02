@@ -622,8 +622,7 @@ function topbarControls(rota) {
     case 'monitoramento': {
       const tots = DB.totais();
       return `
-        ${livePill()}
-        ${divider()}
+        
         <div class="topbar-stats">
           <div class="ts-cell">
             <span class="ts-val">${tots.verificacoes}</span>
@@ -647,7 +646,10 @@ function topbarControls(rota) {
           </div>
         </div>
         ${divider()}
-        ${syncSpan()}`;
+        ${syncSpan()}
+        ${divider()}
+        ${livePill()}
+        `;
     }
 
     case 'tatica':
