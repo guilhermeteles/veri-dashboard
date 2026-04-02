@@ -17,55 +17,21 @@
   --text-h:#181c21;--text-b:#464651;--text-m:#595c7c;--text-s:#767682;--border:#d8dae8;
   --font-d:'Plus Jakarta Sans',sans-serif;--font-b:'DM Sans',sans-serif;--font-m:'JetBrains Mono',monospace;
   --sh-card:0 1px 3px rgba(37,45,122,.08),0 4px 16px rgba(37,45,122,.04);
-  --sidebar-w:220px;--topbar-h:52px;
 }
-html,body{height:100%;overflow:hidden;font-family:var(--font-b);background:var(--bg);color:var(--text-h)}
-.dash-shell{display:grid;grid-template-columns:var(--sidebar-w) 1fr;grid-template-rows:var(--topbar-h) 1fr;grid-template-areas:"sidebar topbar" "sidebar content";height:100vh;overflow:hidden}
-.rainbow-bar{position:fixed;top:0;left:0;right:0;height:3px;z-index:100;background:linear-gradient(90deg,var(--pri-800),var(--pri-400),var(--em-400),var(--pri-400),var(--pri-800));box-shadow:0 1px 8px rgba(37,45,122,.25)}
-.sidebar{grid-area:sidebar;background:var(--pri-800);display:flex;flex-direction:column;height:100vh;box-shadow:2px 0 24px rgba(37,45,122,.08);padding-top:3px;position:relative;z-index:50;overflow:hidden}
-.sb-logo{display:flex;align-items:center;gap:10px;padding:16px 18px 14px;border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0}
-.sb-logo-mark{width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,var(--pri-400),var(--pri-600));border:1px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.sb-logo-text{font-family:var(--font-d);font-size:15px;font-weight:800;color:#fff;letter-spacing:2px}
-.sb-logo-badge{font-family:var(--font-m);font-size:7px;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:1px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:4px;padding:1px 5px;margin-left:auto}
-.sb-nav{flex:1;padding:10px;display:flex;flex-direction:column;gap:2px;overflow-y:auto}
-.sb-nav::-webkit-scrollbar{display:none}
-.sb-section-label{font-family:var(--font-m);font-size:8px;font-weight:700;color:rgba(255,255,255,.25);letter-spacing:1.5px;text-transform:uppercase;padding:8px 8px 4px}
-.sb-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;font-size:12px;font-weight:500;color:rgba(255,255,255,.5);cursor:pointer;transition:all .15s;text-decoration:none;border:none;background:none;width:100%;text-align:left}
-.sb-item:hover{background:rgba(255,255,255,.06);color:rgba(255,255,255,.8)}
-.sb-item.active{background:rgba(92,102,212,.25);color:#fff;font-weight:600;border:1px solid rgba(92,102,212,.35)}
-.sb-item svg{flex-shrink:0;opacity:.7}
-.sb-item.active svg{opacity:1}
-.sb-item-label{flex:1}
-.sb-badge{font-family:var(--font-m);font-size:8px;font-weight:700;background:var(--co-400);color:#fff;border-radius:9999px;padding:1px 6px;min-width:16px;text-align:center}
-.sb-footer{border-top:1px solid rgba(255,255,255,.08);padding:12px 10px;flex-shrink:0}
-.sb-user{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;cursor:pointer}
-.sb-user:hover{background:rgba(255,255,255,.06)}
-.sb-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--pri-400),var(--pri-600));border:1.5px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--font-d);font-size:11px;font-weight:800;color:#fff}
-.sb-user-info{flex:1;min-width:0}
-.sb-user-name{font-size:11px;font-weight:600;color:rgba(255,255,255,.85);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sb-user-role{font-family:var(--font-m);font-size:8px;color:rgba(255,255,255,.35);margin-top:1px}
-.sb-online{width:7px;height:7px;border-radius:50%;background:var(--em-400);flex-shrink:0}
-.topbar{grid-area:topbar;height:var(--topbar-h);background:rgba(248,249,255,.92);backdrop-filter:blur(18px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;padding:0 24px;position:sticky;top:0;z-index:40;padding-top:3px}
-.topbar-title{font-family:var(--font-d);font-size:15px;font-weight:800;color:var(--text-h);flex:1}
-.topbar-divider{width:1px;height:20px;background:var(--border)}
-.topbar-btn{width:34px;height:34px;border-radius:10px;background:var(--sur-low);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;color:var(--text-m)}
-.topbar-btn:hover{background:var(--sur-mid)}
-.topbar-avatar{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--pri-50),var(--pri-100));border:1.5px solid var(--pri-100);display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-size:11px;font-weight:800;color:var(--pri-800);cursor:pointer}
-.content{grid-area:content;overflow-y:auto;padding:20px 24px;background:var(--bg);display:flex;flex-direction:column;gap:14px}
-.content::-webkit-scrollbar{width:6px}
-.content::-webkit-scrollbar-track{background:transparent}
-.content::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+html,body{height:100%;overflow-y:auto;font-family:var(--font-b);background:var(--bg);color:var(--text-h)}
+body::-webkit-scrollbar{width:6px}
+body::-webkit-scrollbar-track{background:transparent}
+body::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.page{padding:20px 24px;display:flex;flex-direction:column;gap:14px}
 
 /* Search bar */
 .search-wrap{background:var(--surface);border:1.5px solid var(--border);border-radius:14px;padding:14px 18px;box-shadow:var(--sh-card)}
 .search-input-row{display:flex;align-items:center;gap:12px;margin-bottom:12px}
 .search-input{flex:1;border:none;outline:none;font-family:var(--font-b);font-size:14px;color:var(--text-h);background:transparent}
 .search-input::placeholder{color:var(--text-s)}
-.search-icon{color:var(--text-s);flex-shrink:0}
 .search-kbd{font-family:var(--font-m);font-size:10px;color:var(--text-s);background:var(--sur-mid);border:1px solid var(--border);border-radius:5px;padding:2px 7px;flex-shrink:0}
-
 .filter-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.filter-label{font-size:11px;font-weight:700;color:var(--text-s);margin-right:4px}
+.filter-label{font-size:11px;font-weight:700;color:var(--text-s)}
 .filter-pill{font-family:var(--font-b);font-size:11px;font-weight:600;padding:4px 12px;border-radius:9999px;border:1px solid var(--border);color:var(--text-m);cursor:pointer;background:var(--surface);transition:all .15s}
 .filter-pill:hover{background:var(--sur-low);color:var(--text-h)}
 .filter-pill.active{background:var(--pri-800);color:#fff;border-color:var(--pri-800)}
@@ -74,300 +40,299 @@ html,body{height:100%;overflow:hidden;font-family:var(--font-b);background:var(-
 .filter-pill.err{background:var(--co-50);color:var(--co-800);border-color:rgba(229,34,7,.15)}
 .filter-sep{width:1px;height:16px;background:var(--border)}
 
-/* Results panel */
+/* Panel */
 .panel{background:var(--surface);border-radius:14px;border:1px solid var(--border);box-shadow:var(--sh-card);overflow:hidden}
 .panel-header{padding:14px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--sur-low)}
 .panel-title{font-family:var(--font-d);font-size:13px;font-weight:800;color:var(--text-h)}
 .panel-subtitle{font-size:10px;color:var(--text-s);margin-top:1px}
 
+/* Table */
 .data-table{width:100%;border-collapse:collapse}
 .data-table thead th{font-size:10px;font-weight:700;color:var(--text-s);text-align:left;text-transform:uppercase;letter-spacing:.7px;padding:10px 14px;background:var(--sur-low);border-bottom:1px solid var(--border);white-space:nowrap;cursor:pointer;user-select:none}
-.data-table thead th:hover{color:var(--text-h);background:var(--sur-mid)}
+.data-table thead th:hover{background:var(--sur-mid)}
 .data-table thead th.sorted{color:var(--pri-600)}
 .data-table tbody td{font-size:12px;color:var(--text-b);padding:11px 14px;border-bottom:1px solid var(--sur-low);transition:background .1s}
 .data-table tbody tr:last-child td{border-bottom:none}
 .data-table tbody tr:hover td{background:var(--sur-low);cursor:pointer}
 .data-table tbody tr.highlight td{background:rgba(229,34,7,.03)}
 
+/* Badge + score */
 .badge{display:inline-flex;align-items:center;gap:4px;font-family:var(--font-b);font-size:10px;font-weight:700;padding:2px 8px;border-radius:9999px}
 .badge-ok{background:var(--em-50);color:var(--em);border:1px solid rgba(22,136,33,.15)}
 .badge-warn{background:var(--am-50);color:var(--am-800);border:1px solid rgba(196,140,20,.2)}
 .badge-err{background:var(--co-50);color:var(--co-800);border:1px solid rgba(229,34,7,.15)}
-.badge-info{background:var(--pri-50);color:var(--pri-600);border:1px solid var(--pri-100)}
-
-.mono{font-family:var(--font-m);font-size:11px;color:var(--text-m)}
-.mono-sm{font-family:var(--font-m);font-size:9px;color:var(--text-s)}
-
-.btn-primary{background:linear-gradient(135deg,var(--pri-800),var(--pri-600));color:#fff;border-radius:9999px;padding:7px 16px;font-family:var(--font-b);font-size:12px;font-weight:600;box-shadow:0 4px 12px rgba(37,45,122,.25);cursor:pointer;display:inline-flex;align-items:center;gap:7px;border:none;transition:opacity .15s}
-.btn-secondary{background:var(--sur-mid);border:1px solid var(--border);border-radius:9999px;padding:6px 14px;font-size:12px;font-weight:600;color:var(--text-b);cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:background .15s}
-.btn-secondary:hover{background:var(--sur-high)}
-
-/* Score pill */
 .score-pill{font-family:var(--font-m);font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px}
 .score-ok{background:var(--em-50);color:var(--em)}
 .score-warn{background:var(--am-50);color:var(--am-800)}
 .score-err{background:var(--co-50);color:var(--co-800)}
 
-/* Pagination */
-.pagination{display:flex;align-items:center;gap:4px;justify-content:center;padding:12px 0}
-.page-btn{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--font-m);font-size:11px;font-weight:700;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--text-m);transition:all .15s}
-.page-btn:hover{background:var(--sur-low);color:var(--text-h)}
-.page-btn.active{background:var(--pri-800);color:#fff;border-color:var(--pri-800)}
-.page-btn.dots{border-color:transparent;background:none;cursor:default;color:var(--text-s)}
+.mono{font-family:var(--font-m);font-size:11px;color:var(--text-m)}
+.mono-sm{font-family:var(--font-m);font-size:9px;color:var(--text-s)}
 
-/* Stats summary */
-.search-stats{display:flex;gap:20px;align-items:center}
+/* Buttons */
+.btn-primary{background:linear-gradient(135deg,var(--pri-800),var(--pri-600));color:#fff;border-radius:9999px;padding:7px 16px;font-family:var(--font-b);font-size:12px;font-weight:600;box-shadow:0 4px 12px rgba(37,45,122,.25);cursor:pointer;display:inline-flex;align-items:center;gap:7px;border:none}
+.btn-secondary{background:var(--sur-mid);border:1px solid var(--border);border-radius:9999px;padding:6px 14px;font-size:11px;font-weight:600;color:var(--text-b);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.btn-secondary:hover{background:var(--sur-high)}
+
+/* Stats strip */
+.stats-strip{display:flex;gap:20px;align-items:center}
 .stat-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-m)}
 .stat-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 
-/* Detail drawer */
-.detail-hint{display:flex;align-items:center;gap:8px;padding:12px 18px;background:var(--pri-50);border-bottom:1px solid var(--pri-100)}
-.detail-hint-text{font-size:11px;color:var(--pri-600)}
+/* Pagination */
+.pagination{display:flex;align-items:center;gap:4px;justify-content:center;padding:12px 0}
+.page-btn{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--font-m);font-size:11px;font-weight:700;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--text-m);transition:all .15s}
+.page-btn:hover{background:var(--sur-low)}
+.page-btn.active{background:var(--pri-800);color:#fff;border-color:var(--pri-800)}
+.page-btn.dots{border-color:transparent;background:none;cursor:default;color:var(--text-s)}
 
-/* Th sort icon */
-.sort-icon{display:inline-block;margin-left:4px;opacity:.4;font-size:10px}
-.sorted .sort-icon{opacity:1}
+/* Footer */
+.footer{display:flex;justify-content:space-between;padding:4px 0;border-top:1px solid var(--sur-high)}
 </style>
 </head>
 <body>
-<div class="rainbow-bar"></div>
-<div class="dash-shell">
+<div class="page">
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <div class="sb-logo">
-      <img src="logo-white.svg" alt="">
-      <!-- <span class="sb-logo-text">V3R1</span> -->
-      <span class="sb-logo-badge">WEB</span>
+  <!-- Search bar -->
+  <div class="search-wrap">
+    <div class="search-input-row">
+      <svg style="color:var(--text-s);flex-shrink:0" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input class="search-input" id="searchInput" type="text" placeholder="Buscar por VIN, placa, modelo, agente, unidade..." oninput="doSearch(this.value)">
+      <span class="search-kbd">⌘K</span>
+      <button class="btn-primary" onclick="doSearch(document.getElementById('searchInput').value)">Buscar</button>
     </div>
-    <nav class="sb-nav">
-      <div class="sb-section-label">Principal</div>
-      <button class="sb-item" onclick="goTo('visao-geral')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg><span class="sb-item-label">Visão geral</span></button>
-      <button class="sb-item" onclick="goTo('monitoramento')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="2"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg><span class="sb-item-label">Monitoramento</span><span class="sb-badge">3</span></button>
-      <button class="sb-item" onclick="goTo('tatica')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg><span class="sb-item-label">Análise tática</span></button>
-      <button class="sb-item" onclick="goTo('inteligencia')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg><span class="sb-item-label">Inteligência</span></button>
-      <div class="sb-section-label" style="margin-top:4px">Operacional</div>
-      <button class="sb-item active" onclick="goTo('busca')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span class="sb-item-label">Busca avançada</span></button>
-      <button class="sb-item" onclick="goTo('performance')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span class="sb-item-label">Performance</span></button>
-      <div class="sb-section-label" style="margin-top:4px">Sistema</div>
-      <button class="sb-item" onclick="goTo('configuracoes')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12.22 2h-.44a2 2 0 00-2 2v.18a2 2 0 01-1 1.73l-.43.25a2 2 0 01-2 0l-.15-.08a2 2 0 00-2.73.73l-.22.38a2 2 0 00.73 2.73l.15.1a2 2 0 011 1.72v.51a2 2 0 01-1 1.74l-.15.09a2 2 0 00-.73 2.73l.22.38a2 2 0 002.73.73l.15-.08a2 2 0 012 0l.43.25a2 2 0 011 1.73V20a2 2 0 002 2h.44a2 2 0 002-2v-.18a2 2 0 011-1.73l.43-.25a2 2 0 012 0l.15.08a2 2 0 002.73-.73l.22-.39a2 2 0 00-.73-2.73l-.15-.08a2 2 0 01-1-1.74v-.5a2 2 0 011-1.74l.15-.09a2 2 0 00.73-2.73l-.22-.38a2 2 0 00-2.73-.73l-.15.08a2 2 0 01-2 0l-.43-.25a2 2 0 01-1-1.73V4a2 2 0 00-2-2z"/><circle cx="12" cy="12" r="3"/></svg><span class="sb-item-label">Configurações</span></button>
-    </nav>
-    <div class="sb-footer">
-      <div class="sb-user">
-        <div class="sb-avatar">AR</div>
-        <div class="sb-user-info"><div class="sb-user-name">Analista Rocha</div><div class="sb-user-role">INVESTIGADOR · ES</div></div>
-        <div class="sb-online"></div>
+    <div class="filter-row">
+      <span class="filter-label">Resultado:</span>
+      <button class="filter-pill active" id="fp-todos" onclick="setFilter('todos',this)">Todos</button>
+      <button class="filter-pill ok"   onclick="setFilter('ok',this)">✓ Compatível</button>
+      <button class="filter-pill warn" onclick="setFilter('warn',this)">⚠ Atenção</button>
+      <button class="filter-pill err"  onclick="setFilter('err',this)">✕ Divergente</button>
+      <div class="filter-sep"></div>
+      <span class="filter-label">Unidade:</span>
+      <select id="filter-unidade" style="font-size:11px;font-weight:600;color:var(--text-b);background:var(--sur-low);border:1px solid var(--border);border-radius:9999px;padding:4px 12px;cursor:pointer" onchange="doSearch(document.getElementById('searchInput').value)">
+        <option value="">Todas</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-strip" id="stats-strip"></div>
+
+  <!-- Results -->
+  <div class="panel">
+    <div class="panel-header">
+      <div>
+        <div class="panel-title">Resultados · <span id="results-count">0</span> verificações</div>
+        <div class="panel-subtitle" id="results-sub"></div>
       </div>
-    </div>
-  </aside>
-
-  <!-- TOPBAR -->
-  <header class="topbar">
-    <h1 class="topbar-title">Busca avançada</h1>
-    <div class="topbar-divider"></div>
-    <div class="search-stats">
-      <div class="stat-item"><div class="stat-dot" style="background:var(--pri-400)"></div>1.247 verificações</div>
-      <div class="stat-item"><div class="stat-dot" style="background:var(--co-400)"></div>52 divergentes</div>
-      <div class="stat-item"><div class="stat-dot" style="background:var(--am-400)"></div>89 atenção</div>
-    </div>
-    <div class="topbar-divider"></div>
-    <button class="btn-secondary" style="font-size:11px;padding:5px 12px" onclick="exportResults()">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      Exportar CSV
-    </button>
-    <button class="topbar-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg></button>
-    <div class="topbar-avatar">AR</div>
-  </header>
-
-  <!-- CONTENT -->
-  <main class="content">
-
-    <!-- Search bar -->
-    <div class="search-wrap">
-      <div class="search-input-row">
-        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input class="search-input" id="searchInput" type="text" placeholder="Buscar por VIN, placa, modelo, agente..." oninput="doSearch(this.value)">
-        <span class="search-kbd">⌘K</span>
-        <button class="btn-primary" style="font-size:12px;padding:6px 18px" onclick="doSearch(document.getElementById('searchInput').value)">Buscar</button>
-      </div>
-      <div class="filter-row">
-        <span class="filter-label">Resultado:</span>
-        <button class="filter-pill active" onclick="setFilter('todos',this)">Todos</button>
-        <button class="filter-pill ok" onclick="setFilter('ok',this)">✓ Compatível</button>
-        <button class="filter-pill warn" onclick="setFilter('warn',this)">⚠ Atenção</button>
-        <button class="filter-pill err" onclick="setFilter('err',this)">✕ Divergente</button>
-        <div class="filter-sep"></div>
-        <span class="filter-label">Período:</span>
-        <button class="filter-pill" onclick="setPeriod('7',this)">7 dias</button>
-        <button class="filter-pill active" id="fp-30" onclick="setPeriod('30',this)">30 dias</button>
-        <button class="filter-pill" onclick="setPeriod('90',this)">90 dias</button>
-        <div class="filter-sep"></div>
-        <span class="filter-label">Unidade:</span>
-        <select style="font-size:11px;font-weight:600;color:var(--text-b);background:var(--sur-low);border:1px solid var(--border);border-radius:9999px;padding:4px 12px;cursor:pointer" onchange="renderTable()">
-          <option value="">Todas</option>
-          <option>Vitória</option><option>Serra</option><option>Cariacica</option><option>Vila Velha</option>
-        </select>
+      <div style="display:flex;gap:8px;align-items:center">
+        <span class="mono-sm" id="query-display"></span>
+        <button class="btn-secondary" onclick="clearSearch()">Limpar filtros</button>
+        <button class="btn-secondary" onclick="exportCSV()">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Exportar CSV
+        </button>
       </div>
     </div>
 
-    <!-- Results -->
-    <div class="panel">
-      <div class="panel-header">
-        <div>
-          <div class="panel-title" id="results-title">Resultados · <span id="results-count">0</span> verificações</div>
-          <div class="panel-subtitle" id="results-sub">Mostrando página 1 de 1</div>
-        </div>
-        <div style="display:flex;gap:8px;align-items:center">
-          <span class="mono-sm" id="query-display"></span>
-          <button class="btn-secondary" style="font-size:11px;padding:5px 12px" onclick="clearSearch()">Limpar filtros</button>
-        </div>
-      </div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th onclick="sortBy('vin')">VIN <span style="opacity:.4">↕</span></th>
+          <th onclick="sortBy('veiculo')">Veículo <span style="opacity:.4">↕</span></th>
+          <th onclick="sortBy('data')" class="sorted" id="th-data">Data/Hora <span style="opacity:1">↓</span></th>
+          <th onclick="sortBy('agente')">Agente <span style="opacity:.4">↕</span></th>
+          <th onclick="sortBy('unidade')">Unidade <span style="opacity:.4">↕</span></th>
+          <th onclick="sortBy('score')">Score <span style="opacity:.4">↕</span></th>
+          <th>Resultado</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="results-body"></tbody>
+    </table>
+    <div class="pagination" id="pagination"></div>
+  </div>
 
-      <table class="data-table" id="results-table">
-        <thead>
-          <tr>
-            <th onclick="sortBy('vin')">VIN <span class="sort-icon">↕</span></th>
-            <th onclick="sortBy('veiculo')">Veículo <span class="sort-icon">↕</span></th>
-            <th onclick="sortBy('data')" class="sorted">Data/Hora <span class="sort-icon">↓</span></th>
-            <th onclick="sortBy('agente')">Agente <span class="sort-icon">↕</span></th>
-            <th onclick="sortBy('unidade')">Unidade <span class="sort-icon">↕</span></th>
-            <th onclick="sortBy('score')">Score <span class="sort-icon">↕</span></th>
-            <th>Resultado</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody id="results-body"></tbody>
-      </table>
+  <div class="footer">
+    <span class="mono-sm">V3R1 BUSCA · <span id="footer-versao"></span></span>
+    <span class="mono-sm" id="fbar"></span>
+  </div>
 
-      <div class="pagination" id="pagination"></div>
-    </div>
-
-    <!-- Footer -->
-    <div style="display:flex;justify-content:space-between;padding:4px 0;border-top:1px solid var(--sur-high)">
-      <span class="mono-sm">V3R1 BUSCA · v2.4.1</span>
-      <span class="mono-sm" id="fbar-busca">SYNC: – · <span style="color:var(--em-400)">ONLINE</span></span>
-    </div>
-  </main>
 </div>
 
+<script src="data.js"></script>
 <script>
-const TODOS = [
-  {vin:'9BWZZ377ZMG012967',veiculo:'VW Gol 1.0 2019',data:'23/03 14:35',ts:new Date('2026-03-23T14:35:00'),agente:'Ag. Santos',unidade:'Vitória',score:12,status:'ok'},
-  {vin:'9BF1234AXM5678821',veiculo:'Ford Ka SE 2021',data:'23/03 14:22',ts:new Date('2026-03-23T14:22:00'),agente:'Ag. Lima',unidade:'Cariacica',score:61,status:'warn'},
-  {vin:'93HRV850NMG234412',veiculo:'Honda HR-V EX 2022',data:'23/03 13:58',ts:new Date('2026-03-23T13:58:00'),agente:'Ag. Santos',unidade:'Serra',score:8,status:'ok'},
-  {vin:'9BD195A4XL5678302',veiculo:'Fiat Argo 1.3 2020',data:'23/03 13:41',ts:new Date('2026-03-23T13:41:00'),agente:'Ag. Costa',unidade:'Vila Velha',score:87,status:'err'},
-  {vin:'9BR53BXXXMG123118',veiculo:'Toyota Corolla 2023',data:'23/03 13:15',ts:new Date('2026-03-23T13:15:00'),agente:'Ag. Rocha',unidade:'Vitória',score:5,status:'ok'},
-  {vin:'9BG65KXXXNG445001',veiculo:'Chevrolet Onix 2022',data:'23/03 12:44',ts:new Date('2026-03-23T12:44:00'),agente:'Ag. Lima',unidade:'Serra',score:22,status:'ok'},
-  {vin:'9BDKXX194MG518002',veiculo:'Fiat Strada 2022',data:'23/03 12:20',ts:new Date('2026-03-23T12:20:00'),agente:'Ag. Ferreira',unidade:'Cariacica',score:55,status:'warn'},
-  {vin:'9BWZZ123XNG789003',veiculo:'VW Polo 1.0 TSI 2023',data:'23/03 11:50',ts:new Date('2026-03-23T11:50:00'),agente:'Ag. Santos',unidade:'Vitória',score:9,status:'ok'},
-  {vin:'9BF456ZXM5111004',veiculo:'Ford Ranger 2021',data:'23/03 11:30',ts:new Date('2026-03-23T11:30:00'),agente:'Ag. Rocha',unidade:'Vila Velha',score:78,status:'err'},
-  {vin:'9BD195B8XM222005',veiculo:'Fiat Cronos 2021',data:'23/03 10:55',ts:new Date('2026-03-23T10:55:00'),agente:'Ag. Costa',unidade:'Serra',score:14,status:'ok'},
-  {vin:'9BKZZZ5UZNG333006',veiculo:'BMW 320i 2022',data:'22/03 17:10',ts:new Date('2026-03-22T17:10:00'),agente:'Ag. Ferreira',unidade:'Vitória',score:18,status:'ok'},
-  {vin:'9BWZZ9YZNK444007',veiculo:'Porsche Taycan 2024',data:'22/03 16:45',ts:new Date('2026-03-22T16:45:00'),agente:'Ag. Rocha',unidade:'Vitória',score:92,status:'err'},
-  {vin:'9BR53C2XMG555008',veiculo:'Toyota Hilux 2023',data:'22/03 15:20',ts:new Date('2026-03-22T15:20:00'),agente:'Ag. Lima',unidade:'Serra',score:33,status:'ok'},
-  {vin:'9BF789NXM5666009',veiculo:'Renault Duster 2022',data:'22/03 14:40',ts:new Date('2026-03-22T14:40:00'),agente:'Ag. Santos',unidade:'Cariacica',score:47,status:'warn'},
-  {vin:'9BGXXXXNG777010',veiculo:'Chevrolet S10 2021',data:'22/03 13:15',ts:new Date('2026-03-22T13:15:00'),agente:'Ag. Costa',unidade:'Vila Velha',score:11,status:'ok'},
-];
+function goTo(r) {
+  try {
+    if (window.parent && window.parent.goTo) window.parent.goTo(r);
+    else window.postMessage({ goTo: r }, '*');
+  } catch(e) { window.postMessage({ goTo: r }, '*'); }
+}
 
+// ── Tabela flat derivada do DB ───────────────────────────
+const TODOS = DB.verificacoes.map(v => {
+  const vei = DB.veiculo(v.veiculo_id);
+  const agt = DB.agente(v.agente_id);
+  const und = DB.unidade(v.unidade_id);
+  const d   = new Date(v.data);
+  return {
+    id:      v.id,
+    vin:     vei?.vin || '—',
+    veiculo: vei ? `${vei.marca} ${vei.modelo} ${vei.ano}` : '—',
+    data:    d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'}) + ' ' + d.toTimeString().slice(0,5),
+    ts:      d,
+    agente:  agt?.nome || '—',
+    unidade: und?.nome || '—',
+    score:   v.score,
+    status:  v.status,
+  };
+});
+
+// Popula select de unidades a partir do DB
+(function() {
+  const sel = document.getElementById('filter-unidade');
+  DB.unidades.forEach(u => {
+    const opt = document.createElement('option');
+    opt.value = u.nome; opt.textContent = u.nome;
+    sel.appendChild(opt);
+  });
+})();
+
+// Stats strip
+(function() {
+  const tots = DB.totais();
+  document.getElementById('stats-strip').innerHTML = `
+    <div class="stat-item"><div class="stat-dot" style="background:var(--pri-400)"></div>${tots.verificacoes} verificações</div>
+    <div class="stat-item"><div class="stat-dot" style="background:var(--co-400)"></div>${tots.err} divergentes</div>
+    <div class="stat-item"><div class="stat-dot" style="background:var(--am-400)"></div>${tots.warn} atenção</div>
+    <div class="stat-item"><div class="stat-dot" style="background:var(--em-400)"></div>${tots.ok} compatíveis</div>
+  `;
+})();
+
+// ── State ────────────────────────────────────────────────
 let currentFilter = 'todos';
-let currentSort = {col:'data',dir:-1};
-let currentPage = 1;
-const PER_PAGE = 8;
+let currentSort   = { col:'data', dir:-1 };
+let currentPage   = 1;
+const PER_PAGE    = 8;
 
-function scoreClass(s){return s>=75?'err':s>=50?'warn':'ok'}
-function badgeClass(s){return s==='ok'?'badge-ok':s==='warn'?'badge-warn':'badge-err'}
-function badgeLabel(s){return s==='ok'?'Compatível':s==='warn'?'Atenção':'Divergente'}
-function scoreStyle(s){return s>=75?'score-err':s>=50?'score-warn':'score-ok'}
+function scorePillClass(s) { return s>=75?'score-err':s>=50?'score-warn':'score-ok'; }
 
-function getFiltered(query){
-  const q=(query||'').toLowerCase().trim();
-  return TODOS.filter(r=>{
-    if(currentFilter!=='todos'&&r.status!==currentFilter)return false;
-    if(!q)return true;
-    return r.vin.toLowerCase().includes(q)||r.veiculo.toLowerCase().includes(q)||r.agente.toLowerCase().includes(q)||r.unidade.toLowerCase().includes(q);
+function getFiltered(query) {
+  const q = (query||'').toLowerCase().trim();
+  const unidade = document.getElementById('filter-unidade').value;
+  return TODOS.filter(r => {
+    if (currentFilter !== 'todos' && r.status !== currentFilter) return false;
+    if (unidade && r.unidade !== unidade) return false;
+    if (!q) return true;
+    return r.vin.toLowerCase().includes(q)
+        || r.veiculo.toLowerCase().includes(q)
+        || r.agente.toLowerCase().includes(q)
+        || r.unidade.toLowerCase().includes(q)
+        || r.id.toLowerCase().includes(q);
   });
 }
 
-function doSearch(q){
-  currentPage=1;
-  renderTable(q);
-}
+function doSearch(q) { currentPage=1; renderTable(q); }
 
-function setFilter(f,btn){
-  currentFilter=f;
-  document.querySelectorAll('.filter-pill').forEach(b=>{if(['Todos','✓ Compatível','⚠ Atenção','✕ Divergente'].some(l=>b.textContent.trim().startsWith(l.replace(/[✓⚠✕] /,'')))||b.textContent.trim()==='Todos') b.classList.remove('active')});
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  currentPage=1;
+  currentPage = 1;
   renderTable(document.getElementById('searchInput').value);
 }
 
-function setPeriod(p,btn){
-  document.querySelectorAll('.filter-row .filter-pill').forEach(b=>{if(['7 dias','30 dias','90 dias'].includes(b.textContent.trim()))b.classList.remove('active')});
-  btn.classList.add('active');
-}
-
-function sortBy(col){
-  if(currentSort.col===col)currentSort.dir*=-1;
-  else{currentSort.col=col;currentSort.dir=-1;}
-  document.querySelectorAll('.data-table thead th').forEach(th=>th.classList.remove('sorted'));
-  const idx={'vin':0,'veiculo':1,'data':2,'agente':3,'unidade':4,'score':5};
-  const ths=document.querySelectorAll('.data-table thead th');
-  if(ths[idx[col]])ths[idx[col]].classList.add('sorted');
+const SORT_IDX = {vin:0,veiculo:1,data:2,agente:3,unidade:4,score:5};
+function sortBy(col) {
+  if (currentSort.col===col) currentSort.dir*=-1;
+  else { currentSort.col=col; currentSort.dir=-1; }
+  document.querySelectorAll('.data-table thead th').forEach(th => th.classList.remove('sorted'));
+  const ths = document.querySelectorAll('.data-table thead th');
+  if (ths[SORT_IDX[col]]) ths[SORT_IDX[col]].classList.add('sorted');
   renderTable(document.getElementById('searchInput').value);
 }
 
-function renderTable(query){
-  query=query||document.getElementById('searchInput').value||'';
-  let data=getFiltered(query);
-  data.sort((a,b)=>{
-    let va=a[currentSort.col],vb=b[currentSort.col];
-    if(currentSort.col==='score'){va=+va;vb=+vb;}
-    if(currentSort.col==='data'){va=a.ts;vb=b.ts;}
-    if(va<vb)return currentSort.dir;
-    if(va>vb)return -currentSort.dir;
+function renderTable(query) {
+  query = query ?? document.getElementById('searchInput').value ?? '';
+  let data = getFiltered(query);
+  data.sort((a,b) => {
+    let va = a[currentSort.col], vb = b[currentSort.col];
+    if (currentSort.col==='score') { va=+va; vb=+vb; }
+    if (currentSort.col==='data')  { va=a.ts; vb=b.ts; }
+    if (va<vb) return currentSort.dir;
+    if (va>vb) return -currentSort.dir;
     return 0;
   });
-  const total=data.length;
-  const pages=Math.max(1,Math.ceil(total/PER_PAGE));
-  if(currentPage>pages)currentPage=1;
-  const slice=data.slice((currentPage-1)*PER_PAGE,currentPage*PER_PAGE);
-  document.getElementById('results-count').textContent=total;
-  document.getElementById('results-sub').textContent=`Mostrando página ${currentPage} de ${pages}`;
-  document.getElementById('query-display').textContent=query?`"${query}"`:'';
-  const tbody=document.getElementById('results-body');
-  tbody.innerHTML=slice.map(r=>`
-    <tr class="${r.status==='err'?'highlight':''}" onclick="goTo('detalhe')">
-      <td><span class="mono">${r.vin.slice(0,12)}…</span></td>
+
+  const total = data.length;
+  const pages = Math.max(1, Math.ceil(total/PER_PAGE));
+  if (currentPage>pages) currentPage=1;
+  const slice = data.slice((currentPage-1)*PER_PAGE, currentPage*PER_PAGE);
+
+  document.getElementById('results-count').textContent = total;
+  document.getElementById('results-sub').textContent   = `Página ${currentPage} de ${pages}`;
+  document.getElementById('query-display').textContent = query ? `"${query}"` : '';
+
+  document.getElementById('results-body').innerHTML = slice.map(r => `
+    <tr class="${r.status==='err'?'highlight':''}" onclick="goTo('detalhe')" style="cursor:pointer">
+      <td><span class="mono">${r.vin.slice(0,10)}…</span></td>
       <td style="font-weight:600;color:var(--text-h)">${r.veiculo}</td>
       <td><span class="mono-sm">${r.data}</span></td>
       <td>${r.agente}</td>
       <td>${r.unidade}</td>
-      <td><span class="score-pill ${scoreStyle(r.score)}">${r.score}</span></td>
-      <td><span class="badge ${badgeClass(r.status)}">${badgeLabel(r.status)}</span></td>
+      <td><span class="score-pill ${scorePillClass(r.score)}">${r.score}</span></td>
+      <td><span class="badge ${DB.badge_class(r.status)}">${DB.badge_label(r.status)}</span></td>
       <td><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-s)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></td>
     </tr>`).join('');
-  // pagination
-  const pg=document.getElementById('pagination');
-  if(pages<=1){pg.innerHTML='';return;}
-  let html='';
-  if(currentPage>1)html+=`<button class="page-btn" onclick="goPage(${currentPage-1})">‹</button>`;
-  for(let i=1;i<=pages;i++){
-    if(i===1||i===pages||Math.abs(i-currentPage)<=1)html+=`<button class="page-btn${i===currentPage?' active':''}" onclick="goPage(${i})">${i}</button>`;
-    else if(Math.abs(i-currentPage)===2)html+=`<span class="page-btn dots">…</span>`;
+
+  // Paginação
+  const pg = document.getElementById('pagination');
+  if (pages<=1) { pg.innerHTML=''; return; }
+  let html = '';
+  if (currentPage>1) html += `<button class="page-btn" onclick="goPage(${currentPage-1})">‹</button>`;
+  for (let i=1; i<=pages; i++) {
+    if (i===1||i===pages||Math.abs(i-currentPage)<=1)
+      html += `<button class="page-btn${i===currentPage?' active':''}" onclick="goPage(${i})">${i}</button>`;
+    else if (Math.abs(i-currentPage)===2)
+      html += `<span class="page-btn dots">…</span>`;
   }
-  if(currentPage<pages)html+=`<button class="page-btn" onclick="goPage(${currentPage+1})">›</button>`;
-  pg.innerHTML=html;
+  if (currentPage<pages) html += `<button class="page-btn" onclick="goPage(${currentPage+1})">›</button>`;
+  pg.innerHTML = html;
 }
 
-function goPage(p){currentPage=p;renderTable();}
-function clearSearch(){document.getElementById('searchInput').value='';currentFilter='todos';document.querySelectorAll('.filter-pill').forEach((b,i)=>{b.classList.toggle('active',i===0)});currentPage=1;renderTable('');}
-function exportResults(){alert('Exportando CSV com '+getFiltered(document.getElementById('searchInput').value).length+' registros...');}
+function goPage(p) { currentPage=p; renderTable(); }
 
-function goTo(r){try{if(window.parent&&window.parent.goTo)window.parent.goTo(r);else{const M={'visao-geral':'dash-01-visao-geral.html','monitoramento':'dash-02-monitoramento.html','tatica':'dash-03-tatica.html','inteligencia':'dash-04-inteligencia.html','detalhe':'dash-05-detalhe.html','performance':'dash-06-performance.html','busca':'dash-07-busca.html','configuracoes':'dash-08-configuracoes.html'};if(M[r])window.location.href=M[r];}}catch(e){window.postMessage({goTo:r},'*')}}
+function clearSearch() {
+  document.getElementById('searchInput').value = '';
+  document.getElementById('filter-unidade').value = '';
+  currentFilter = 'todos';
+  document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+  document.getElementById('fp-todos').classList.add('active');
+  currentPage = 1;
+  renderTable('');
+}
 
-function tick(){const t=new Date().toTimeString().slice(0,8);const f=document.getElementById('fbar-busca');if(f)f.innerHTML='SYNC: '+t+' · <span style="color:var(--em-400)">ONLINE</span>';}
+function exportCSV() {
+  const data = getFiltered(document.getElementById('searchInput').value);
+  const rows = [['ID','VIN','Veículo','Data','Agente','Unidade','Score','Status']];
+  data.forEach(r => rows.push([r.id, r.vin, r.veiculo, r.data, r.agente, r.unidade, r.score, DB.badge_label(r.status)]));
+  const csv = rows.map(r => r.join(';')).join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+  a.download = 'v3r1-busca.csv';
+  a.click();
+}
+
+function tick() {
+  const t = new Date().toTimeString().slice(0,8);
+  const f = document.getElementById('fbar');
+  if (f) f.innerHTML = `SYNC: ${t} · <span style="color:var(--em-400)">ONLINE</span>`;
+}
+
+document.getElementById('footer-versao').textContent = DB.sistema.versao;
 renderTable('');
-tick();setInterval(tick,1000);
+tick();
+setInterval(tick, 1000);
 </script>
 </body>
 </html>

@@ -6,673 +6,458 @@
 <title>V3R1 · Monitoramento</title>
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap"></noscript>
-
 <style>
-/* ── Reset ─────────────────────────────────────────── */
 *{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased}
-
-/* ── Tokens (idênticos ao app) ─────────────────────── */
 :root{
-  --pri:#252d7a; --pri-50:#eceeff; --pri-100:#d8daff;
-  --pri-400:#5c66d4; --pri-600:#3d4592; --pri-800:#252d7a;
-  --em:#168821; --em-50:#e6f4e8; --em-400:#1a9e27;
-  --am:#C48C14; --am-50:#fdf3dc; --am-400:#C48C14; --am-800:#7a5600;
-  --co:#E52207; --co-50:#fdecea; --co-400:#E52207; --co-800:#8c1200;
-
-  --bg:#f8f9ff; --surface:#ffffff;
-  --sur-low:#f1f3fb; --sur-mid:#eceef6; --sur-high:#e6e8f0;
-  --text-h:#181c21; --text-b:#464651; --text-m:#595c7c; --text-s:#767682;
-  --border:#d8dae8;
-
-  --font-d:'Plus Jakarta Sans',sans-serif;
-  --font-b:'DM Sans',sans-serif;
-  --font-m:'JetBrains Mono',monospace;
-
+  --pri:#252d7a;--pri-50:#eceeff;--pri-100:#d8daff;--pri-400:#5c66d4;--pri-600:#3d4592;--pri-800:#252d7a;
+  --em:#168821;--em-50:#e6f4e8;--em-400:#1a9e27;
+  --am:#C48C14;--am-50:#fdf3dc;--am-400:#C48C14;--am-800:#7a5600;
+  --co:#E52207;--co-50:#fdecea;--co-400:#E52207;--co-800:#8c1200;
+  --bg:#f8f9ff;--surface:#ffffff;
+  --sur-low:#f1f3fb;--sur-mid:#eceef6;--sur-high:#e6e8f0;
+  --text-h:#181c21;--text-b:#464651;--text-m:#595c7c;--text-s:#767682;--border:#d8dae8;
+  --font-d:'Plus Jakarta Sans',sans-serif;--font-b:'DM Sans',sans-serif;--font-m:'JetBrains Mono',monospace;
   --sh-card:0 1px 3px rgba(37,45,122,.08),0 4px 16px rgba(37,45,122,.04);
-  --sh-panel:0 2px 8px rgba(37,45,122,.06);
-  --sh-sidebar:2px 0 24px rgba(37,45,122,.08);
-
-  /* Layout */
-  --sidebar-w:220px;
-  --topbar-h:52px;
 }
-
 html,body{height:100%;overflow:hidden;font-family:var(--font-b);background:var(--bg);color:var(--text-h)}
 
-/* ════════════════════════════════════════════════════
-   SHELL — grade principal da página
-   ════════════════════════════════════════════════════ */
-.dash-shell{
-  display:grid;
-  grid-template-columns:var(--sidebar-w) 1fr;
-  grid-template-rows:var(--topbar-h) 1fr;
-  grid-template-areas:
-    "sidebar topbar"
-    "sidebar content";
-  height:100vh;
-  overflow:hidden;
-}
+/* ── Layout ─────────────────────────────────────── */
+.page{height:100%;display:flex;flex-direction:column;overflow:hidden}
 
-/* ════════════════════════════════════════════════════
-   BARRA ARCO-ÍRIS (identidade do app no topo)
-   ════════════════════════════════════════════════════ */
-.rainbow-bar{
-  position:fixed;top:0;left:0;right:0;height:3px;z-index:100;
-  background:linear-gradient(90deg,var(--pri-800),var(--pri-400),var(--em-400),var(--pri-400),var(--pri-800));
-  box-shadow:0 1px 8px rgba(37,45,122,.25);
-}
-
-/* ════════════════════════════════════════════════════
-   SIDEBAR
-   ════════════════════════════════════════════════════ */
-.sidebar{
-  grid-area:sidebar;
-  background:var(--pri-800);
-  display:flex;flex-direction:column;
-  height:100vh;
-  box-shadow:var(--sh-sidebar);
-  padding-top:3px; /* espaço pro rainbow-bar */
-  position:relative;
-  z-index:50;
-  overflow:hidden;
-}
-
-/* Logo */
-.sb-logo{
-  display:flex;align-items:center;gap:10px;
-  padding:16px 18px 14px;
-  border-bottom:1px solid rgba(255,255,255,.08);
+/* Stats bar — substitui o clock strip, fica no topo da página */
+/* Ticker */
+.ticker-wrap{
+  height:22px;overflow:hidden;display:flex;align-items:center;
+  background:var(--pri-800);border-bottom:1px solid rgba(255,255,255,.06);
   flex-shrink:0;
 }
-.sb-logo-mark{
-  width:32px;height:32px;border-radius:10px;
-  background:linear-gradient(135deg,var(--pri-400),var(--pri-600));
-  border:1px solid rgba(255,255,255,.15);
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:0 2px 8px rgba(0,0,0,.3);
-  flex-shrink:0;
+.ticker-inner{
+  display:flex;white-space:nowrap;
+  animation:ticker 40s linear infinite;
+  font-family:var(--font-m);font-weight: 600;font-size:9.5px;gap:0;
 }
-.sb-logo-text{
-  font-family:var(--font-d);font-size:15px;font-weight:800;
-  color:#fff;letter-spacing:2px;
-}
-.sb-logo-badge{
-  font-family:var(--font-m);font-size:7px;font-weight:700;
-  color:rgba(255,255,255,.45);letter-spacing:1px;
-  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
-  border-radius:4px;padding:1px 5px;margin-left:auto;
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* Grid 3 colunas */
+.main-grid{
+  flex:1;display:grid;
+  grid-template-columns:240px 1fr 300px;
+  gap:12px;min-height:0;
+  padding:12px 14px;overflow:hidden;
 }
 
-/* Nav */
-.sb-nav{
-  flex:1;padding:10px 10px;display:flex;flex-direction:column;gap:2px;
-  overflow-y:auto;
-}
-.sb-nav::-webkit-scrollbar{display:none}
+/* Coluna genérica */
+.col{display:flex;flex-direction:column;gap:10px;min-height:0;overflow:hidden}
 
-.sb-section-label{
-  font-family:var(--font-m);font-size:8px;font-weight:700;
-  color:rgba(255,255,255,.25);letter-spacing:1.5px;text-transform:uppercase;
-  padding:8px 8px 4px;
-}
-
-.sb-item{
-  display:flex;align-items:center;gap:10px;
-  padding:9px 10px;border-radius:10px;
-  font-family:var(--font-b);font-size:12px;font-weight:500;
-  color:rgba(255,255,255,.5);
-  cursor:pointer;transition:all .15s ease;
-  text-decoration:none;border:none;background:none;width:100%;text-align:left;
-}
-.sb-item:hover{
-  background:rgba(255,255,255,.06);
-  color:rgba(255,255,255,.8);
-}
-.sb-item.active{
-  background:rgba(92,102,212,.25);
-  color:#fff;font-weight:600;
-  border:1px solid rgba(92,102,212,.35);
-}
-.sb-item svg{flex-shrink:0;opacity:.7}
-.sb-item.active svg{opacity:1}
-.sb-item-label{flex:1}
-.sb-badge{
-  font-family:var(--font-m);font-size:8px;font-weight:700;
-  background:var(--co-400);color:#fff;
-  border-radius:9999px;padding:1px 6px;min-width:16px;text-align:center;
-}
-.sb-badge.amber{background:var(--am-400)}
-.sb-badge.green{background:var(--em-400)}
-.sb-badge.blue{background:var(--pri-400)}
-
-/* Footer do sidebar */
-.sb-footer{
-  border-top:1px solid rgba(255,255,255,.08);
-  padding:12px 10px;flex-shrink:0;
-}
-.sb-user{
-  display:flex;align-items:center;gap:10px;
-  padding:8px 10px;border-radius:10px;cursor:pointer;
-  transition:background .15s;
-}
-.sb-user:hover{background:rgba(255,255,255,.06)}
-.sb-avatar{
-  width:32px;height:32px;border-radius:50%;
-  background:linear-gradient(135deg,var(--pri-400),var(--pri-600));
-  border:1.5px solid rgba(255,255,255,.2);
-  display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;
-  font-family:var(--font-d);font-size:11px;font-weight:800;color:#fff;
-}
-.sb-user-info{flex:1;min-width:0}
-.sb-user-name{font-size:11px;font-weight:600;color:rgba(255,255,255,.85);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sb-user-role{font-family:var(--font-m);font-size:8px;color:rgba(255,255,255,.35);margin-top:1px}
-.sb-online{width:7px;height:7px;border-radius:50%;background:var(--em-400);box-shadow:0 0 6px var(--em);flex-shrink:0}
-
-/* ════════════════════════════════════════════════════
-   TOPBAR
-   ════════════════════════════════════════════════════ */
-.topbar{
-  grid-area:topbar;
-  height:var(--topbar-h);
-  background:rgba(248,249,255,.92);
-  backdrop-filter:blur(18px);
-  border-bottom:1px solid var(--border);
-  display:flex;align-items:center;gap:12px;
-  padding:0 24px;
-  position:sticky;top:0;z-index:40;
-  padding-top:3px; /* rainbow bar */
-}
-.topbar-title{
-  font-family:var(--font-d);font-size:15px;font-weight:800;
-  color:var(--text-h);flex:1;
-}
-.topbar-divider{width:1px;height:20px;background:var(--border)}
-
-/* Filtros de período */
-.period-pills{display:flex;gap:4px}
-.period-pill{
-  font-family:var(--font-b);font-size:11px;font-weight:600;
-  padding:4px 12px;border-radius:9999px;
-  background:transparent;border:1px solid var(--border);
-  color:var(--text-m);cursor:pointer;transition:all .15s;
-}
-.period-pill:hover{background:var(--sur-low);color:var(--text-h)}
-.period-pill.active{
-  background:var(--pri-800);color:#fff;border-color:var(--pri-800);
-}
-
-/* Botões do topbar */
-.topbar-btn{
-  width:34px;height:34px;border-radius:10px;
-  background:var(--sur-low);border:1px solid var(--border);
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;transition:all .15s;color:var(--text-m);
-  position:relative;
-}
-.topbar-btn:hover{background:var(--sur-mid);color:var(--text-h)}
-.topbar-notif-dot{
-  position:absolute;top:-2px;right:-2px;
-  width:8px;height:8px;border-radius:50%;
-  background:var(--co-400);border:1.5px solid var(--bg);
-}
-.topbar-avatar{
-  width:34px;height:34px;border-radius:10px;
-  background:linear-gradient(135deg,var(--pri-50),var(--pri-100));
-  border:1.5px solid var(--pri-100);
-  display:flex;align-items:center;justify-content:center;
-  font-family:var(--font-d);font-size:11px;font-weight:800;
-  color:var(--pri-800);cursor:pointer;
-}
-
-/* Filtro de escopo */
-.scope-select{
-  display:flex;align-items:center;gap:6px;
-  font-size:11px;font-weight:600;color:var(--text-b);
-  background:var(--sur-low);border:1px solid var(--border);
-  border-radius:9999px;padding:4px 12px;cursor:pointer;
-}
-.scope-select svg{opacity:.5}
-
-/* Status badge no topbar */
-.topbar-status{
-  display:flex;align-items:center;gap:5px;
-  font-family:var(--font-m);font-size:9px;font-weight:700;
-  padding:3px 10px;border-radius:9999px;
-}
-.topbar-status.live{
-  background:var(--em-50);border:1px solid rgba(22,136,33,.2);color:var(--em);
-}
-.topbar-status.live::before{
-  content:'';width:6px;height:6px;border-radius:50%;background:var(--em-400);
-  animation:blink 1.4s ease-in-out infinite;
-}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-
-/* ════════════════════════════════════════════════════
-   CONTENT AREA
-   ════════════════════════════════════════════════════ */
-.content{
-  grid-area:content;
-  overflow-y:auto;
-  padding:20px 24px;
-  background:var(--bg);
-}
-.content::-webkit-scrollbar{width:6px}
-.content::-webkit-scrollbar-track{background:transparent}
-.content::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
-
-/* ════════════════════════════════════════════════════
-   COMPONENTES REUTILIZÁVEIS
-   ════════════════════════════════════════════════════ */
-
-/* Seção com título */
-.section-header{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:12px;
-}
-.section-title{
-  font-family:var(--font-d);font-size:13px;font-weight:800;
-  color:var(--text-h);
-}
-.section-action{
-  font-size:11px;font-weight:600;color:var(--pri-400);cursor:pointer;
-}
-
-/* KPI cards */
-.kpi-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:20px}
-.kpi-card{
-  background:var(--surface);border-radius:14px;
-  padding:14px 16px;
-  box-shadow:var(--sh-card);
-  border:1px solid var(--border);
-  border-top:3px solid var(--border);
-  position:relative;overflow:hidden;
-}
-.kpi-card.blue{border-top-color:var(--pri-400)}
-.kpi-card.green{border-top-color:var(--em-400)}
-.kpi-card.amber{border-top-color:var(--am-400)}
-.kpi-card.red{border-top-color:var(--co-400)}
-.kpi-card.purple{border-top-color:#7c3aed}
-
-.kpi-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-s);margin-bottom:6px}
-.kpi-value{font-family:var(--font-d);font-size:26px;font-weight:800;color:var(--text-h);line-height:1}
-.kpi-change{
-  display:inline-flex;align-items:center;gap:3px;
-  font-size:10px;font-weight:700;margin-top:6px;
-  padding:2px 7px;border-radius:9999px;
-}
-.kpi-change.up{background:var(--em-50);color:var(--em)}
-.kpi-change.up-bad{background:var(--co-50);color:var(--co-400)}
-.kpi-change.down{background:var(--co-50);color:var(--co-400)}
-.kpi-change.down-good{background:var(--em-50);color:var(--em)}
-
-/* Painéis */
-.panel{
-  background:var(--surface);border-radius:14px;
-  border:1px solid var(--border);
-  box-shadow:var(--sh-card);
-  overflow:hidden;
-}
-.panel-header{
-  padding:14px 16px 0;
-  display:flex;align-items:center;justify-content:space-between;
-}
+/* Panel */
+.panel{background:var(--surface);border-radius:14px;border:1px solid var(--border);box-shadow:var(--sh-card);overflow:hidden;display:flex;flex-direction:column}
+.panel-header{padding:12px 14px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 .panel-title{font-family:var(--font-d);font-size:12px;font-weight:800;color:var(--text-h)}
-.panel-subtitle{font-size:10px;color:var(--text-s);margin-top:2px}
-.panel-body{padding:12px 16px 16px}
+.panel-subtitle{font-size:10px;color:var(--text-s);margin-top:1px}
+.panel-body{padding:10px 14px 14px}
 
-/* Tabela */
-.data-table{width:100%;border-collapse:collapse}
-.data-table thead th{
-  font-family:var(--font-b);font-size:10px;font-weight:700;
-  color:var(--text-s);text-align:left;text-transform:uppercase;letter-spacing:.7px;
-  padding:10px 12px;
-  background:var(--sur-low);
-  border-bottom:1px solid var(--border);
-}
-.data-table tbody td{
-  font-size:12px;color:var(--text-b);
-  padding:10px 12px;
-  border-bottom:1px solid var(--sur-low);
-}
-.data-table tbody tr:last-child td{border-bottom:none}
-.data-table tbody tr:hover td{background:var(--sur-low)}
+/* Location pins */
+.lpin{position:absolute;z-index:2;width:11px;height:11px;border-radius:50%}
+.lpin::after{content:'';position:absolute;inset:0;border-radius:50%;animation:pulse 2s ease-in-out infinite}
+.lpin.g{background:var(--em-400);box-shadow:0 0 6px var(--em)}.lpin.g::after{background:var(--em-400)}
+.lpin.a{background:var(--am-400)}.lpin.a::after{background:var(--am-400);animation-delay:.5s}
+.lpin.r{background:var(--co-400);box-shadow:0 0 6px var(--co)}.lpin.r::after{background:var(--co-400);animation-delay:1s}
+@keyframes pulse{0%{transform:scale(1);opacity:.9}50%{transform:scale(2.4);opacity:.2}100%{transform:scale(1);opacity:.9}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
 
-/* Badges */
-.badge{
-  display:inline-flex;align-items:center;gap:4px;
-  font-family:var(--font-b);font-size:10px;font-weight:700;
-  padding:2px 8px;border-radius:9999px;
-}
+/* Agente row */
+.agent-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--sur-low)}
+.agent-row:last-child{border-bottom:none}
+.agent-avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--pri-50),var(--pri-100));border:1.5px solid var(--pri-100);display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-size:9px;font-weight:800;color:var(--pri-800);flex-shrink:0}
+.agent-name{font-size:11px;font-weight:600;color:var(--text-h)}
+.agent-sub{font-size:9px;color:var(--text-s);margin-top:1px}
+.agent-status{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+/* Feed */
+.feed-panel{flex:1;min-height:0}
+.feed-filters{display:flex;gap:5px;padding:8px 14px 0}
+.feed-filter{font-size:10px;font-weight:600;padding:3px 10px;border-radius:9999px;cursor:pointer;border:none}
+.feed-filter.active{background:var(--pri-800);color:#fff}
+.feed-filter.alerts{background:var(--co-50);color:var(--co-800);border:1px solid rgba(229,34,7,.2)}
+.feed-list{overflow-y:auto;flex:1;margin-top:6px}
+.feed-list::-webkit-scrollbar{width:4px}
+.feed-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+.feed-item{display:flex;gap:10px;padding:9px 14px;border-bottom:1px solid var(--sur-low);cursor:pointer;align-items:flex-start;transition:background .1s}
+.feed-item:last-child{border-bottom:none}
+.feed-item:hover{background:var(--sur-low)}
+.feed-item.err{background:rgba(229,34,7,.03);border-bottom-color:rgba(229,34,7,.1)}
+.feed-item.err:hover{background:rgba(229,34,7,.06)}
+.feed-icon{width:42px;height:42px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.feed-icon.ok{background:var(--em-50)}.feed-icon.warn{background:var(--am-50)}.feed-icon.err{background:var(--co-50)}
+.feed-name{font-size:12px;font-weight:700;color:var(--text-h)}
+.feed-sub{font-size:10px;color:var(--text-m);margin-top:1px}
+.feed-meta{display:flex;align-items:center;justify-content:space-between;margin-top:5px}
+.feed-ago{font-family:var(--font-m);font-size:9px;color:var(--text-s)}
+
+/* Badge */
+.badge{display:inline-flex;align-items:center;gap:4px;font-family:var(--font-b);font-size:9px;font-weight:700;padding:1px 6px;border-radius:9999px}
 .badge-ok{background:var(--em-50);color:var(--em);border:1px solid rgba(22,136,33,.15)}
 .badge-warn{background:var(--am-50);color:var(--am-800);border:1px solid rgba(196,140,20,.2)}
 .badge-err{background:var(--co-50);color:var(--co-800);border:1px solid rgba(229,34,7,.15)}
 .badge-info{background:var(--pri-50);color:var(--pri-600);border:1px solid var(--pri-100)}
 
-/* Mono tag */
-.mono{font-family:var(--font-m);font-size:11px;color:var(--text-m)}
-.mono-sm{font-family:var(--font-m);font-size:9px;color:var(--text-s)}
-
-/* Botões */
-.btn-primary{
-  background:linear-gradient(135deg,var(--pri-800),var(--pri-600));
-  color:#fff;border-radius:9999px;padding:8px 18px;
-  font-family:var(--font-b);font-size:12px;font-weight:600;
-  box-shadow:0 4px 12px rgba(37,45,122,.25);
-  cursor:pointer;display:inline-flex;align-items:center;gap:7px;
-  border:none;transition:opacity .15s;
-}
-.btn-primary:hover{opacity:.9}
-.btn-secondary{
-  background:var(--sur-mid);border:1px solid var(--border);
-  border-radius:9999px;padding:7px 16px;
-  font-size:12px;font-weight:600;color:var(--text-b);
-  cursor:pointer;display:inline-flex;align-items:center;gap:7px;
-  transition:background .15s;
-}
-.btn-secondary:hover{background:var(--sur-high)}
-
-/* Alert items */
-.alert-item{
-  display:flex;gap:10px;align-items:flex-start;
-  padding:10px 16px;border-bottom:1px solid var(--sur-low);
-}
+/* Alertas críticos */
+.alerts-panel{flex:1;min-height:0}
+.alerts-header{padding:10px 14px;display:flex;align-items:center;justify-content:space-between;background:var(--co-50);border-bottom:1px solid rgba(229,34,7,.12);flex-shrink:0}
+.alerts-list{flex:1;overflow-y:auto}
+.alerts-list::-webkit-scrollbar{width:4px}
+.alerts-list::-webkit-scrollbar-thumb{background:rgba(229,34,7,.2);border-radius:2px}
+.alert-item{display:flex;gap:10px;padding:10px 14px;border-bottom:1px solid var(--sur-low);align-items:flex-start}
 .alert-item:last-child{border-bottom:none}
-.alert-dot{
-  width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px;
-}
-.alert-dot.red{background:var(--co-400);box-shadow:0 0 6px rgba(229,34,7,.4)}
-.alert-dot.amber{background:var(--am-400);box-shadow:0 0 6px rgba(196,140,20,.4)}
-.alert-dot.green{background:var(--em-400)}
-.alert-text{font-size:12px;color:var(--text-b);line-height:1.4}
-.alert-meta{font-size:10px;color:var(--text-s);margin-top:2px}
+.alert-icon{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.alert-icon.err{background:var(--co-50);border:1px solid rgba(229,34,7,.15)}
+.alert-icon.warn{background:var(--am-50);border:1px solid rgba(196,140,20,.2)}
+.alert-title{font-size:12px;font-weight:700;color:var(--text-h)}
+.alert-sub{font-size:10px;color:var(--text-m);margin-top:2px;line-height:1.4}
+.btn-detail{font-size:10px;font-weight:600;padding:3px 10px;border-radius:9999px;cursor:pointer;margin-top:5px;border:none;display:inline-block}
+.btn-detail.err{background:var(--co-50);color:var(--co-800);border:1px solid rgba(229,34,7,.2)}
+.btn-detail.warn{background:var(--am-50);color:var(--am-800);border:1px solid rgba(196,140,20,.25)}
 
-/* Progress bar */
-.progress-bar{height:6px;background:var(--sur-high);border-radius:3px;overflow:hidden}
-.progress-fill{height:100%;border-radius:3px;transition:width .4s ease}
+/* Turno */
+.turno-panel{flex-shrink:0}
+.turno-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--sur-low)}
+.turno-row:last-child{border-bottom:none}
+.turno-label{font-size:11px;color:var(--text-m)}
+.turno-val{font-family:var(--font-d);font-size:14px;font-weight:800}
 
-/* Score ring placeholder */
-.score-ring{
-  width:52px;height:52px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  font-family:var(--font-d);font-size:14px;font-weight:800;
-  position:relative;flex-shrink:0;
-}
-
-/* Layout helpers */
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
-.grid-60-40{display:grid;grid-template-columns:1.5fr 1fr;gap:16px}
-.grid-70-30{display:grid;grid-template-columns:2fr 1fr;gap:16px}
-.flex-col{display:flex;flex-direction:column;gap:16px}
-
-/* Divider */
-.divider{height:1px;background:var(--sur-high);margin:4px 0}
-
-/* Tooltip básico */
-[data-tip]{position:relative}
-[data-tip]:hover::after{
-  content:attr(data-tip);
-  position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);
-  background:var(--text-h);color:#fff;
-  font-size:10px;font-weight:600;padding:4px 8px;border-radius:6px;
-  white-space:nowrap;pointer-events:none;z-index:999;
-}
-
-/* Mapa placeholder */
-.map-placeholder{
-  background:linear-gradient(160deg,#e8ecf8 0%,#eef0fa 100%);
-  border-radius:10px;
-  position:relative;overflow:hidden;
-  display:flex;align-items:center;justify-content:center;
-}
-.map-placeholder::before{
-  content:'';position:absolute;inset:0;
-  background:
-    repeating-linear-gradient(0deg,transparent,transparent 28px,rgba(37,45,122,.04) 28px,rgba(37,45,122,.04) 29px),
-    repeating-linear-gradient(90deg,transparent,transparent 28px,rgba(37,45,122,.04) 28px,rgba(37,45,122,.04) 29px);
-}
-.map-label{font-family:var(--font-m);font-size:10px;color:var(--text-s);z-index:1;letter-spacing:1px}
-.heat-dot{position:absolute;border-radius:50%;filter:blur(12px);opacity:.35;pointer-events:none}
-
-/* Chart placeholder */
-.chart-bars{
-  display:flex;align-items:flex-end;gap:6px;
-  padding:8px 8px 4px;
-  height:100%;
-}
-.chart-bar{
-  flex:1;border-radius:4px 4px 0 0;
-  background:linear-gradient(180deg,var(--pri-400),var(--pri-600));
-  opacity:.5;transition:opacity .15s;min-width:0;
-}
-.chart-bar:hover{opacity:.8}
-.chart-bar.hi{opacity:.85}
+/* Footer */
+.footer{display:flex;justify-content:space-between;padding:5px 14px;border-top:1px solid var(--sur-high);flex-shrink:0;background:var(--bg)}
+.mono-sm{font-family:var(--font-m);font-size:9px;color:var(--text-s)}
 </style>
 </head>
 <body>
+<div class="page">
 
-<!-- Barra arco-íris (identidade) -->
-<div class="rainbow-bar"></div>
-
-<!-- Shell -->
-<div class="dash-shell">
-
-  <!-- ── SIDEBAR ──────────────────────────────────── -->
-  <aside class="sidebar">
-    <!-- Logo -->
-    <div class="sb-logo">
-      <img src="logo-white.svg" alt="">
-      <!-- <span class="sb-logo-text">V3R1</span> -->
-      <span class="sb-logo-badge">WEB</span>
-    </div>
-
-    <!-- Navegação -->
-    <nav class="sb-nav">
-      <div class="sb-section-label">Principal</div>
-
-      <button class="sb-item" onclick="goTo('visao-geral')">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-        <span class="sb-item-label">Visão geral</span>
-      </button>
-
-      <button class="sb-item active" onclick="goTo('monitoramento')">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="2"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
-        <span class="sb-item-label">Monitoramento</span>
-        <span class="sb-badge">3</span>
-      </button>
-
-      <button class="sb-item" onclick="goTo('tatica')">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
-        <span class="sb-item-label">Análise tática</span>
-      </button>
-
-      <button class="sb-item" onclick="goTo('inteligencia')">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-        <span class="sb-item-label">Inteligência</span>
-      </button>
-
-      <div class="sb-section-label" style="margin-top:4px">Operacional</div>
-
-      <button class="sb-item" onclick="goTo('busca')">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <span class="sb-item-label">Busca avançada</span>
-      </button>
-
-      <button class="sb-item" onclick="goTo('performance')">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-        <span class="sb-item-label">Performance</span>
-      </button>
-
-      <div class="sb-section-label" style="margin-top:4px">Sistema</div>
-
-      <button class="sb-item" onclick="goTo('configuracoes')">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12.22 2h-.44a2 2 0 00-2 2v.18a2 2 0 01-1 1.73l-.43.25a2 2 0 01-2 0l-.15-.08a2 2 0 00-2.73.73l-.22.38a2 2 0 00.73 2.73l.15.1a2 2 0 011 1.72v.51a2 2 0 01-1 1.74l-.15.09a2 2 0 00-.73 2.73l.22.38a2 2 0 002.73.73l.15-.08a2 2 0 012 0l.43.25a2 2 0 011 1.73V20a2 2 0 002 2h.44a2 2 0 002-2v-.18a2 2 0 011-1.73l.43-.25a2 2 0 012 0l.15.08a2 2 0 002.73-.73l.22-.39a2 2 0 00-.73-2.73l-.15-.08a2 2 0 01-1-1.74v-.5a2 2 0 011-1.74l.15-.09a2 2 0 00.73-2.73l-.22-.38a2 2 0 00-2.73-.73l-.15.08a2 2 0 01-2 0l-.43-.25a2 2 0 01-1-1.73V4a2 2 0 00-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
-        <span class="sb-item-label">Configurações</span>
-      </button>
-    </nav>
-
-    <!-- Footer / usuário -->
-    <div class="sb-footer">
-      <div class="sb-user">
-        <div class="sb-avatar">GS</div>
-        <div class="sb-user-info">
-          <div class="sb-user-name">Gestor Silva</div>
-          <div class="sb-user-role">ADMIN · ES</div>
-        </div>
-        <div class="sb-online"></div>
-      </div>
-    </div>
-  </aside>
-
-  <!-- ── TOPBAR ────────────────────────────────────── -->
-  <header class="topbar">
-    <h1 class="topbar-title">Monitoramento</h1>
-
-    <div class="topbar-status live"><div class="live-dot" style="width:6px;height:6px;border-radius:50%;background:var(--em-400);animation:blink 1.4s ease-in-out infinite"></div>AO VIVO</div>
-    <span id="clock" style="font-family:var(--font-m);font-size:10px;color:var(--text-s)">14:35:22</span>
-
-    <div class="topbar-divider"></div>
-
-    <!-- Escopo -->
-    <div class="scope-select">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-      ES · Todas unidades
-      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-    </div>
-
-    <!-- Status live -->
-    <div class="topbar-status live">AO VIVO</div>
-
-    <!-- Ações -->
-    <button class="topbar-btn" data-tip="Exportar">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-    </button>
-    <button class="topbar-btn" data-tip="Notificações">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
-      <div class="topbar-notif-dot"></div>
-    </button>
-    <div class="topbar-avatar">GS</div>
-  </header>
-
-  <!-- ── CONTENT ────────────────────────────────────── -->
-  <main class="content">
-
-  
-  <!-- Ticker ao vivo -->
-  <div style="background:var(--pri-800);height:24px;overflow:hidden;display:flex;align-items:center;flex-shrink:0;border-bottom:1px solid rgba(255,255,255,.06);margin:-20px -24px 16px">
-    <div id="ticker" style="display:flex;white-space:nowrap;animation:ticker 40s linear infinite;font-family:var(--font-m);font-size:8px;gap:0">
-      <span style="color:rgba(26,158,39,.8);padding:0 20px">● COMPATÍVEL · VW Gol · Vitória · 14:35</span><span style="color:rgba(255,255,255,.15)"> · </span>
-      <span style="color:rgba(229,34,7,.8);padding:0 20px">● DIVERGENTE · Honda Civic · Vila Velha · 14:23</span><span style="color:rgba(255,255,255,.15)"> · </span>
-      <span style="color:rgba(196,140,20,.8);padding:0 20px">● ATENÇÃO · Ford Ka · Cariacica · 14:18</span><span style="color:rgba(255,255,255,.15)"> · </span>
-      <span style="color:rgba(26,158,39,.8);padding:0 20px">● COMPATÍVEL · Fiat Strada · Serra · 14:12</span><span style="color:rgba(255,255,255,.15)"> · </span>
-      <span style="color:rgba(26,158,39,.8);padding:0 20px">● COMPATÍVEL · Toyota Corolla · Vitória · 14:05</span><span style="color:rgba(255,255,255,.15)"> · </span>
-      <span style="color:rgba(229,34,7,.8);padding:0 20px">● DIVERGENTE · Chevrolet Onix · Linhares · 13:58</span><span style="color:rgba(255,255,255,.15)"> · </span>
-      <span style="color:rgba(26,158,39,.8);padding:0 20px">● COMPATÍVEL · VW Gol · Vitória · 14:35</span><span style="color:rgba(255,255,255,.15)"> · </span>
-      <span style="color:rgba(229,34,7,.8);padding:0 20px">● DIVERGENTE · Honda Civic · Vila Velha · 14:23</span><span style="color:rgba(255,255,255,.15)"> · </span>
-    </div>
+  <!-- Ticker -->
+  <div class="ticker-wrap">
+    <div class="ticker-inner" id="ticker-inner"></div>
   </div>
-  <style>@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}</style>
 
-  <!-- Grade 3 colunas -->
-  <div style="display:grid;grid-template-columns:268px 1fr 268px;gap:14px;flex:1;min-height:0;overflow:hidden">
+  <!-- Grid 3 colunas -->
+  <div class="main-grid">
 
-    <!-- Coluna esquerda: mapa + agentes -->
-    <div style="display:flex;flex-direction:column;gap:12px;min-height:0;overflow:hidden">
+    <!-- Col esquerda: mapa ao vivo + agentes -->
+    <div class="col">
       <div class="panel" style="flex:1;min-height:0">
-        <div class="panel-header"><div><div class="panel-title">Mapa ao vivo</div><div class="panel-subtitle">Posições em tempo real</div></div></div>
-        <div class="panel-body" style="padding-top:8px;display:flex;flex-direction:column;gap:10px">
-          <div class="map-placeholder" style="flex:1;min-height:130px">
-            <style>@keyframes pulse{0%{transform:scale(1);opacity:.9}50%{transform:scale(2.4);opacity:.2}100%{transform:scale(1);opacity:.9}}
-            .lpin{position:absolute;z-index:2;width:11px;height:11px;border-radius:50%}
-            .lpin::after{content:'';position:absolute;inset:0;border-radius:50%;animation:pulse 2s ease-in-out infinite}
-            .lpin.g{background:var(--em-400);box-shadow:0 0 6px var(--em)}.lpin.g::after{background:var(--em-400)}
-            .lpin.a{background:var(--am-400)}.lpin.a::after{background:var(--am-400);animation-delay:.5s}
-            .lpin.r{background:var(--co-400);box-shadow:0 0 6px var(--co)}.lpin.r::after{background:var(--co-400);animation-delay:1s}
-            </style>
-            <div class="lpin g" style="top:37%;left:42%"></div>
-            <div class="lpin g" style="top:51%;left:57%"></div>
-            <div class="lpin a" style="top:32%;left:53%"></div>
-            <div class="lpin r" style="top:59%;left:37%"></div>
-            <div class="lpin g" style="top:43%;left:65%"></div>
-            <span class="map-label">LIVE · ES</span>
+        <div class="panel-header">
+          <div><div class="panel-title">Mapa ao vivo</div><div class="panel-subtitle">Posições em tempo real</div></div>
+          <div style="display:flex;align-items:center;gap:5px;font-family:var(--font-m);font-size:8px;font-weight:700;color:var(--em-400);background:var(--em-50);border:1px solid rgba(26,158,39,.2);border-radius:9999px;padding:2px 8px">
+            <div style="width:5px;height:5px;border-radius:50%;background:var(--em-400);animation:blink 1.4s ease-in-out infinite"></div>LIVE
           </div>
-          <div style="display:flex;justify-content:space-around;padding:6px 0;border-top:1px solid var(--sur-high)">
-            <div style="text-align:center"><div style="font-family:var(--font-d);font-size:20px;font-weight:800;color:var(--em)">8</div><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--text-s);margin-top:2px">Agentes</div></div>
-            <div style="text-align:center"><div style="font-family:var(--font-d);font-size:20px;font-weight:800;color:var(--pri-400)">12</div><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--text-s);margin-top:2px">Devices</div></div>
-            <div style="text-align:center"><div style="font-family:var(--font-d);font-size:20px;font-weight:800;color:var(--am)">5</div><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--text-s);margin-top:2px">Sessões</div></div>
+        </div>
+        <div class="panel-body" style="display:flex;flex-direction:column;gap:8px;flex:1;min-height:0;padding-top:8px">
+          <div id="map-wrap" style="position:relative;flex:1;min-height:100px;border-radius:10px;overflow:hidden">
+            <iframe id="map-iframe"
+              width="100%" height="100%"
+              style="position:absolute;inset:0;border:0;filter:grayscale(100%) contrast(100%) brightness(110%)"
+              loading="lazy"></iframe>
+            <canvas id="heatmap-canvas"
+              style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;border-radius:10px"></canvas>
+            <!-- pins de agentes ao vivo -->
+            <div id="agent-pins"></div>
+            <div style="position:absolute;top:6px;left:8px;font-family:var(--font-m);font-size:8px;font-weight:700;color:var(--text-s);letter-spacing:1px;z-index:5;background:rgba(255,255,255,.85);padding:2px 7px;border-radius:9999px;backdrop-filter:blur(4px)">ES · AO VIVO</div>
+          </div>
+          <div style="display:flex;justify-content:space-around;padding:5px 0;border-top:1px solid var(--sur-high)">
+            <div style="text-align:center"><div style="font-family:var(--font-d);font-size:18px;font-weight:800;color:var(--em)" id="map-agentes">–</div><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--text-s);margin-top:1px">Agentes</div></div>
+            <div style="text-align:center"><div style="font-family:var(--font-d);font-size:18px;font-weight:800;color:var(--pri-400)" id="map-devices">–</div><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--text-s);margin-top:1px">Devices</div></div>
+            <div style="text-align:center"><div style="font-family:var(--font-d);font-size:18px;font-weight:800;color:var(--am)" id="map-sessoes">–</div><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--text-s);margin-top:1px">Sessões</div></div>
           </div>
         </div>
       </div>
+
       <div class="panel">
-        <div class="panel-header"><div class="panel-title">Agentes ativos</div><span class="badge badge-ok">8 online</span></div>
-        <div class="panel-body" style="padding-top:8px">
-          <div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--sur-low)"><div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--pri-50),var(--pri-100));border:1.5px solid var(--pri-100);display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-size:9px;font-weight:800;color:var(--pri-800)">AS</div><div style="flex:1"><div style="font-size:11px;font-weight:600;color:var(--text-h)">Ag. Santos</div><div style="font-size:9px;color:var(--text-s)">Vitória · verificando</div></div><div style="width:8px;height:8px;border-radius:50%;background:var(--em-400);box-shadow:0 0 5px var(--em)"></div></div>
-          <div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--sur-low)"><div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--pri-50),var(--pri-100));border:1.5px solid var(--pri-100);display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-size:9px;font-weight:800;color:var(--pri-800)">AL</div><div style="flex:1"><div style="font-size:11px;font-weight:600;color:var(--text-h)">Ag. Lima</div><div style="font-size:9px;color:var(--text-s)">Cariacica · deslocamento</div></div><div style="width:8px;height:8px;border-radius:50%;background:var(--am-400)"></div></div>
-          <div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--sur-low)"><div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--pri-50),var(--pri-100));border:1.5px solid var(--pri-100);display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-size:9px;font-weight:800;color:var(--pri-800)">AC</div><div style="flex:1"><div style="font-size:11px;font-weight:600;color:var(--text-h)">Ag. Costa</div><div style="font-size:9px;color:var(--text-s)">Serra · verificando</div></div><div style="width:8px;height:8px;border-radius:50%;background:var(--em-400);box-shadow:0 0 5px var(--em)"></div></div>
-          <div style="display:flex;align-items:center;gap:8px;padding:7px 0"><div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--pri-50),var(--pri-100));border:1.5px solid var(--pri-100);display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-size:9px;font-weight:800;color:var(--pri-800)">AR</div><div style="flex:1"><div style="font-size:11px;font-weight:600;color:var(--text-h)">Ag. Rocha</div><div style="font-size:9px;color:var(--text-s)">Vila Velha · divergente</div></div><div style="width:8px;height:8px;border-radius:50%;background:var(--co-400);box-shadow:0 0 5px var(--co)"></div></div>
+        <div class="panel-header">
+          <div class="panel-title">Agentes ativos</div>
+          <span class="badge badge-ok" id="agentes-badge"></span>
         </div>
+        <div class="panel-body" id="agentes-list" style="padding-top:6px"></div>
       </div>
     </div>
 
-    <!-- Coluna central: feed -->
-    <div class="panel" style="min-height:0;overflow:hidden;display:flex;flex-direction:column">
+    <!-- Col central: feed -->
+    <div class="panel feed-panel">
       <div class="panel-header">
         <div><div class="panel-title">Feed de verificações</div><div class="panel-subtitle">Atualizando em tempo real</div></div>
-        <div style="display:flex;gap:6px">
-          <button style="font-size:10px;font-weight:600;padding:3px 10px;border-radius:9999px;background:var(--pri-800);color:#fff;border:none;cursor:pointer">Todos</button>
-          <button style="font-size:10px;font-weight:600;padding:3px 10px;border-radius:9999px;background:var(--co-50);color:var(--co-800);border:1px solid rgba(229,34,7,.2);cursor:pointer">Alertas</button>
-        </div>
+        <span class="badge badge-info" id="feed-count"></span>
       </div>
-      <div style="overflow-y:auto;flex:1;margin-top:8px">
-        <div style="display:flex;gap:10px;padding:9px 14px;border-bottom:1px solid var(--sur-low);cursor:pointer;align-items:flex-start" onclick="goTo('detalhe')"><div style="width:42px;height:42px;border-radius:9px;background:var(--em-50);flex-shrink:0;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--em)" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div><div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:700;color:var(--text-h)">VW Gol 1.0 2019</div><div style="font-size:10px;color:var(--text-m);margin-top:1px">Gravação chassi · <span style="font-family:var(--font-m);font-size:9px">9BWZZ377...967</span></div><div style="display:flex;align-items:center;justify-content:space-between;margin-top:5px"><span class="badge badge-ok" style="font-size:9px;padding:1px 6px">Compatível</span><span style="font-family:var(--font-m);font-size:9px;color:var(--text-s)">Ag. Santos · 2 min</span></div></div></div>
-        <div style="display:flex;gap:10px;padding:9px 14px;border-bottom:1px solid var(--sur-low);cursor:pointer;align-items:flex-start" onclick="goTo('detalhe')"><div style="width:42px;height:42px;border-radius:9px;background:var(--am-50);flex-shrink:0;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--am)" stroke-width="2" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:700;color:var(--text-h)">Ford Ka SE 2021</div><div style="font-size:10px;color:var(--text-m);margin-top:1px">Etiqueta VIN · <span style="font-family:var(--font-m);font-size:9px">9BF1234A...821</span></div><div style="display:flex;align-items:center;justify-content:space-between;margin-top:5px"><span class="badge badge-warn" style="font-size:9px;padding:1px 6px">Atenção</span><span style="font-family:var(--font-m);font-size:9px;color:var(--text-s)">Ag. Lima · 5 min</span></div></div></div>
-        <div style="display:flex;gap:10px;padding:9px 14px;border-bottom:1px solid var(--sur-low);cursor:pointer;align-items:flex-start" onclick="goTo('detalhe')"><div style="width:42px;height:42px;border-radius:9px;background:var(--em-50);flex-shrink:0;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--em)" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div><div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:700;color:var(--text-h)">Fiat Strada 2022</div><div style="font-size:10px;color:var(--text-m);margin-top:1px">Motor · <span style="font-family:var(--font-m);font-size:9px">9BD195A...777</span></div><div style="display:flex;align-items:center;justify-content:space-between;margin-top:5px"><span class="badge badge-ok" style="font-size:9px;padding:1px 6px">Compatível</span><span style="font-family:var(--font-m);font-size:9px;color:var(--text-s)">Ag. Costa · 8 min</span></div></div></div>
-        <div style="display:flex;gap:10px;padding:9px 14px;border-bottom:1px solid rgba(229,34,7,.12);cursor:pointer;align-items:flex-start;background:rgba(229,34,7,.03)" onclick="goTo('detalhe')"><div style="width:42px;height:42px;border-radius:9px;background:var(--co-50);flex-shrink:0;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--co-400)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg></div><div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:700;color:var(--text-h)">Honda Civic 2020</div><div style="font-size:10px;color:var(--text-m);margin-top:1px">Gravação chassi · <span style="font-family:var(--font-m);font-size:9px">93HRV850...412</span></div><div style="display:flex;align-items:center;justify-content:space-between;margin-top:5px"><span class="badge badge-err" style="font-size:9px;padding:1px 6px">Divergente</span><span style="font-family:var(--font-m);font-size:9px;color:var(--text-s)">Ag. Rocha · 12 min</span></div></div></div>
-        <div style="display:flex;gap:10px;padding:9px 14px;border-bottom:1px solid var(--sur-low);cursor:pointer;align-items:flex-start" onclick="goTo('detalhe')"><div style="width:42px;height:42px;border-radius:9px;background:var(--em-50);flex-shrink:0;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--em)" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div><div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:700;color:var(--text-h)">Toyota Corolla 2023</div><div style="font-size:10px;color:var(--text-m);margin-top:1px">Vidros · <span style="font-family:var(--font-m);font-size:9px">9BR53B...118</span></div><div style="display:flex;align-items:center;justify-content:space-between;margin-top:5px"><span class="badge badge-ok" style="font-size:9px;padding:1px 6px">Compatível</span><span style="font-family:var(--font-m);font-size:9px;color:var(--text-s)">Ag. Santos · 15 min</span></div></div></div>
-        <div style="display:flex;gap:10px;padding:9px 14px;border-bottom:1px solid var(--sur-low);cursor:pointer;align-items:flex-start" onclick="goTo('detalhe')"><div style="width:42px;height:42px;border-radius:9px;background:var(--em-50);flex-shrink:0;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--em)" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div><div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:700;color:var(--text-h)">Chevrolet Onix 2021</div><div style="font-size:10px;color:var(--text-m);margin-top:1px">Gravação chassi · <span style="font-family:var(--font-m);font-size:9px">9BG65K...445</span></div><div style="display:flex;align-items:center;justify-content:space-between;margin-top:5px"><span class="badge badge-ok" style="font-size:9px;padding:1px 6px">Compatível</span><span style="font-family:var(--font-m);font-size:9px;color:var(--text-s)">Ag. Lima · 18 min</span></div></div></div>
-        <div style="display:flex;gap:10px;padding:9px 14px;cursor:pointer;align-items:flex-start" onclick="goTo('detalhe')"><div style="width:42px;height:42px;border-radius:9px;background:var(--am-50);flex-shrink:0;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--am)" stroke-width="2" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/></svg></div><div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:700;color:var(--text-h)">Fiat Argo 1.3 2020</div><div style="font-size:10px;color:var(--text-m);margin-top:1px">Motor · <span style="font-family:var(--font-m);font-size:9px">9BD195A...302</span></div><div style="display:flex;align-items:center;justify-content:space-between;margin-top:5px"><span class="badge badge-warn" style="font-size:9px;padding:1px 6px">Atenção</span><span style="font-family:var(--font-m);font-size:9px;color:var(--text-s)">Ag. Ferreira · 22 min</span></div></div></div>
+      <div class="feed-filters">
+        <button class="feed-filter active" id="ff-all" onclick="setFeedFilter('all',this)">Todos</button>
+        <button class="feed-filter alerts" onclick="setFeedFilter('err',this)">Alertas</button>
+      </div>
+      <div class="feed-list" id="feed-list"></div>
+    </div>
+
+    <!-- Col direita: alertas + turno -->
+    <div class="col">
+      <div class="panel alerts-panel">
+        <div class="alerts-header">
+          <div>
+            <div class="panel-title" style="color:var(--co-800);display:flex;align-items:center;gap:5px">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--co-400)" stroke-width="2.5" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              Alertas críticos
+            </div>
+            <div class="panel-subtitle">Requer atenção imediata</div>
+          </div>
+          <span class="badge badge-err" id="alerts-count"></span>
+        </div>
+        <div class="alerts-list" id="alerts-list"></div>
+      </div>
+
+      <div class="panel turno-panel">
+        <div class="panel-header">
+          <div class="panel-title">Resumo do turno</div>
+          <span class="mono-sm" id="turno-range"></span>
+        </div>
+        <div style="padding:6px 14px 12px" id="turno-body"></div>
       </div>
     </div>
 
-    <!-- Coluna direita: alertas + turno -->
-    <div style="display:flex;flex-direction:column;gap:12px;min-height:0;overflow:hidden">
-      <div class="panel" style="flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column">
-        <div style="padding:12px 16px;display:flex;align-items:center;justify-content:space-between;background:var(--co-50);border-bottom:1px solid rgba(229,34,7,.12);flex-shrink:0">
-          <div><div class="panel-title" style="color:var(--co-800);display:flex;align-items:center;gap:5px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--co-400)" stroke-width="2.5" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Alertas críticos</div><div class="panel-subtitle">Requer atenção imediata</div></div>
-          <span class="badge badge-err">3</span>
-        </div>
-        <div style="overflow-y:auto;flex:1">
-          <div style="display:flex;gap:10px;padding:10px 14px;border-bottom:1px solid var(--sur-low);align-items:flex-start"><div style="width:34px;height:34px;border-radius:10px;background:var(--co-50);border:1px solid rgba(229,34,7,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--co-400)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg></div><div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:700;color:var(--text-h)">Divergência VIN</div><div style="font-size:10px;color:var(--text-m);margin-top:2px;line-height:1.4">Honda Civic · Vila Velha<br>Ag. Rocha · Score: <strong style="color:var(--co-400)">87</strong></div><div style="font-family:var(--font-m);font-size:9px;color:var(--text-s);margin-top:3px">Há 12 min</div><button onclick="goTo('detalhe')" style="font-size:10px;font-weight:600;padding:3px 10px;border-radius:9999px;background:var(--co-50);color:var(--co-800);border:1px solid rgba(229,34,7,.2);cursor:pointer;margin-top:5px">Ver detalhe →</button></div></div>
-          <div style="display:flex;gap:10px;padding:10px 14px;border-bottom:1px solid var(--sur-low);align-items:flex-start"><div style="width:34px;height:34px;border-radius:10px;background:var(--co-50);border:1px solid rgba(229,34,7,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--co-400)" stroke-width="2" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/></svg></div><div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:700;color:var(--text-h)">Adulteração suspeita</div><div style="font-size:10px;color:var(--text-m);margin-top:2px;line-height:1.4">Fiat Uno · Cariacica<br>Ag. Lima · Score: <strong style="color:var(--co-400)">74</strong></div><div style="font-family:var(--font-m);font-size:9px;color:var(--text-s);margin-top:3px">Há 34 min</div><button onclick="goTo('detalhe')" style="font-size:10px;font-weight:600;padding:3px 10px;border-radius:9999px;background:var(--co-50);color:var(--co-800);border:1px solid rgba(229,34,7,.2);cursor:pointer;margin-top:5px">Ver detalhe →</button></div></div>
-          <div style="display:flex;gap:10px;padding:10px 14px;align-items:flex-start"><div style="width:34px;height:34px;border-radius:10px;background:var(--am-50);border:1px solid rgba(196,140,20,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--am-400)" stroke-width="2" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/></svg></div><div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:700;color:var(--text-h)">Inconsistência múltipla</div><div style="font-size:10px;color:var(--text-m);margin-top:2px;line-height:1.4">VW Gol · Serra<br>Ag. Costa · Score: <strong style="color:var(--am)">61</strong></div><div style="font-family:var(--font-m);font-size:9px;color:var(--text-s);margin-top:3px">Há 1h</div><button onclick="goTo('detalhe')" style="font-size:10px;font-weight:600;padding:3px 10px;border-radius:9999px;background:var(--am-50);color:var(--am-800);border:1px solid rgba(196,140,20,.25);cursor:pointer;margin-top:5px">Ver detalhe →</button></div></div>
-        </div>
-      </div>
-      <div class="panel">
-        <div class="panel-header"><div class="panel-title">Resumo do turno</div><span class="mono-sm">14:00 – agora</span></div>
-        <div class="panel-body" style="padding-top:8px">
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--sur-low)"><span style="font-size:11px;color:var(--text-m)">Verificações</span><span style="font-family:var(--font-d);font-size:16px;font-weight:800;color:var(--text-h)">47</span></div>
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--sur-low)"><span style="font-size:11px;color:var(--text-m)">Compatíveis</span><span style="font-family:var(--font-d);font-size:16px;font-weight:800;color:var(--em)">42</span></div>
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--sur-low)"><span style="font-size:11px;color:var(--text-m)">Atenção</span><span style="font-family:var(--font-d);font-size:16px;font-weight:800;color:var(--am)">3</span></div>
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--sur-low)"><span style="font-size:11px;color:var(--text-m)">Divergentes</span><span style="font-family:var(--font-d);font-size:16px;font-weight:800;color:var(--co-400)">2</span></div>
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:11px;color:var(--text-m)">Taxa divergência</span><span style="font-family:var(--font-m);font-size:12px;font-weight:700;color:var(--co-400)">4,3%</span></div>
-        </div>
-      </div>
-    </div>
   </div>
 
-  <!-- Rodapé mono -->
-  <div style="display:flex;justify-content:space-between;padding:6px 0;border-top:1px solid var(--sur-high)">
-    <span style="font-family:var(--font-m);font-size:9px;color:var(--text-s)">V3R1 MONITOR · v2.4.1</span>
-    <span style="font-family:var(--font-m);font-size:9px;color:var(--text-s)" id="fbar">SYNC: 14:35:22 · <span style="color:var(--em-400)">ONLINE</span> · 8 AGENTES</span>
+  <div class="footer">
+    <span class="mono-sm">V3R1 MONITOR · <span id="footer-versao"></span></span>
+    <span class="mono-sm" id="fbar"></span>
   </div>
 
-</main>
+</div>
+
+<script src="data.js"></script>
 <script>
-function goTo(r){try{if(window.parent&&window.parent.goTo)window.parent.goTo(r);else{const M={'visao-geral':'dash-01-visao-geral.html','monitoramento':'dash-02-monitoramento.html','tatica':'dash-03-tatica.html','inteligencia':'dash-04-inteligencia.html','detalhe':'dash-05-detalhe.html','performance':'dash-06-performance.html','busca':'dash-07-busca.html','configuracoes':'dash-08-configuracoes.html'};if(M[r])window.location.href=M[r];}}catch(e){window.postMessage({goTo:r},'*')}}
-function tick(){const t=new Date().toTimeString().slice(0,8);const c=document.getElementById('clock');const f=document.getElementById('fbar');if(c)c.textContent=t;if(f)f.innerHTML='SYNC: '+t+' · <span style="color:var(--em-400)">ONLINE</span> · 8 AGENTES';}
-tick();setInterval(tick,1000);
+function goTo(r) {
+  try {
+    if (window.parent && window.parent.goTo) window.parent.goTo(r);
+    else window.postMessage({ goTo: r }, '*');
+  } catch(e) { window.postMessage({ goTo: r }, '*'); }
+}
+
+// ── Ticker gerado do DB ──────────────────────────────────
+function renderTicker() {
+  const items = DB.verificacoes_recentes(8).map(v => {
+    const vei = DB.veiculo(v.veiculo_id);
+    const und = DB.unidade(v.unidade_id);
+    const d   = new Date(v.data);
+    const hora = d.toTimeString().slice(0,5);
+    const label = vei ? `${vei.marca} ${vei.modelo.split(' ')[0]}` : '—';
+    const col = v.status==='err'
+  ? 'rgba(255, 99, 132, 0.9)'     // vermelho vibrante
+  : v.status==='warn'
+  ? 'rgba(255, 189, 46, 0.9)'     // amarelo/laranja vivo
+  : 'rgba(46, 213, 115, 0.9)'
+    const txt = DB.badge_label(v.status).toUpperCase();
+    return `<span style="color:${col};padding:0 20px">● ${txt} · ${label} · ${und?.nome||'—'} · ${hora}</span><span style="color:rgba(255,255,255,.15)"> · </span>`;
+  }).join('');
+  // Duplica para loop contínuo
+  document.getElementById('ticker-inner').innerHTML = items + items;
+}
+
+// ── Mapa ao vivo ──────────────────────────────────────────
+function renderMapa() {
+  const { lat, lng, zoom } = DB.mapa;
+  document.getElementById('map-iframe').src =
+    `https://www.google.com/maps?q=${lat},${lng}&z=${zoom}&output=embed`;
+
+  // Pins de agentes sobrepostos (posições simuladas em % do container)
+  const AGENT_POS = [
+    { x:42, y:37, cls:'g' }, { x:57, y:51, cls:'g' },
+    { x:53, y:32, cls:'a' }, { x:37, y:59, cls:'r' },
+    { x:65, y:43, cls:'g' },
+  ];
+  const pinsEl = document.getElementById('agent-pins');
+  pinsEl.innerHTML = AGENT_POS.slice(0, DB.agentes.length).map(p =>
+    `<div class="lpin ${p.cls}" style="top:${p.y}%;left:${p.x}%;z-index:5"></div>`
+  ).join('');
+
+  const tryDraw = () => {
+    const wrap = document.getElementById('map-wrap');
+    if (wrap && wrap.offsetWidth > 0) renderHeatmap();
+    else requestAnimationFrame(tryDraw);
+  };
+  tryDraw();
+}
+
+function renderHeatmap() {
+  const canvas = document.getElementById('heatmap-canvas');
+  const wrap   = document.getElementById('map-wrap');
+  if (!wrap) return;
+
+  const rect = wrap.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+
+  const W = rect.width;
+  const H = rect.height;
+
+  if (!W || !H) return;
+
+  // 👉 Ajuste real de resolução (evita blur e desalinhamento)
+  canvas.width  = Math.round(W * dpr);
+  canvas.height = Math.round(H * dpr);
+
+  // 👉 Mantém o tamanho visual correto
+  canvas.style.width  = W + 'px';
+  canvas.style.height = H + 'px';
+
+  const ctx = canvas.getContext('2d');
+
+  // 👉 Escala para compensar o DPR
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  ctx.clearRect(0, 0, W, H);
+
+  const R = W * 0.09;
+
+  DB.mapa.pontos.forEach(p => {
+    const cx = (p.x / 100) * W;
+    const OFFSET_Y = -100; // ajusta aqui (px)
+
+const cy = (p.y / 100) * H + OFFSET_Y;
+
+    const r = Math.round(p.intensidade > 0.5 ? 229 : 26 + (196-26) * (p.intensidade/0.5));
+    const g = Math.round(p.intensidade > 0.5 ? 158 - (158-34)*((p.intensidade-0.5)/0.5) : 158 + (196-158)*(p.intensidade/0.5));
+    const b = p.intensidade > 0.5 ? 7 : 20;
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, R, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(${r},${g},${b},${(0.18 + p.intensidade * 0.42).toFixed(2)})`;
+    ctx.fill();
+  });
+}
+
+// ── Agentes ──────────────────────────────────────────────
+function renderAgentes() {
+  const STATUS = ['verificando','deslocamento','verificando','aguardando','verificando'];
+  const STATUS_DOT = {
+    'verificando': { color:'var(--em-400)', shadow:'box-shadow:0 0 5px var(--em)' },
+    'deslocamento':{ color:'var(--am-400)', shadow:'' },
+    'aguardando':  { color:'var(--co-400)', shadow:'box-shadow:0 0 5px var(--co)' },
+  };
+  document.getElementById('agentes-badge').textContent = `${DB.agentes.length} online`;
+  document.getElementById('map-agentes').textContent = DB.agentes.length;
+  document.getElementById('map-devices').textContent  = DB.agentes.length + 4;
+  document.getElementById('map-sessoes').textContent  = Math.ceil(DB.agentes.length * 0.7);
+
+  document.getElementById('agentes-list').innerHTML = DB.agentes.map((a, i) => {
+    const und = DB.unidade(a.unidade_id);
+    const st  = STATUS[i % STATUS.length];
+    const dot = STATUS_DOT[st] || STATUS_DOT['verificando'];
+    return `
+      <div class="agent-row">
+        <div class="agent-avatar">${a.iniciais}</div>
+        <div style="flex:1;min-width:0">
+          <div class="agent-name">${a.nome}</div>
+          <div class="agent-sub">${und?.nome||'—'} · ${st}</div>
+        </div>
+        <div class="agent-status" style="background:${dot.color};${dot.shadow}"></div>
+      </div>`;
+  }).join('');
+}
+
+// ── Feed ─────────────────────────────────────────────────
+let feedFilter = 'all';
+
+function feedIconSVG(s) {
+  if (s==='err')  return `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--co-400)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`;
+  if (s==='warn') return `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--am-400)" stroke-width="2" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/></svg>`;
+  return `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--em)" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+}
+
+function setFeedFilter(f, btn) {
+  feedFilter = f;
+  document.querySelectorAll('.feed-filter').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderFeed();
+}
+
+function renderFeed() {
+  const all = DB.verificacoes_recentes(15);
+  const list = feedFilter === 'all' ? all : all.filter(v => v.status === feedFilter);
+  document.getElementById('feed-count').textContent = `${list.length} recentes`;
+  document.getElementById('feed-list').innerHTML = list.map(v => {
+    const vei = DB.veiculo(v.veiculo_id);
+    const agt = DB.agente(v.agente_id);
+    const ago = Math.round((Date.now() - new Date(v.data)) / 60000);
+    const agoStr = ago < 60 ? `${ago} min` : `${Math.round(ago/60)}h`;
+    const label  = vei ? `${vei.marca} ${vei.modelo} ${vei.ano}` : '—';
+    const vinShort = vei ? vei.vin.slice(0,9)+'...'+vei.vin.slice(-3) : '—';
+    const etapa = ['Gravação chassi','Etiqueta VIN','Vidros','Placa OCR'][Math.abs(v.score) % 4];
+    return `
+      <div class="feed-item ${v.status}" onclick="goTo('detalhe')">
+        <div class="feed-icon ${v.status}">${feedIconSVG(v.status)}</div>
+        <div style="flex:1;min-width:0">
+          <div class="feed-name">${label}</div>
+          <div class="feed-sub">${etapa} · <span style="font-family:var(--font-m);font-size:9px">${vinShort}</span></div>
+          <div class="feed-meta">
+            <span class="badge ${DB.badge_class(v.status)}">${DB.badge_label(v.status)}</span>
+            <span class="feed-ago">${agt?.nome||'—'} · ${agoStr}</span>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// ── Alertas ──────────────────────────────────────────────
+function alertIconSVG(t) {
+  if (t==='err') return `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--co-400)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`;
+  return `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--am-400)" stroke-width="2" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/></svg>`;
+}
+
+function renderAlertas() {
+  document.getElementById('alerts-count').textContent = DB.alertas_criticos().length;
+  document.getElementById('alerts-list').innerHTML = DB.alertas.map(a => {
+    const cls    = a.tipo === 'err' ? 'err' : 'warn';
+    const partes = a.texto.split('·');
+    return `
+      <div class="alert-item">
+        <div class="alert-icon ${cls}">${alertIconSVG(a.tipo)}</div>
+        <div style="flex:1;min-width:0">
+          <div class="alert-title">${partes[0].trim()}</div>
+          <div class="alert-sub">${partes.slice(1).join('·').trim()}<br>${a.meta}</div>
+          <button class="btn-detail ${cls}" onclick="goTo('detalhe')">Ver detalhe →</button>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// ── Turno ─────────────────────────────────────────────────
+function renderTurno() {
+  const tots = DB.totais();
+  const h    = new Date().getHours();
+  const turnoStart = h < 14 ? '08:00' : h < 20 ? '14:00' : '20:00';
+  document.getElementById('turno-range').textContent = `${turnoStart} – agora`;
+  document.getElementById('turno-body').innerHTML = `
+    <div class="turno-row"><span class="turno-label">Verificações</span><span class="turno-val">${tots.verificacoes}</span></div>
+    <div class="turno-row"><span class="turno-label">Compatíveis</span><span class="turno-val" style="color:var(--em)">${tots.ok}</span></div>
+    <div class="turno-row"><span class="turno-label">Atenção</span><span class="turno-val" style="color:var(--am)">${tots.warn}</span></div>
+    <div class="turno-row"><span class="turno-label">Divergentes</span><span class="turno-val" style="color:var(--co-400)">${tots.err}</span></div>
+    <div class="turno-row"><span class="turno-label">Taxa</span><span style="font-family:var(--font-m);font-size:12px;font-weight:700;color:var(--co-400)">${tots.pct_diverg}%</span></div>
+  `;
+}
+
+function tick() {
+  const t = new Date().toTimeString().slice(0, 8);
+  document.getElementById('fbar').innerHTML =
+    `SYNC: ${t} · <span style="color:var(--em-400)">ONLINE</span> · ${DB.agentes.length} AGENTES`;
+}
+
+function render() {
+  renderTicker();
+  renderMapa();
+  renderAgentes();
+  renderFeed();
+  renderAlertas();
+  renderTurno();
+  document.getElementById('footer-versao').textContent = DB.sistema.versao;
+  tick();
+}
+
+render();
+setInterval(tick, 1000);
+window.addEventListener('resize', renderHeatmap);
 </script>
 </body>
 </html>

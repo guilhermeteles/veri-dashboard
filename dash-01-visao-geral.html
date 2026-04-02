@@ -234,6 +234,16 @@ html,body{height:100%;overflow:hidden;font-family:var(--font-b);background:var(-
 }
 .scope-select svg{opacity:.5}
 
+/* Stats inline no topbar (monitoramento) */
+.topbar-stats{display:flex;align-items:center;gap:0}
+.ts-cell{
+  display:flex;flex-direction:column;align-items:center;gap:1px;
+  padding:0 14px;border-right:1px solid var(--border);
+}
+.ts-cell:last-child{border-right:none}
+.ts-val{font-family:var(--font-d);font-size:15px;font-weight:800;color:var(--text-h);line-height:1}
+.ts-lbl{font-family:var(--font-m);font-size:8px;color:var(--text-s);letter-spacing:.5px;white-space:nowrap}
+
 /* Status badge no topbar */
 .topbar-status{
   display:flex;align-items:center;gap:5px;
@@ -250,17 +260,17 @@ html,body{height:100%;overflow:hidden;font-family:var(--font-b);background:var(-
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
 
 /* ════════════════════════════════════════════════════
-   CONTENT AREA
+   CONTENT AREA — iframe full
    ════════════════════════════════════════════════════ */
 .content{
   grid-area:content;
-  overflow-y:auto;
-  padding:20px 24px;
+  overflow:hidden;
   background:var(--bg);
+  display:flex;flex-direction:column;
 }
-.content::-webkit-scrollbar{width:6px}
-.content::-webkit-scrollbar-track{background:transparent}
-.content::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+#main-frame{
+  width:100%;flex:1;border:none;display:block;
+}
 
 /* ════════════════════════════════════════════════════
    COMPONENTES REUTILIZÁVEIS
@@ -313,6 +323,7 @@ html,body{height:100%;overflow:hidden;font-family:var(--font-b);background:var(-
   border:1px solid var(--border);
   box-shadow:var(--sh-card);
   overflow:hidden;
+  display: flex;flex-direction:column;
 }
 .panel-header{
   padding:14px 16px 0;
@@ -511,6 +522,13 @@ html,body{height:100%;overflow:hidden;font-family:var(--font-b);background:var(-
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12.22 2h-.44a2 2 0 00-2 2v.18a2 2 0 01-1 1.73l-.43.25a2 2 0 01-2 0l-.15-.08a2 2 0 00-2.73.73l-.22.38a2 2 0 00.73 2.73l.15.1a2 2 0 011 1.72v.51a2 2 0 01-1 1.74l-.15.09a2 2 0 00-.73 2.73l.22.38a2 2 0 002.73.73l.15-.08a2 2 0 012 0l.43.25a2 2 0 011 1.73V20a2 2 0 002 2h.44a2 2 0 002-2v-.18a2 2 0 011-1.73l.43-.25a2 2 0 012 0l.15.08a2 2 0 002.73-.73l.22-.39a2 2 0 00-.73-2.73l-.15-.08a2 2 0 01-1-1.74v-.5a2 2 0 011-1.74l.15-.09a2 2 0 00.73-2.73l-.22-.38a2 2 0 00-2.73-.73l-.15.08a2 2 0 01-2 0l-.43-.25a2 2 0 01-1-1.73V4a2 2 0 00-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
         <span class="sb-item-label">Configurações</span>
       </button>
+
+      <!-- Notificações — pinned bottom -->
+      <button class="sb-item" id="sb-notif" onclick="toggleNotif()" style="margin-top:auto;position:relative">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+        <span class="sb-item-label">Notificações</span>
+        <span class="sb-badge" id="sb-notif-badge">3</span>
+      </button>
     </nav>
 
     <!-- Footer / usuário -->
@@ -527,294 +545,256 @@ html,body{height:100%;overflow:hidden;font-family:var(--font-b);background:var(-
   </aside>
 
   <!-- ── TOPBAR ────────────────────────────────────── -->
-  <header class="topbar">
-    <h1 class="topbar-title">Visão geral</h1>
-
-    <!-- Filtros de período -->
-    <div class="period-pills">
-      <button class="period-pill">Hoje</button>
-      <button class="period-pill active">7 dias</button>
-      <button class="period-pill">30 dias</button>
-      <button class="period-pill">Custom</button>
-    </div>
-
-    <div class="topbar-divider"></div>
-
-    <!-- Escopo -->
-    <div class="scope-select">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-      ES · Todas unidades
-      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-    </div>
-
-    <!-- Status live -->
-    <div class="topbar-status live">AO VIVO</div>
-
-    <!-- Ações -->
-    <button class="topbar-btn" data-tip="Exportar">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-    </button>
-    <button class="topbar-btn" data-tip="Notificações">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
-      <div class="topbar-notif-dot"></div>
-    </button>
-    <div class="topbar-avatar">GS</div>
+  <header class="topbar" id="topbar">
+    <h1 class="topbar-title" id="topbar-title">Visão geral</h1>
+    <div id="topbar-controls" style="display:flex;align-items:center;gap:10px"></div>
   </header>
 
-  <!-- ── CONTENT ────────────────────────────────────── -->
+  <!-- ── CONTENT — iframe full ────────────────────── -->
   <main class="content">
-
-    <!-- KPIs -->
-    <div class="kpi-grid">
-      <div class="kpi-card blue">
-        <div class="kpi-label">Total verificações</div>
-        <div class="kpi-value">1.247</div>
-        <div class="kpi-change up">↑ 12%</div>
-      </div>
-      <div class="kpi-card red">
-        <div class="kpi-label">% Divergentes</div>
-        <div class="kpi-value">4,2%</div>
-        <div class="kpi-change up-bad">↑ 0,3%</div>
-      </div>
-      <div class="kpi-card amber">
-        <div class="kpi-label">Score médio risco</div>
-        <div class="kpi-value">32</div>
-        <div class="kpi-change down-good">↓ 5pts</div>
-      </div>
-      <div class="kpi-card green">
-        <div class="kpi-label">Tempo médio</div>
-        <div class="kpi-value">3m42s</div>
-        <div class="kpi-change down-good">↓ 18s</div>
-      </div>
-      <div class="kpi-card purple">
-        <div class="kpi-label">Qualidade imagens</div>
-        <div class="kpi-value">94%</div>
-        <div class="kpi-change up">↑ 2%</div>
-      </div>
-    </div>
-
-    <!-- Linha principal: Mapa + Alertas + Mini gráfico -->
-    <div class="grid-60-40" style="margin-bottom:16px">
-
-      <!-- Mapa -->
-      <div class="panel">
-        <div class="panel-header">
-          <div>
-            <div class="panel-title">Mapa de verificações</div>
-            <div class="panel-subtitle">Concentração geográfica · ES</div>
-          </div>
-          <div class="badge badge-info">Heatmap</div>
-        </div>
-        <div class="panel-body" style="padding-top:10px">
-          <div class="map-placeholder" style="height:280px">
-            <div class="heat-dot" style="width:80px;height:80px;background:var(--co-400);top:28%;left:38%"></div>
-            <div class="heat-dot" style="width:55px;height:55px;background:var(--am-400);top:48%;left:54%"></div>
-            <div class="heat-dot" style="width:45px;height:45px;background:var(--em-400);top:33%;left:62%"></div>
-            <div class="heat-dot" style="width:65px;height:65px;background:var(--am-400);top:58%;left:33%"></div>
-            <span class="map-label">MAPA · ESTADO · ES</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Alertas + Gráfico tendência -->
-      <div class="flex-col" style="gap:12px">
-
-        <div class="panel" style="flex:1">
-          <div class="panel-header">
-            <div>
-              <div class="panel-title">Alertas recentes</div>
-              <div class="panel-subtitle">Últimas 24h</div>
-            </div>
-            <span class="badge badge-err">5 novos</span>
-          </div>
-          <div style="margin-top:8px">
-            <div class="alert-item">
-              <div class="alert-dot red"></div>
-              <div>
-                <div class="alert-text">Divergência VIN · Ford Ka · Vitória</div>
-                <div class="alert-meta">Há 12 min · Ag. Santos</div>
-              </div>
-            </div>
-            <div class="alert-item">
-              <div class="alert-dot amber"></div>
-              <div>
-                <div class="alert-text">Adulteração suspeita · Fiat Uno · Cariacica</div>
-                <div class="alert-meta">Há 34 min · Ag. Lima</div>
-              </div>
-            </div>
-            <div class="alert-item">
-              <div class="alert-dot amber"></div>
-              <div>
-                <div class="alert-text">Inconsistência múltipla · VW Gol · Serra</div>
-                <div class="alert-meta">Há 1h · Ag. Costa</div>
-              </div>
-            </div>
-            <div class="alert-item">
-              <div class="alert-dot red"></div>
-              <div>
-                <div class="alert-text">Divergência VIN · Honda Civic · Vila Velha</div>
-                <div class="alert-meta">Há 2h · Ag. Rocha</div>
-              </div>
-            </div>
-            <div class="alert-item">
-              <div class="alert-dot amber"></div>
-              <div>
-                <div class="alert-text">Raspagem detectada · Chevrolet Onix · Vitória</div>
-                <div class="alert-meta">Há 3h · Ag. Ferreira</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="panel">
-          <div class="panel-header">
-            <div class="panel-title">Tendência (7 dias)</div>
-          </div>
-          <div class="panel-body" style="padding-top:10px">
-            <div class="chart-bars" style="height:80px">
-              <div class="chart-bar" style="height:40%"></div>
-              <div class="chart-bar" style="height:55%"></div>
-              <div class="chart-bar" style="height:70%"></div>
-              <div class="chart-bar" style="height:60%"></div>
-              <div class="chart-bar hi" style="height:82%"></div>
-              <div class="chart-bar" style="height:65%"></div>
-              <div class="chart-bar hi" style="height:90%"></div>
-            </div>
-            <div style="display:flex;justify-content:space-between;margin-top:4px">
-              <span class="mono-sm">Seg</span><span class="mono-sm">Ter</span><span class="mono-sm">Qua</span>
-              <span class="mono-sm">Qui</span><span class="mono-sm">Sex</span><span class="mono-sm">Sáb</span>
-              <span class="mono-sm" style="color:var(--pri-400)">Dom</span>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- Tabela de verificações recentes -->
-    <div class="panel" style="margin-bottom:16px">
-      <div class="panel-header">
-        <div>
-          <div class="panel-title">Verificações recentes</div>
-          <div class="panel-subtitle">Últimas 10 ocorrências</div>
-        </div>
-        <button class="btn-secondary" style="font-size:11px;padding:5px 12px" onclick="goTo('busca')">Ver todas →</button>
-      </div>
-      <div class="panel-body" style="padding:0">
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>VIN</th>
-              <th>Veículo</th>
-              <th>Data/Hora</th>
-              <th>Agente</th>
-              <th>Unidade</th>
-              <th>Score</th>
-              <th>Resultado</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><span class="mono">9BWZZ377...967</span></td>
-              <td>VW Gol 1.0 2019</td>
-              <td><span class="mono-sm">23/03 14:35</span></td>
-              <td>Ag. Santos</td>
-              <td>Vitória</td>
-              <td><span class="mono" style="color:var(--em)">12</span></td>
-              <td><span class="badge badge-ok">Compatível</span></td>
-            </tr>
-            <tr>
-              <td><span class="mono">9BF1234A...821</span></td>
-              <td>Ford Ka SE 2021</td>
-              <td><span class="mono-sm">23/03 14:22</span></td>
-              <td>Ag. Lima</td>
-              <td>Cariacica</td>
-              <td><span class="mono" style="color:var(--am)">61</span></td>
-              <td><span class="badge badge-warn">Atenção</span></td>
-            </tr>
-            <tr>
-              <td><span class="mono">93HRV850...412</span></td>
-              <td>Honda HR-V EX 2022</td>
-              <td><span class="mono-sm">23/03 13:58</span></td>
-              <td>Ag. Santos</td>
-              <td>Serra</td>
-              <td><span class="mono" style="color:var(--em)">8</span></td>
-              <td><span class="badge badge-ok">Compatível</span></td>
-            </tr>
-            <tr>
-              <td><span class="mono">9BD195A...302</span></td>
-              <td>Fiat Argo 1.3 2020</td>
-              <td><span class="mono-sm">23/03 13:41</span></td>
-              <td>Ag. Costa</td>
-              <td>Vila Velha</td>
-              <td><span class="mono" style="color:var(--co-400)">87</span></td>
-              <td><span class="badge badge-err">Divergente</span></td>
-            </tr>
-            <tr>
-              <td><span class="mono">9BR53B...118</span></td>
-              <td>Toyota Corolla 2023</td>
-              <td><span class="mono-sm">23/03 13:15</span></td>
-              <td>Ag. Rocha</td>
-              <td>Vitória</td>
-              <td><span class="mono" style="color:var(--em)">5</span></td>
-              <td><span class="badge badge-ok">Compatível</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Rodapé mono -->
-    <div style="display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid var(--sur-high)">
-      <span class="mono-sm">V3R1 DASHBOARD · v2.4.1</span>
-      <span class="mono-sm">LAST_SYNC: <span style="color:var(--pri-400)">14:35:22</span> · STATUS: <span style="color:var(--em-400)">ONLINE</span></span>
-    </div>
-
+    <iframe id="main-frame" src="dash-01-visao-geral-content.html" allowfullscreen></iframe>
   </main>
 </div>
 
+<script src="data.js"></script>
 <script>
-// Navegação: tenta parent.goTo (iframe) e fallback top-level
-function goTo(rota) {
-  try {
-    if (window.parent && window.parent.goTo) {
-      window.parent.goTo(rota);
-    } else {
-      // standalone: mapa local de rotas
-      const ROUTES = {
-        'visao-geral':   'dash-01-visao-geral.html',
-        'monitoramento': 'dash-02-monitoramento.html',
-        'tatica':        'dash-03-tatica.html',
-        'inteligencia':  'dash-04-inteligencia.html',
-        'detalhe':       'dash-05-detalhe.html',
-        'performance':   'dash-06-performance.html',
-        'busca':         'dash-07-busca.html',
-        'configuracoes': 'dash-08-configuracoes.html',
-      };
-      if (ROUTES[rota]) window.location.href = ROUTES[rota];
+const ROUTES = {
+  'visao-geral':   'dash-01-visao-geral-content.html',
+  'monitoramento': 'dash-02-monitoramento.html',
+  'tatica':        'dash-03-tatica.html',
+  'inteligencia':  'dash-04-inteligencia.html',
+  'detalhe':       'dash-05-detalhe.html',
+  'performance':   'dash-06-performance.html',
+  'busca':         'dash-07-busca.html',
+  'configuracoes': 'dash-08-configuracoes.html',
+};
+
+const TITLES = {
+  'visao-geral':   'Visão geral',
+  'monitoramento': 'Monitoramento',
+  'tatica':        'Análise tática',
+  'inteligencia':  'Inteligência',
+  'detalhe':       'Detalhe da verificação',
+  'performance':   'Performance',
+  'busca':         'Busca avançada',
+  'configuracoes': 'Configurações',
+};
+
+// ── SVGs utilitários ──────────────────────────────────────
+const SVG = {
+  export: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>`,
+  pin:    `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>`,
+  chev:   `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>`,
+  back:   `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>`,
+  save:   `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>`,
+  search: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`,
+};
+
+// ── Helpers HTML ──────────────────────────────────────────
+const divider  = () => `<div class="topbar-divider"></div>`;
+const livePill = () => `<div class="topbar-status live">AO VIVO</div>`;
+const syncSpan = () => `<span class="topbar-sync" id="topbar-sync" style="font-family:var(--font-m);font-size:9px;color:var(--text-s)"></span>`;
+
+const periodPills = (active='7d') => `
+  <div class="period-pills">
+    ${[['Hoje','hoje'],['7 dias','7d'],['30 dias','30d'],['Custom','custom']].map(([l,v])=>
+      `<button class="period-pill${v===active?' active':''}" onclick="setPeriod('${v}',this)">${l}</button>`
+    ).join('')}
+  </div>`;
+
+const scopeSelect = () => `
+  <div class="scope-select">
+    ${SVG.pin} ES · Todas unidades ${SVG.chev}
+  </div>`;
+
+const btnExport = (tip='Exportar') => `
+  <button class="topbar-btn" data-tip="${tip}" onclick="exportAction()">
+    ${SVG.export}
+  </button>`;
+
+// ── Configuração de controles por rota ───────────────────
+function topbarControls(rota) {
+  switch (rota) {
+
+    case 'visao-geral':
+      return periodPills() + divider() + scopeSelect() + livePill() + syncSpan() + btnExport();
+
+    case 'monitoramento': {
+      const tots = DB.totais();
+      return `
+        ${livePill()}
+        ${divider()}
+        <div class="topbar-stats">
+          <div class="ts-cell">
+            <span class="ts-val">${tots.verificacoes}</span>
+            <span class="ts-lbl">Verificações</span>
+          </div>
+          <div class="ts-cell">
+            <span class="ts-val" style="color:var(--em)">${tots.ok}</span>
+            <span class="ts-lbl">Compatíveis</span>
+          </div>
+          <div class="ts-cell">
+            <span class="ts-val" style="color:var(--am)">${tots.warn}</span>
+            <span class="ts-lbl">Atenção</span>
+          </div>
+          <div class="ts-cell">
+            <span class="ts-val" style="color:var(--co-400)">${tots.err}</span>
+            <span class="ts-lbl">Divergências</span>
+          </div>
+          <div class="ts-cell">
+            <span class="ts-val">${DB.agentes.length}</span>
+            <span class="ts-lbl">Agentes ativos</span>
+          </div>
+        </div>
+        ${divider()}
+        ${syncSpan()}`;
     }
-  } catch(e) {
-    window.postMessage({ goTo: rota }, '*');
+
+    case 'tatica':
+      return periodPills() + divider() + scopeSelect() + btnExport('Exportar CSV');
+
+    case 'inteligencia':
+      // filtros de tipo espelham os filter-chips da tela via postMessage
+      return `
+        <div class="period-pills" id="intel-filters">
+          ${['Todos','Veículos','VINs','Agentes','Ocorrências'].map((l,i)=>
+            `<button class="period-pill${i===0?' active':''}"
+              onclick="intelFilter('${l.toLowerCase()}',this)">${l}</button>`
+          ).join('')}
+        </div>` + divider() + btnExport('Exportar grafo');
+
+    case 'detalhe':
+      return `
+        <button class="topbar-btn" data-tip="Voltar" onclick="goTo('busca')" style="width:auto;padding:0 14px;gap:6px;font-size:11px;font-weight:600;color:var(--text-b)">
+          ${SVG.back} Voltar
+        </button>` + divider() + btnExport('Exportar PDF');
+
+    case 'performance':
+      return periodPills() + divider() + scopeSelect() + btnExport();
+
+    case 'busca':
+      return `
+        <div style="display:flex;align-items:center;gap:6px;background:var(--sur-low);border:1px solid var(--border);border-radius:9999px;padding:4px 14px;min-width:220px">
+          ${SVG.search}
+          <input id="topbar-search" type="text" placeholder="Buscar VIN, placa, modelo…"
+            style="border:none;background:none;outline:none;font-size:11px;font-weight:500;color:var(--text-h);width:100%"
+            oninput="relaySearch(this.value)"
+            onkeydown="if(event.key==='Enter')relaySearch(this.value)">
+        </div>` + divider() + scopeSelect() + btnExport('Exportar CSV');
+
+    case 'configuracoes':
+      return `
+        <button class="topbar-btn" style="width:auto;padding:0 16px;gap:6px;font-size:11px;font-weight:600;background:linear-gradient(135deg,var(--pri-800),var(--pri-600));color:#fff;border:none;box-shadow:0 4px 12px rgba(37,45,122,.25)"
+          onclick="relayAction('saveAll')">
+          ${SVG.save} Salvar
+        </button>`;
+
+    default: return '';
   }
 }
 
-// Marcar item ativo no sidebar com base na rota atual
-(function(){
-  const page = window.location.pathname.split('/').pop();
-  const map = {
-    'dash-01-visao-geral.html':   0,
-    'dash-02-monitoramento.html': 1,
-    'dash-03-tatica.html':        2,
-    'dash-04-inteligencia.html':  3,
-    'dash-07-busca.html':         4,
-    'dash-06-performance.html':   5,
-    'dash-08-configuracoes.html': 6,
-  };
-  const items = document.querySelectorAll('.sb-item');
-  items.forEach(i => i.classList.remove('active'));
-  const idx = map[page];
-  if (idx !== undefined && items[idx]) items[idx].classList.add('active');
-})();
+// ── Navegação ─────────────────────────────────────────────
+let rotaAtual = 'visao-geral';
+
+function goTo(rota) {
+  const src = ROUTES[rota];
+  if (!src) return;
+  rotaAtual = rota;
+  document.getElementById('main-frame').src = src;
+
+  // Sidebar ativo
+  const ORDER = ['visao-geral','monitoramento','tatica','inteligencia','busca','performance','configuracoes'];
+  document.querySelectorAll('.sb-item').forEach((el, i) => {
+    el.classList.toggle('active', ORDER[i] === rota);
+  });
+
+  // Notificações: fecha drawer se aberto
+  document.getElementById('notif-drawer')?.remove();
+
+  // Topbar
+  document.getElementById('topbar-title').textContent = TITLES[rota] || rota;
+  document.getElementById('topbar-controls').innerHTML = topbarControls(rota);
+}
+
+// ── Ações do topbar ───────────────────────────────────────
+function setPeriod(val, btn) {
+  btn.closest('.period-pills').querySelectorAll('.period-pill').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  relayAction('setPeriod', val);
+}
+
+function intelFilter(tipo, btn) {
+  btn.closest('#intel-filters').querySelectorAll('.period-pill').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  relayAction('filterGraph', tipo);
+}
+
+function exportAction() {
+  relayAction('export');
+}
+
+// Envia comando para o iframe filho
+function relayAction(action, payload) {
+  try {
+    document.getElementById('main-frame').contentWindow.postMessage({ action, payload }, '*');
+  } catch(e) {}
+}
+
+// Envia busca para a tela de busca
+function relaySearch(val) {
+  relayAction('search', val);
+}
+
+// ── postMessage das telas filhas ──────────────────────────
+window.addEventListener('message', e => {
+  if (!e.data) return;
+  if (e.data.goTo) goTo(e.data.goTo);
+});
+
+// ── Notificações ──────────────────────────────────────────
+function toggleNotif() {
+  let drawer = document.getElementById('notif-drawer');
+  if (!drawer) {
+    drawer = document.createElement('div');
+    drawer.id = 'notif-drawer';
+    drawer.style.cssText = `
+      position:fixed;left:var(--sidebar-w);bottom:0;width:280px;
+      background:#fff;border:1px solid var(--border);border-radius:0 14px 0 0;
+      box-shadow:4px -4px 24px rgba(37,45,122,.12);z-index:200;
+      font-family:var(--font-b);overflow:hidden;
+    `;
+    const alertas = DB.alertas;
+    drawer.innerHTML = `
+      <div style="padding:12px 16px;border-bottom:1px solid var(--sur-low);display:flex;align-items:center;justify-content:space-between">
+        <span style="font-family:var(--font-d);font-size:12px;font-weight:800;color:var(--text-h)">Notificações</span>
+        <button onclick="document.getElementById('notif-drawer').remove()" style="border:none;background:none;cursor:pointer;color:var(--text-s);font-size:16px;line-height:1">×</button>
+      </div>
+      ${alertas.map(a => `
+        <div style="display:flex;gap:10px;padding:10px 16px;border-bottom:1px solid var(--sur-low);cursor:pointer" onclick="goTo('monitoramento');document.getElementById('notif-drawer').remove()">
+          <div style="width:7px;height:7px;border-radius:50%;background:${a.tipo==='err'?'var(--co-400)':'var(--am-400)'};flex-shrink:0;margin-top:4px"></div>
+          <div>
+            <div style="font-size:11px;font-weight:600;color:var(--text-b)">${a.texto}</div>
+            <div style="font-size:10px;color:var(--text-s);margin-top:1px">${a.meta}</div>
+          </div>
+        </div>`).join('')}
+    `;
+    document.body.appendChild(drawer);
+  } else {
+    drawer.remove();
+  }
+}
+
+// ── Init ──────────────────────────────────────────────────
+document.getElementById('sb-notif-badge').textContent = DB.alertas.length;
+document.getElementById('topbar-controls').innerHTML = topbarControls('visao-geral');
+
+function tick() {
+  const t = new Date().toTimeString().slice(0,8);
+  const el = document.getElementById('topbar-sync');
+  if (el) el.textContent = t;
+}
+tick();
+setInterval(tick, 1000);
 </script>
 </body>
 </html>

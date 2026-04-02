@@ -17,424 +17,521 @@
   --text-h:#181c21;--text-b:#464651;--text-m:#595c7c;--text-s:#767682;--border:#d8dae8;
   --font-d:'Plus Jakarta Sans',sans-serif;--font-b:'DM Sans',sans-serif;--font-m:'JetBrains Mono',monospace;
   --sh-card:0 1px 3px rgba(37,45,122,.08),0 4px 16px rgba(37,45,122,.04);
-  --sidebar-w:220px;--topbar-h:52px;
 }
 html,body{height:100%;overflow:hidden;font-family:var(--font-b);background:var(--bg);color:var(--text-h)}
-.dash-shell{display:grid;grid-template-columns:var(--sidebar-w) 1fr;grid-template-rows:var(--topbar-h) 1fr;grid-template-areas:"sidebar topbar" "sidebar content";height:100vh;overflow:hidden}
-.rainbow-bar{position:fixed;top:0;left:0;right:0;height:3px;z-index:100;background:linear-gradient(90deg,var(--pri-800),var(--pri-400),var(--em-400),var(--pri-400),var(--pri-800))}
-.sidebar{grid-area:sidebar;background:var(--pri-800);display:flex;flex-direction:column;height:100vh;box-shadow:2px 0 24px rgba(37,45,122,.08);padding-top:3px;position:relative;z-index:50;overflow:hidden}
-.sb-logo{display:flex;align-items:center;gap:10px;padding:16px 18px 14px;border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0}
-.sb-logo-mark{width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,var(--pri-400),var(--pri-600));border:1px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.sb-logo-text{font-family:var(--font-d);font-size:15px;font-weight:800;color:#fff;letter-spacing:2px}
-.sb-logo-badge{font-family:var(--font-m);font-size:7px;color:rgba(255,255,255,.45);letter-spacing:1px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:4px;padding:1px 5px;margin-left:auto}
-.sb-nav{flex:1;padding:10px;display:flex;flex-direction:column;gap:2px;overflow-y:auto}
-.sb-nav::-webkit-scrollbar{display:none}
-.sb-section-label{font-family:var(--font-m);font-size:8px;font-weight:700;color:rgba(255,255,255,.25);letter-spacing:1.5px;text-transform:uppercase;padding:8px 8px 4px}
-.sb-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;font-size:12px;font-weight:500;color:rgba(255,255,255,.5);cursor:pointer;transition:all .15s;text-decoration:none;border:none;background:none;width:100%;text-align:left}
-.sb-item:hover{background:rgba(255,255,255,.06);color:rgba(255,255,255,.8)}
-.sb-item.active{background:rgba(92,102,212,.25);color:#fff;font-weight:600;border:1px solid rgba(92,102,212,.35)}
-.sb-item svg{flex-shrink:0;opacity:.7}.sb-item.active svg{opacity:1}.sb-item-label{flex:1}
-.sb-badge{font-family:var(--font-m);font-size:8px;font-weight:700;background:var(--co-400);color:#fff;border-radius:9999px;padding:1px 6px;min-width:16px;text-align:center}
-.sb-footer{border-top:1px solid rgba(255,255,255,.08);padding:12px 10px;flex-shrink:0}
-.sb-user{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;cursor:pointer}
-.sb-user:hover{background:rgba(255,255,255,.06)}
-.sb-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--pri-400),var(--pri-600));border:1.5px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--font-d);font-size:11px;font-weight:800;color:#fff}
-.sb-user-info{flex:1;min-width:0}.sb-user-name{font-size:11px;font-weight:600;color:rgba(255,255,255,.85);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sb-user-role{font-family:var(--font-m);font-size:8px;color:rgba(255,255,255,.35);margin-top:1px}
-.sb-online{width:7px;height:7px;border-radius:50%;background:var(--em-400);flex-shrink:0}
-.topbar{grid-area:topbar;height:var(--topbar-h);background:rgba(248,249,255,.92);backdrop-filter:blur(18px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;padding:0 24px;position:sticky;top:0;z-index:40;padding-top:3px}
-.topbar-title{font-family:var(--font-d);font-size:15px;font-weight:800;color:var(--text-h);flex:1}
-.topbar-divider{width:1px;height:20px;background:var(--border)}
-.topbar-btn{width:34px;height:34px;border-radius:10px;background:var(--sur-low);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-m)}
-.topbar-avatar{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--pri-50),var(--pri-100));border:1.5px solid var(--pri-100);display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-size:11px;font-weight:800;color:var(--pri-800);cursor:pointer}
 
-/* INTEL LAYOUT — full height, no scroll */
-.intel-shell{display:grid;grid-template-columns:1fr 320px;height:100%;overflow:hidden}
+/* Layout full-height, sem scroll */
+.intel-shell{display:grid;grid-template-columns:1fr 300px;height:100%;overflow:hidden}
 
-/* Graph area */
-.graph-area{position:relative;background:linear-gradient(160deg,#f0f2fb,#f8f9ff);overflow:hidden;border-right:1px solid var(--border)}
-#graph-svg{width:100%;height:100%}
+/* ── Filter bar ──────────────────────────────────────────── */
+.filter-bar{
+  position:absolute;top:12px;left:50%;transform:translateX(-50%);
+  display:flex;gap:4px;z-index:10;
+  background:rgba(255,255,255,.92);backdrop-filter:blur(10px);
+  border:1px solid var(--border);border-radius:9999px;padding:4px 6px;
+  box-shadow:var(--sh-card);
+}
+.filter-chip{font-size:11px;font-weight:600;padding:4px 10px;border-radius:9999px;cursor:pointer;border:none;background:none;color:var(--text-m);transition:all .15s}
+.filter-chip:hover{color:var(--text-h);background:var(--sur-low)}
+.filter-chip.active{background:var(--pri-800);color:#fff}
 
-/* Graph controls */
-.graph-controls{position:absolute;top:14px;left:14px;display:flex;flex-direction:column;gap:6px;z-index:10}
-.ctrl-btn{width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,.9);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:var(--text-m);box-shadow:0 1px 4px rgba(37,45,122,.08)}
+/* ── Graph area ──────────────────────────────────────────── */
+.graph-area{
+  position:relative;overflow:hidden;
+  background:transparent;
+  border-right:1px solid var(--border);
+}
+/* Mapa base — fica abaixo do SVG */
+#map-iframe{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  border:0;
+  filter: grayscale(100%) brightness(1.08) contrast(0.92) saturate(0.6);
+  z-index:0;
+}
+
+/* overlay correto */
+#mapCanvas::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:rgba(255,255,255,0.8); /* 👈 ajuste aqui */
+  pointer-events:none;
+  z-index:1;
+}
+#graph-svg{width:100%;height:100%;position:relative;z-index:2}
+
+.graph-controls{position:absolute;top:12px;left:12px;display:flex;flex-direction:column;gap:5px;z-index:10}
+.ctrl-btn{width:30px;height:30px;border-radius:8px;background:rgba(255,255,255,.9);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:var(--text-m);box-shadow:0 1px 4px rgba(37,45,122,.08)}
 .ctrl-btn:hover{background:#fff;color:var(--text-h)}
 
-/* Legend */
-.graph-legend{position:absolute;bottom:14px;left:14px;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border:1px solid var(--border);border-radius:10px;padding:10px 14px;z-index:10}
-.leg-row{display:flex;align-items:center;gap:8px;padding:3px 0;font-size:10px;color:var(--text-m)}
-.leg-node{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+.graph-legend{position:absolute;bottom:12px;left:12px;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border:1px solid var(--border);border-radius:10px;padding:10px 14px;z-index:10}
+.leg-title{font-family:var(--font-m);font-size:8px;font-weight:700;color:var(--text-s);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.leg-row{display:flex;align-items:center;gap:8px;padding:2px 0;font-size:10px;color:var(--text-m)}
+.leg-node{width:10px;height:10px;border-radius:50%;flex-shrink:0}
 
-/* Right panel */
+.node-tooltip{position:absolute;background:var(--text-h);color:#fff;padding:5px 9px;border-radius:7px;font-size:10px;pointer-events:none;z-index:20;opacity:0;transition:opacity .15s;white-space:nowrap}
+.node-tooltip.show{opacity:1}
+
+/* Stats strip no grafo */
+.graph-stats{
+  position:absolute;top:12px;right:12px;
+  display:flex;gap:6px;z-index:10;
+}
+.stat-chip{
+  background:rgba(255,255,255,.92);backdrop-filter:blur(8px);
+  border:1px solid var(--border);border-radius:9999px;
+  padding:3px 10px;font-family:var(--font-m);font-size:9px;color:var(--text-s);
+}
+
+/* ── Detail panel ────────────────────────────────────────── */
 .detail-panel{display:flex;flex-direction:column;overflow:hidden;background:var(--surface)}
-.detail-header{padding:16px 18px;border-bottom:1px solid var(--border);flex-shrink:0}
-.detail-body{flex:1;overflow-y:auto;padding:16px 18px}
+.detail-header{padding:14px 16px;border-bottom:1px solid var(--border);flex-shrink:0}
+.detail-body{flex:1;overflow-y:auto;padding:14px 16px}
 .detail-body::-webkit-scrollbar{width:4px}
 .detail-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
-
-/* Node tooltip */
-.node-tooltip{position:absolute;background:var(--text-h);color:#fff;padding:6px 10px;border-radius:8px;font-size:10px;pointer-events:none;z-index:20;opacity:0;transition:opacity .15s;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,.2)}
-.node-tooltip.show{opacity:1}
 
 .badge{display:inline-flex;align-items:center;gap:4px;font-family:var(--font-b);font-size:10px;font-weight:700;padding:2px 8px;border-radius:9999px}
 .badge-ok{background:var(--em-50);color:var(--em);border:1px solid rgba(22,136,33,.15)}
 .badge-warn{background:var(--am-50);color:var(--am-800);border:1px solid rgba(196,140,20,.2)}
 .badge-err{background:var(--co-50);color:var(--co-800);border:1px solid rgba(229,34,7,.15)}
 .badge-info{background:var(--pri-50);color:var(--pri-600);border:1px solid var(--pri-100)}
-.mono-sm{font-family:var(--font-m);font-size:9px;color:var(--text-s)}
-.mono{font-family:var(--font-m);font-size:11px;color:var(--text-m)}
 
-.conn-item{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--sur-low);align-items:flex-start;cursor:pointer}
-.conn-item:hover{opacity:.85}
+.conn-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid var(--sur-low);cursor:pointer;align-items:flex-start}
+.conn-item:hover{opacity:.8}
 .conn-item:last-child{border-bottom:none}
-.conn-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:3px}
+.conn-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;margin-top:3px}
 .conn-label{font-size:11px;font-weight:700;color:var(--text-h)}
 .conn-meta{font-size:10px;color:var(--text-s);margin-top:1px}
 
-.filter-chip{font-size:11px;font-weight:600;padding:4px 10px;border-radius:9999px;border:1px solid var(--border);cursor:pointer;background:var(--sur-low);color:var(--text-m);transition:all .15s}
-.filter-chip.active{background:var(--pri-800);color:#fff;border-color:var(--pri-800)}
-.btn-secondary{background:var(--sur-mid);border:1px solid var(--border);border-radius:9999px;padding:6px 14px;font-size:11px;font-weight:600;color:var(--text-b);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.cluster-card{border-radius:10px;padding:10px 12px;cursor:pointer;margin-bottom:8px;border:1px solid transparent}
+.cluster-card:last-child{margin-bottom:0}
+.cluster-card.err{background:var(--co-50);border-color:rgba(229,34,7,.15)}
+.cluster-card.warn{background:var(--am-50);border-color:rgba(196,140,20,.2)}
+
+.btn-action{width:100%;padding:8px;border-radius:9999px;border:none;font-size:12px;font-weight:600;cursor:pointer;background:var(--pri-800);color:#fff;margin-top:12px}
 </style>
 </head>
 <body>
-<div class="rainbow-bar"></div>
-<div class="dash-shell">
-  <aside class="sidebar">
-    <div class="sb-logo">
-      <img src="logo-white.svg" alt="">
-      <!-- <span class="sb-logo-text">V3R1</span> -->
-      <span class="sb-logo-badge">WEB</span>
-    </div>
-    <nav class="sb-nav">
-      <div class="sb-section-label">Principal</div>
-      <button class="sb-item" onclick="goTo('visao-geral')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg><span class="sb-item-label">Visão geral</span></button>
-      <button class="sb-item" onclick="goTo('monitoramento')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="2"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg><span class="sb-item-label">Monitoramento</span><span class="sb-badge">3</span></button>
-      <button class="sb-item" onclick="goTo('tatica')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg><span class="sb-item-label">Análise tática</span></button>
-      <button class="sb-item active" onclick="goTo('inteligencia')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg><span class="sb-item-label">Inteligência</span></button>
-      <div class="sb-section-label" style="margin-top:4px">Operacional</div>
-      <button class="sb-item" onclick="goTo('busca')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span class="sb-item-label">Busca avançada</span></button>
-      <button class="sb-item" onclick="goTo('performance')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span class="sb-item-label">Performance</span></button>
-      <div class="sb-section-label" style="margin-top:4px">Sistema</div>
-      <button class="sb-item" onclick="goTo('configuracoes')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12.22 2h-.44a2 2 0 00-2 2v.18a2 2 0 01-1 1.73l-.43.25a2 2 0 01-2 0l-.15-.08a2 2 0 00-2.73.73l-.22.38a2 2 0 00.73 2.73l.15.1a2 2 0 011 1.72v.51a2 2 0 01-1 1.74l-.15.09a2 2 0 00-.73 2.73l.22.38a2 2 0 002.73.73l.15-.08a2 2 0 012 0l.43.25a2 2 0 011 1.73V20a2 2 0 002 2h.44a2 2 0 002-2v-.18a2 2 0 011-1.73l.43-.25a2 2 0 012 0l.15.08a2 2 0 002.73-.73l.22-.39a2 2 0 00-.73-2.73l-.15-.08a2 2 0 01-1-1.74v-.5a2 2 0 011-1.74l.15-.09a2 2 0 00.73-2.73l-.22-.38a2 2 0 00-2.73-.73l-.15.08a2 2 0 01-2 0l-.43-.25a2 2 0 01-1-1.73V4a2 2 0 00-2-2z"/><circle cx="12" cy="12" r="3"/></svg><span class="sb-item-label">Configurações</span></button>
-    </nav>
-    <div class="sb-footer">
-      <div class="sb-user">
-        <div class="sb-avatar">AR</div>
-        <div class="sb-user-info"><div class="sb-user-name">Analista Rocha</div><div class="sb-user-role">INVESTIGADOR · ES</div></div>
-        <div class="sb-online"></div>
-      </div>
-    </div>
-  </aside>
 
-  <header class="topbar">
-    <h1 class="topbar-title">Grafo de inteligência</h1>
-    <div style="display:flex;gap:6px">
+<div class="intel-shell">
+
+  <!-- ── Graph area ────────────────────────────── -->
+  <div class="graph-area" id="graphArea">
+    <!-- Mapa base -->
+     <div id="mapCanvas">
+<iframe id="map-iframe"></iframe>
+     </div>
+    
+    <!-- SVG do grafo (z-index:2, flutua sobre o mapa) -->
+    <svg id="graph-svg"></svg>
+
+    <!-- Filter bar -->
+    <div class="filter-bar">
       <button class="filter-chip active" onclick="filterGraph('all',this)">Todos</button>
+      <button class="filter-chip" onclick="filterGraph('veiculo',this)">Veículos</button>
       <button class="filter-chip" onclick="filterGraph('vin',this)">VINs</button>
-      <button class="filter-chip" onclick="filterGraph('placa',this)">Placas</button>
       <button class="filter-chip" onclick="filterGraph('agente',this)">Agentes</button>
       <button class="filter-chip" onclick="filterGraph('ocorrencia',this)">Ocorrências</button>
     </div>
-    <div class="topbar-divider"></div>
-    <span style="font-family:var(--font-m);font-size:9px;color:var(--text-s)">52 nós · 87 conexões</span>
-    <div class="topbar-divider"></div>
-    <button class="btn-secondary" style="font-size:11px;padding:5px 12px">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      Exportar grafo
-    </button>
-    <button class="topbar-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg></button>
-    <div class="topbar-avatar">AR</div>
-  </header>
 
-  <div style="grid-area:content;overflow:hidden;display:grid;grid-template-columns:1fr 320px">
-
-    <!-- Graph canvas -->
-    <div class="graph-area" id="graphArea">
-      <svg id="graph-svg"></svg>
-
-      <div class="graph-controls">
-        <button class="ctrl-btn" onclick="zoom(1.2)" title="Zoom in">+</button>
-        <button class="ctrl-btn" onclick="zoom(.83)" title="Zoom out">−</button>
-        <button class="ctrl-btn" onclick="resetView()" title="Resetar" style="font-size:10px">⌂</button>
-      </div>
-
-      <div class="graph-legend">
-        <div style="font-family:var(--font-m);font-size:8px;font-weight:700;color:var(--text-s);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Legenda</div>
-        <div class="leg-row"><div class="leg-node" style="background:var(--co-400)"></div>Divergência</div>
-        <div class="leg-row"><div class="leg-node" style="background:var(--am-400)"></div>Suspeito</div>
-        <div class="leg-row"><div class="leg-node" style="background:var(--em-400)"></div>Compatível</div>
-        <div class="leg-row"><div class="leg-node" style="background:var(--pri-400)"></div>Veículo</div>
-        <div class="leg-row"><div class="leg-node" style="background:#7c3aed"></div>Agente</div>
-        <div class="leg-row"><div class="leg-node" style="background:var(--text-s)"></div>Ocorrência</div>
-        <div style="margin-top:6px;padding-top:6px;border-top:1px solid var(--border)">
-          <div class="leg-row" style="gap:4px">
-            <svg width="20" height="8" style="flex-shrink:0"><line x1="0" y1="4" x2="20" y2="4" stroke="var(--co-400)" stroke-width="2" stroke-dasharray="4,2"/></svg>
-            Ligação divergente
-          </div>
-          <div class="leg-row" style="gap:4px">
-            <svg width="20" height="8" style="flex-shrink:0"><line x1="0" y1="4" x2="20" y2="4" stroke="var(--border)" stroke-width="1.5"/></svg>
-            Ligação normal
-          </div>
-        </div>
-      </div>
-
-      <div class="node-tooltip" id="tooltip"></div>
+    <!-- Controls -->
+    <div class="graph-controls">
+      <button class="ctrl-btn" onclick="zoom(1.2)">+</button>
+      <button class="ctrl-btn" onclick="zoom(.83)">−</button>
+      <button class="ctrl-btn" onclick="resetView()" style="font-size:10px">⌂</button>
     </div>
 
-    <!-- Detail panel -->
-    <div class="detail-panel">
-      <div class="detail-header">
-        <div style="display:flex;align-items:center;justify-content:space-between">
-          <div>
-            <div style="font-family:var(--font-d);font-size:13px;font-weight:800;color:var(--text-h)" id="dp-title">Selecione um nó</div>
-            <div style="font-size:10px;color:var(--text-s);margin-top:2px" id="dp-sub">Clique em qualquer elemento do grafo</div>
-          </div>
-          <span class="badge badge-err" id="dp-badge" style="display:none"></span>
+    <!-- Stats -->
+    <div class="graph-stats" id="graph-stats"></div>
+
+    <!-- Legend -->
+    <div class="graph-legend">
+      <div class="leg-title">Legenda</div>
+      <div class="leg-row"><div class="leg-node" style="background:var(--co-400)"></div>Divergência</div>
+      <div class="leg-row"><div class="leg-node" style="background:var(--am-400)"></div>Suspeito</div>
+      <div class="leg-row"><div class="leg-node" style="background:var(--em-400)"></div>Compatível</div>
+      <div class="leg-row"><div class="leg-node" style="background:var(--pri-400)"></div>Veículo</div>
+      <div class="leg-row"><div class="leg-node" style="background:#7c3aed"></div>Agente</div>
+      <div class="leg-row"><div class="leg-node" style="background:var(--text-s)"></div>Ocorrência</div>
+      <div style="margin-top:6px;padding-top:6px;border-top:1px solid var(--border)">
+        <div class="leg-row" style="gap:4px">
+          <svg width="20" height="8" style="flex-shrink:0"><line x1="0" y1="4" x2="20" y2="4" stroke="var(--co-400)" stroke-width="2" stroke-dasharray="4,2"/></svg>
+          Ligação divergente
+        </div>
+        <div class="leg-row" style="gap:4px">
+          <svg width="20" height="8" style="flex-shrink:0"><line x1="0" y1="4" x2="20" y2="4" stroke="var(--border)" stroke-width="1.5"/></svg>
+          Ligação normal
         </div>
       </div>
-      <div class="detail-body" id="dp-body">
-        <div style="color:var(--text-s);font-size:11px;line-height:1.6;margin-top:8px">
-          O grafo mostra conexões entre veículos, VINs, placas, agentes e ocorrências registradas no sistema.<br><br>
-          <strong style="color:var(--text-h)">Nós em vermelho</strong> indicam divergências confirmadas.<br>
-          <strong style="color:var(--text-h)">Nós em âmbar</strong> estão sob suspeita.<br><br>
-          Clique em um nó para ver suas conexões e histórico.
-        </div>
+    </div>
 
-        <div style="margin-top:20px">
-          <div style="font-family:var(--font-d);font-size:11px;font-weight:800;color:var(--text-h);margin-bottom:8px">Clusters detectados</div>
-          <div style="display:flex;flex-direction:column;gap:8px">
-            <div style="background:var(--co-50);border:1px solid rgba(229,34,7,.15);border-radius:10px;padding:10px 12px;cursor:pointer" onclick="selectCluster('A')">
-              <div style="display:flex;align-items:center;justify-content:space-between">
-                <span style="font-size:12px;font-weight:700;color:var(--co-800)">Cluster A · Vila Velha</span>
-                <span class="badge badge-err" style="font-size:9px">4 nós</span>
-              </div>
-              <div style="font-size:10px;color:var(--text-m);margin-top:3px">Honda Civic · VIN adulterado · 2 ocorrências</div>
-            </div>
-            <div style="background:var(--am-50);border:1px solid rgba(196,140,20,.2);border-radius:10px;padding:10px 12px;cursor:pointer" onclick="selectCluster('B')">
-              <div style="display:flex;align-items:center;justify-content:space-between">
-                <span style="font-size:12px;font-weight:700;color:var(--am-800)">Cluster B · Serra</span>
-                <span class="badge badge-warn" style="font-size:9px">6 nós</span>
-              </div>
-              <div style="font-size:10px;color:var(--text-m);margin-top:3px">VW/Fiat · Raspagem de chassi · 3 ocorrências</div>
-            </div>
-            <div style="background:var(--am-50);border:1px solid rgba(196,140,20,.2);border-radius:10px;padding:10px 12px;cursor:pointer" onclick="selectCluster('C')">
-              <div style="display:flex;align-items:center;justify-content:space-between">
-                <span style="font-size:12px;font-weight:700;color:var(--am-800)">Cluster C · Cariacica</span>
-                <span class="badge badge-warn" style="font-size:9px">3 nós</span>
-              </div>
-              <div style="font-size:10px;color:var(--text-m);margin-top:3px">Ford Ranger · Suspeita SINESP · 1 ocorrência</div>
-            </div>
-          </div>
-        </div>
+    <div class="node-tooltip" id="tooltip"></div>
+  </div>
 
-        <div style="margin-top:16px">
-          <div style="font-family:var(--font-d);font-size:11px;font-weight:800;color:var(--text-h);margin-bottom:8px">Conexões recentes</div>
-          <div id="conn-list">
-            <div class="conn-item" onclick="selectNode('honda-civic')"><div class="conn-dot" style="background:var(--co-400)"></div><div><div class="conn-label">Honda Civic 2020 · GHT-3A12</div><div class="conn-meta">VIN divergente · Score 87 · Vila Velha</div></div></div>
-            <div class="conn-item" onclick="selectNode('vw-gol')"><div class="conn-dot" style="background:var(--am-400)"></div><div><div class="conn-label">VW Gol 1.0 · FGH-2B08</div><div class="conn-meta">Suspeita chassi · Score 61 · Serra</div></div></div>
-            <div class="conn-item" onclick="selectNode('ford-ranger')"><div class="conn-dot" style="background:var(--am-400)"></div><div><div class="conn-label">Ford Ranger · KLM-5C20</div><div class="conn-meta">SINESP match · Score 78 · Cariacica</div></div></div>
-            <div class="conn-item" onclick="selectNode('fiat-argo')"><div class="conn-dot" style="background:var(--am-400)"></div><div><div class="conn-label">Fiat Argo 1.3 · PQR-9D33</div><div class="conn-meta">Adulteração motora · Score 55 · Serra</div></div></div>
-          </div>
+  <!-- ── Detail panel ──────────────────────────── -->
+  <div class="detail-panel">
+    <div class="detail-header">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-family:var(--font-d);font-size:13px;font-weight:800;color:var(--text-h)" id="dp-title">Selecione um nó</div>
+          <div style="font-size:10px;color:var(--text-s);margin-top:2px" id="dp-sub">Clique em qualquer elemento do grafo</div>
         </div>
+        <span class="badge badge-err" id="dp-badge" style="display:none"></span>
+      </div>
+    </div>
+    <div class="detail-body" id="dp-body">
+      <div style="color:var(--text-s);font-size:11px;line-height:1.6;margin-top:4px">
+        Grafo de conexões entre veículos, VINs, agentes e ocorrências.<br><br>
+        <strong style="color:var(--text-h)">Vermelho</strong> · divergência confirmada<br>
+        <strong style="color:var(--text-h)">Âmbar</strong> · suspeita<br>
+        <strong style="color:var(--text-h)">Verde</strong> · compatível
+      </div>
+
+      <div style="margin-top:16px">
+        <div style="font-family:var(--font-d);font-size:11px;font-weight:800;color:var(--text-h);margin-bottom:8px">Clusters detectados</div>
+        <div id="clusters-list"></div>
+      </div>
+
+      <div style="margin-top:16px">
+        <div style="font-family:var(--font-d);font-size:11px;font-weight:800;color:var(--text-h);margin-bottom:8px">Conexões recentes</div>
+        <div id="conn-list"></div>
       </div>
     </div>
   </div>
+
 </div>
 
+<script src="data.js"></script>
 <script>
-function goTo(r){try{if(window.parent&&window.parent.goTo)window.parent.goTo(r);else{const M={'visao-geral':'dash-01-visao-geral.html','monitoramento':'dash-02-monitoramento.html','tatica':'dash-03-tatica.html','inteligencia':'dash-04-inteligencia.html','detalhe':'dash-05-detalhe.html','performance':'dash-06-performance.html','busca':'dash-07-busca.html','configuracoes':'dash-08-configuracoes.html'};if(M[r])window.location.href=M[r];}}catch(e){window.postMessage({goTo:r},'*')}}
+function goTo(r) {
+  try {
+    if (window.parent && window.parent.goTo) window.parent.goTo(r);
+    else window.postMessage({ goTo: r }, '*');
+  } catch(e) { window.postMessage({ goTo: r }, '*'); }
+}
 
-// ── Graph engine ────────────────────────────────────────────
-const NODES = [
-  // Veículos divergentes (vermelho)
-  {id:'hc1',label:'Honda Civic',sub:'GHT-3A12',type:'veiculo',status:'err',x:.45,y:.35},
-  {id:'vg1',label:'VW Gol',sub:'FGH-2B08',type:'veiculo',status:'warn',x:.32,y:.55},
-  {id:'fr1',label:'Ford Ranger',sub:'KLM-5C20',type:'veiculo',status:'warn',x:.60,y:.65},
-  {id:'fa1',label:'Fiat Argo',sub:'PQR-9D33',type:'veiculo',status:'warn',x:.38,y:.72},
-  {id:'tc1',label:'Toyota Corolla',sub:'XYZ-1A99',type:'veiculo',status:'ok',x:.72,y:.38},
-  {id:'co1',label:'Chevrolet Onix',sub:'MNO-4B77',type:'veiculo',status:'ok',x:.20,y:.35},
-  {id:'po1',label:'Porsche Taycan',sub:'STU-7C55',type:'veiculo',status:'err',x:.68,y:.20},
+// ── Construção dos nós e arestas a partir do DB ──────────
+// Posições fixas por ID (layout pré-calculado)
+const POS = {
+  // veículos divergentes/suspeitos
+  'VEI-10': {x:.45,y:.35}, 'VEI-02': {x:.32,y:.55}, 'VEI-09': {x:.60,y:.65},
+  'VEI-04': {x:.38,y:.72}, 'VEI-05': {x:.72,y:.38}, 'VEI-01': {x:.20,y:.35},
+  'VEI-11': {x:.68,y:.20},
+  // agentes
+  'AGT-01': {x:.28,y:.22}, 'AGT-02': {x:.50,y:.18}, 'AGT-03': {x:.78,y:.70},
+  'AGT-04': {x:.62,y:.48}, 'AGT-05': {x:.18,y:.58},
+  // ocorrências
+  'OC-01': {x:.40,y:.20}, 'OC-02': {x:.22,y:.65}, 'OC-03': {x:.72,y:.55},
+};
 
-  // VINs
-  {id:'vin1',label:'9BD195A4…302',sub:'VIN · Divergente',type:'vin',status:'err',x:.55,y:.48},
-  {id:'vin2',label:'9BWZZ9YZ…007',sub:'VIN · Suspeito',type:'vin',status:'warn',x:.65,y:.28},
-  {id:'vin3',label:'9BR53BX…118',sub:'VIN · Ok',type:'vin',status:'ok',x:.80,y:.50},
+function buildNodes() {
+  const nodes = [];
+
+  // Veículos com posição definida
+  DB.veiculos.forEach(v => {
+    if (!POS[v.id]) return;
+    // Pega o pior status das verificações desse veículo
+    const verifs = DB.verificacoes.filter(vr => vr.veiculo_id === v.id);
+    const status = verifs.some(vr => vr.status === 'err') ? 'err'
+                 : verifs.some(vr => vr.status === 'warn') ? 'warn'
+                 : 'ok';
+    nodes.push({
+      id: v.id, type: 'veiculo', status,
+      label: `${v.marca} ${v.modelo.split(' ')[0]}`,
+      sub: v.placa,
+      ...POS[v.id],
+    });
+  });
 
   // Agentes
-  {id:'ag1',label:'Ag. Lima',sub:'MAT-22041 · 294 verif.',type:'agente',status:'norm',x:.28,y:.22},
-  {id:'ag2',label:'Ag. Rocha',sub:'MAT-19902 · 198 verif.',type:'agente',status:'norm',x:.50,y:.18},
-  {id:'ag3',label:'Ag. Costa',sub:'MAT-31100 · 241 verif.',type:'agente',status:'norm',x:.78,y:.70},
+  DB.agentes.forEach(a => {
+    if (!POS[a.id]) return;
+    nodes.push({ id: a.id, type: 'agente', status: 'norm', label: a.nome, sub: a.matricula, ...POS[a.id] });
+  });
 
-  // Ocorrências (BO)
-  {id:'oc1',label:'BO 2024/8821',sub:'Adulteração · Vila Velha',type:'ocorrencia',status:'err',x:.40,y:.20},
-  {id:'oc2',label:'BO 2024/9034',sub:'Adulteração · Serra',type:'ocorrencia',status:'err',x:.22,y:.65},
-  {id:'oc3',label:'BO 2025/0112',sub:'Suspeita · Cariacica',type:'ocorrencia',status:'warn',x:.72,y:.55},
+  // Ocorrências
+  DB.ocorrencias.forEach(o => {
+    if (!POS[o.id]) return;
+    nodes.push({ id: o.id, type: 'ocorrencia', status: 'err', label: o.numero, sub: o.tipo + ' · ' + o.unidade, ...POS[o.id] });
+  });
 
-  // Placas adicionais (pequenos)
-  {id:'pl1',label:'GHT-3A12',sub:'Placa · RENAVAM',type:'placa',status:'err',x:.58,y:.58},
-  {id:'pl2',label:'KLM-5C20',sub:'Placa · SINESP match',type:'placa',status:'warn',x:.82,y:.62},
-];
+  return nodes;
+}
 
-const EDGES = [
-  {s:'hc1',t:'vin1',type:'err'},{s:'hc1',t:'ag1',type:'norm'},{s:'hc1',t:'oc1',type:'err'},
-  {s:'hc1',t:'pl1',type:'err'},{s:'vg1',t:'ag1',type:'norm'},{s:'vg1',t:'oc2',type:'err'},
-  {s:'vg1',t:'fa1',type:'warn'},{s:'fa1',t:'oc2',type:'warn'},{s:'fa1',t:'ag2',type:'norm'},
-  {s:'fr1',t:'pl2',type:'warn'},{s:'fr1',t:'oc3',type:'warn'},{s:'fr1',t:'ag3',type:'norm'},
-  {s:'tc1',t:'ag3',type:'norm'},{s:'tc1',t:'vin3',type:'ok'},{s:'co1',t:'ag1',type:'norm'},
-  {s:'po1',t:'vin2',type:'err'},{s:'po1',t:'ag2',type:'norm'},{s:'po1',t:'oc1',type:'err'},
-  {s:'vin1',t:'oc1',type:'err'},{s:'vin2',t:'oc1',type:'warn'},{s:'pl1',t:'oc3',type:'warn'},
-  {s:'ag2',t:'oc1',type:'norm'},{s:'ag1',t:'oc2',type:'norm'},
-];
+function buildEdges(nodes) {
+  const edges = [];
+  const nodeIds = new Set(nodes.map(n => n.id));
 
-const COLORS = {err:'#E52207',warn:'#C48C14',ok:'#1a9e27',norm:'#5c66d4',placa:'#595c7c',vin:'#7c3aed',agente:'#7c3aed',ocorrencia:'#767682'};
-const NODE_COLOR = n => n.type==='agente'?'#7c3aed':n.type==='ocorrencia'?'#767682':n.type==='vin'?'#5c66d4':n.type==='placa'?'#595c7c':COLORS[n.status]||'#5c66d4';
-const NODE_R = n => n.type==='agente'?14:n.type==='ocorrencia'?10:n.type==='vin'?11:n.type==='placa'?9:13;
+  // Veículo → Agente (via verificação)
+  DB.verificacoes.forEach(v => {
+    if (nodeIds.has(v.veiculo_id) && nodeIds.has(v.agente_id)) {
+      edges.push({ s: v.veiculo_id, t: v.agente_id, type: v.status === 'err' ? 'err' : 'norm' });
+    }
+  });
 
-let scale=1, tx=0, ty=0, dragging=false, dragStart={x:0,y:0}, selected=null;
-let W=0,H=0;
+  // Veículo → Ocorrência
+  DB.ocorrencias.forEach(o => {
+    o.verif_ids.forEach(vid => {
+      const vr = DB.verificacao(vid);
+      if (vr && nodeIds.has(vr.veiculo_id) && nodeIds.has(o.id)) {
+        edges.push({ s: vr.veiculo_id, t: o.id, type: 'err' });
+      }
+    });
+  });
 
-function getPos(n){return{x:n.x*W,y:n.y*H};}
+  // Deduplica
+  const seen = new Set();
+  return edges.filter(e => {
+    const k = [e.s, e.t].sort().join('|');
+    if (seen.has(k)) return false;
+    seen.add(k); return true;
+  });
+}
 
-function buildGraph(){
-  const svg=document.getElementById('graph-svg');
-  const rect=document.getElementById('graphArea').getBoundingClientRect();
-  W=rect.width;H=rect.height;
-  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
-  svg.innerHTML='';
+// ── Cores e tamanhos ─────────────────────────────────────
+const NODE_COLOR = n => {
+  if (n.type === 'agente')    return '#7c3aed';
+  if (n.type === 'ocorrencia') return '#767682';
+  return { err:'#E52207', warn:'#C48C14', ok:'#1a9e27', norm:'#5c66d4' }[n.status] || '#5c66d4';
+};
+const NODE_R = n => ({ veiculo:13, agente:12, ocorrencia:9, vin:10, placa:8 })[n.type] || 10;
 
-  const g=document.createElementNS('http://www.w3.org/2000/svg','g');
+// ── Graph state ──────────────────────────────────────────
+let scale=1, tx=0, ty=0, dragging=false, dragStart={x:0,y:0};
+let activeFilter = 'all';
+let NODES=[], EDGES=[];
+
+function getPos(n, W, H) { return { x: n.x*W, y: n.y*H }; }
+
+function buildGraph() {
+  const svg   = document.getElementById('graph-svg');
+  const area  = document.getElementById('graphArea');
+  const W     = area.offsetWidth;
+  const H     = area.offsetHeight;
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.innerHTML = '';
+
+  NODES = buildNodes();
+  EDGES = buildEdges(NODES);
+
+  // Filtro de tipo
+  const visNodes = activeFilter === 'all' ? NODES : NODES.filter(n => n.type === activeFilter);
+  const visIds   = new Set(visNodes.map(n => n.id));
+  const visEdges = EDGES.filter(e => visIds.has(e.s) && visIds.has(e.t));
+
+  // Defs
+  const defs = document.createElementNS('http://www.w3.org/2000/svg','defs');
+  defs.innerHTML = `<filter id="glow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>`;
+  svg.appendChild(defs);
+
+  const g = document.createElementNS('http://www.w3.org/2000/svg','g');
   g.setAttribute('id','g-root');
   g.setAttribute('transform',`translate(${tx},${ty}) scale(${scale})`);
 
-  // Defs
-  const defs=document.createElementNS('http://www.w3.org/2000/svg','defs');
-  defs.innerHTML=`<filter id="glow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>`;
-  svg.appendChild(defs);
-
   // Edges
-  EDGES.forEach(e=>{
-    const s=NODES.find(n=>n.id===e.s),t=NODES.find(n=>n.id===e.t);
-    if(!s||!t)return;
-    const ps=getPos(s),pt=getPos(t);
-    const line=document.createElementNS('http://www.w3.org/2000/svg','line');
-    line.setAttribute('x1',ps.x);line.setAttribute('y1',ps.y);
-    line.setAttribute('x2',pt.x);line.setAttribute('y2',pt.y);
-    line.setAttribute('stroke',e.type==='err'?'rgba(229,34,7,.4)':e.type==='warn'?'rgba(196,140,20,.35)':'rgba(216,218,232,.6)');
-    line.setAttribute('stroke-width',e.type==='err'?2:1.5);
-    if(e.type==='err')line.setAttribute('stroke-dasharray','5,3');
+  visEdges.forEach(e => {
+    const s = NODES.find(n => n.id===e.s), t = NODES.find(n => n.id===e.t);
+    if (!s||!t) return;
+    const ps = getPos(s,W,H), pt = getPos(t,W,H);
+    const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1',ps.x); line.setAttribute('y1',ps.y);
+    line.setAttribute('x2',pt.x); line.setAttribute('y2',pt.y);
+    line.setAttribute('stroke', e.type==='err' ? 'rgba(229,34,7,.4)' : 'rgba(216,218,232,.7)');
+    line.setAttribute('stroke-width', e.type==='err' ? '2' : '1.5');
+    if (e.type==='err') line.setAttribute('stroke-dasharray','5,3');
     g.appendChild(line);
   });
 
   // Nodes
-  NODES.forEach(n=>{
-    const p=getPos(n);
-    const r=NODE_R(n);
-    const col=NODE_COLOR(n);
-    const grp=document.createElementNS('http://www.w3.org/2000/svg','g');
+  visNodes.forEach(n => {
+    const p   = getPos(n,W,H);
+    const r   = NODE_R(n);
+    const col = NODE_COLOR(n);
+    const grp = document.createElementNS('http://www.w3.org/2000/svg','g');
     grp.setAttribute('cursor','pointer');
     grp.setAttribute('id','node-'+n.id);
 
-    // halo for err nodes
-    if(n.status==='err'){
-      const halo=document.createElementNS('http://www.w3.org/2000/svg','circle');
-      halo.setAttribute('cx',p.x);halo.setAttribute('cy',p.y);halo.setAttribute('r',r+6);
-      halo.setAttribute('fill','none');halo.setAttribute('stroke',col);halo.setAttribute('stroke-width','1');halo.setAttribute('opacity','.25');
-      halo.innerHTML='<animate attributeName="r" values="'+(r+4)+';'+(r+10)+';'+(r+4)+'" dur="2.5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".3;0;.3" dur="2.5s" repeatCount="indefinite"/>';
+    if (n.status === 'err') {
+      const halo = document.createElementNS('http://www.w3.org/2000/svg','circle');
+      halo.setAttribute('cx',p.x); halo.setAttribute('cy',p.y); halo.setAttribute('r',r+5);
+      halo.setAttribute('fill','none'); halo.setAttribute('stroke',col);
+      halo.setAttribute('stroke-width','1'); halo.setAttribute('opacity','.25');
+      halo.innerHTML=`<animate attributeName="r" values="${r+3};${r+9};${r+3}" dur="2.5s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values=".3;0;.3" dur="2.5s" repeatCount="indefinite"/>`;
       grp.appendChild(halo);
     }
 
-    const circle=document.createElementNS('http://www.w3.org/2000/svg','circle');
-    circle.setAttribute('cx',p.x);circle.setAttribute('cy',p.y);circle.setAttribute('r',r);
-    circle.setAttribute('fill',col);circle.setAttribute('stroke','white');circle.setAttribute('stroke-width','2');
-    circle.setAttribute('filter',n.status==='err'?'url(#glow)':'none');
+    const circle = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    circle.setAttribute('cx',p.x); circle.setAttribute('cy',p.y); circle.setAttribute('r',r);
+    circle.setAttribute('fill',col); circle.setAttribute('stroke','white'); circle.setAttribute('stroke-width','2');
+    if (n.status==='err') circle.setAttribute('filter','url(#glow)');
     grp.appendChild(circle);
 
-    const label=document.createElementNS('http://www.w3.org/2000/svg','text');
-    label.setAttribute('x',p.x);label.setAttribute('y',p.y+r+11);
-    label.setAttribute('text-anchor','middle');label.setAttribute('font-family','DM Sans');
-    label.setAttribute('font-size','9');label.setAttribute('font-weight','700');
-    label.setAttribute('fill','var(--text-h)');label.textContent=n.label;
+    const label = document.createElementNS('http://www.w3.org/2000/svg','text');
+    label.setAttribute('x',p.x); label.setAttribute('y',p.y+r+10);
+    label.setAttribute('text-anchor','middle'); label.setAttribute('font-family','DM Sans');
+    label.setAttribute('font-size','9'); label.setAttribute('font-weight','700');
+    label.setAttribute('fill','var(--text-h)'); label.textContent = n.label;
     grp.appendChild(label);
 
-    grp.addEventListener('click',()=>selectNode(n.id));
-    grp.addEventListener('mouseenter',ev=>showTooltip(n,ev));
-    grp.addEventListener('mouseleave',hideTooltip);
+    grp.addEventListener('click', () => selectNode(n.id));
+    grp.addEventListener('mouseenter', ev => showTooltip(n, ev));
+    grp.addEventListener('mouseleave', hideTooltip);
     g.appendChild(grp);
   });
 
   svg.appendChild(g);
 
+  // Stats
+  document.getElementById('graph-stats').innerHTML = `
+    <span class="stat-chip">${visNodes.length} nós</span>
+    <span class="stat-chip">${visEdges.length} conexões</span>
+  `;
+
   // Pan + drag
-  svg.addEventListener('mousedown',e=>{if(e.target===svg||e.target.tagName==='line'){dragging=true;dragStart={x:e.clientX-tx,y:e.clientY-ty};}});
-  window.addEventListener('mousemove',e=>{if(dragging){tx=e.clientX-dragStart.x;ty=e.clientY-dragStart.y;document.getElementById('g-root').setAttribute('transform',`translate(${tx},${ty}) scale(${scale})`);}});
-  window.addEventListener('mouseup',()=>dragging=false);
-  svg.addEventListener('wheel',e=>{e.preventDefault();zoom(e.deltaY<0?1.1:.91);},{passive:false});
+  svg.addEventListener('mousedown', e => {
+    if (e.target===svg||e.target.tagName==='line') { dragging=true; dragStart={x:e.clientX-tx,y:e.clientY-ty}; }
+  });
+  window.addEventListener('mousemove', e => {
+    if (!dragging) return;
+    tx=e.clientX-dragStart.x; ty=e.clientY-dragStart.y;
+    document.getElementById('g-root')?.setAttribute('transform',`translate(${tx},${ty}) scale(${scale})`);
+  });
+  window.addEventListener('mouseup', () => dragging=false);
+  svg.addEventListener('wheel', e => { e.preventDefault(); zoom(e.deltaY<0?1.1:.91); }, {passive:false});
 }
 
-function zoom(f){
-  scale=Math.min(3,Math.max(0.3,scale*f));
+function zoom(f) {
+  scale = Math.min(3, Math.max(0.3, scale*f));
   document.getElementById('g-root')?.setAttribute('transform',`translate(${tx},${ty}) scale(${scale})`);
 }
-function resetView(){scale=1;tx=0;ty=0;document.getElementById('g-root')?.setAttribute('transform','translate(0,0) scale(1)');}
+function resetView() { scale=1; tx=0; ty=0; document.getElementById('g-root')?.setAttribute('transform','translate(0,0) scale(1)'); }
 
-function showTooltip(n,ev){
-  const t=document.getElementById('tooltip');
-  const areaRect=document.getElementById('graphArea').getBoundingClientRect();
-  t.textContent=n.label+(n.sub?' · '+n.sub:'');
-  t.style.left=(ev.clientX-areaRect.left+12)+'px';
-  t.style.top=(ev.clientY-areaRect.top-28)+'px';
+function showTooltip(n, ev) {
+  const t = document.getElementById('tooltip');
+  const rect = document.getElementById('graphArea').getBoundingClientRect();
+  t.textContent = n.label + (n.sub ? ' · '+n.sub : '');
+  t.style.left = (ev.clientX-rect.left+12)+'px';
+  t.style.top  = (ev.clientY-rect.top-28)+'px';
   t.classList.add('show');
 }
-function hideTooltip(){document.getElementById('tooltip').classList.remove('show');}
+function hideTooltip() { document.getElementById('tooltip').classList.remove('show'); }
 
-function selectNode(id){
-  selected=id;
-  const n=NODES.find(n=>n.id===id);
-  if(!n)return;
-  const badge=document.getElementById('dp-badge');
-  badge.style.display='';
-  badge.textContent=n.status==='err'?'Divergente':n.status==='warn'?'Suspeito':n.status==='ok'?'Compatível':'Agente';
-  badge.className='badge '+(n.status==='err'?'badge-err':n.status==='warn'?'badge-warn':n.status==='ok'?'badge-ok':'badge-info');
-  document.getElementById('dp-title').textContent=n.label;
-  document.getElementById('dp-sub').textContent=n.sub;
-  const conns=EDGES.filter(e=>e.s===id||e.t===id).map(e=>{
-    const other=NODES.find(nd=>nd.id===(e.s===id?e.t:e.s));
-    return other;
-  }).filter(Boolean);
-  document.getElementById('dp-body').innerHTML=`
-    <div style="margin-bottom:12px;display:flex;flex-direction:column;gap:4px">
-      <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--sur-low)"><span style="font-size:11px;color:var(--text-m)">Tipo</span><span style="font-size:11px;font-weight:700">${{veiculo:'Veículo',vin:'VIN',agente:'Agente',placa:'Placa',ocorrencia:'Ocorrência'}[n.type]}</span></div>
-      <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--sur-low)"><span style="font-size:11px;color:var(--text-m)">Conexões</span><span style="font-size:11px;font-weight:700">${conns.length}</span></div>
-      ${n.type==='veiculo'?`<div style="display:flex;justify-content:space-between;padding:6px 0"><span style="font-size:11px;color:var(--text-m)">Placa</span><span style="font-family:var(--font-m);font-size:11px">${n.sub}</span></div>`:''}
+function selectNode(id) {
+  const n = NODES.find(n => n.id===id);
+  if (!n) return;
+
+  const badge = document.getElementById('dp-badge');
+  badge.style.display = '';
+  badge.textContent = n.status==='err'?'Divergente':n.status==='warn'?'Suspeito':n.status==='ok'?'Compatível':'Agente';
+  badge.className = 'badge '+(n.status==='err'?'badge-err':n.status==='warn'?'badge-warn':n.status==='ok'?'badge-ok':'badge-info');
+  document.getElementById('dp-title').textContent = n.label;
+  document.getElementById('dp-sub').textContent = n.sub;
+
+  const conns = EDGES
+    .filter(e => e.s===id||e.t===id)
+    .map(e => NODES.find(nd => nd.id===(e.s===id?e.t:e.s)))
+    .filter(Boolean);
+
+  const typeLabel = {veiculo:'Veículo',agente:'Agente',ocorrencia:'Ocorrência',vin:'VIN',placa:'Placa'};
+  document.getElementById('dp-body').innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:0;margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--sur-low)">
+        <span style="font-size:11px;color:var(--text-m)">Tipo</span>
+        <span style="font-size:11px;font-weight:700">${typeLabel[n.type]||n.type}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--sur-low)">
+        <span style="font-size:11px;color:var(--text-m)">Conexões</span>
+        <span style="font-size:11px;font-weight:700">${conns.length}</span>
+      </div>
+      ${n.type==='veiculo'?`
+      <div style="display:flex;justify-content:space-between;padding:7px 0">
+        <span style="font-size:11px;color:var(--text-m)">Placa</span>
+        <span style="font-family:var(--font-m);font-size:11px">${n.sub}</span>
+      </div>`:''}
     </div>
     <div style="font-family:var(--font-d);font-size:11px;font-weight:800;color:var(--text-h);margin-bottom:8px">Nós conectados</div>
     <div>
-      ${conns.map(c=>`<div class="conn-item" onclick="selectNode('${c.id}')">
-        <div class="conn-dot" style="background:${NODE_COLOR(c)}"></div>
-        <div><div class="conn-label">${c.label}</div><div class="conn-meta">${c.sub}</div></div>
-      </div>`).join('')}
+      ${conns.map(c => `
+        <div class="conn-item" onclick="selectNode('${c.id}')">
+          <div class="conn-dot" style="background:${NODE_COLOR(c)}"></div>
+          <div><div class="conn-label">${c.label}</div><div class="conn-meta">${c.sub}</div></div>
+        </div>`).join('')}
     </div>
-    ${n.type==='veiculo'?`<div style="margin-top:14px"><button style="width:100%;justify-content:center;background:var(--pri-800);color:#fff;border:none;border-radius:9999px;padding:8px;font-size:12px;font-weight:600;cursor:pointer" onclick="goTo('detalhe')">Ver ficha completa →</button></div>`:''}
+    ${n.type==='veiculo'?`<button class="btn-action" onclick="goTo('detalhe')">Ver ficha completa →</button>`:''}
   `;
 
-  // highlight node
-  document.querySelectorAll('[id^="node-"] circle').forEach(c=>c.setAttribute('stroke-width','2'));
-  const sel=document.querySelector('#node-'+id+' circle');
-  if(sel)sel.setAttribute('stroke-width','3.5');
+  // Highlight
+  document.querySelectorAll('[id^="node-"] circle').forEach(c => c.setAttribute('stroke-width','2'));
+  document.querySelector('#node-'+id+' circle')?.setAttribute('stroke-width','3.5');
 }
 
-function selectCluster(c){
-  const clusters={A:['hc1','vin1','ag1','oc1'],B:['vg1','fa1','vg1','oc2','ag2'],C:['fr1','pl2','oc3']};
-  (clusters[c]||[]).forEach(id=>selectNode(id));
-}
-
-function filterGraph(type,btn){
-  document.querySelectorAll('.filter-chip').forEach(b=>b.classList.remove('active'));
+function filterGraph(type, btn) {
+  activeFilter = type;
+  document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
+  buildGraph();
 }
 
-window.addEventListener('resize',buildGraph);
-window.addEventListener('load',()=>{setTimeout(buildGraph,80)});
+// ── Clusters derivados de DB.ocorrencias ─────────────────
+function renderClusters() {
+  document.getElementById('clusters-list').innerHTML = DB.ocorrencias.map(o => {
+    const veics = o.verif_ids
+      .map(vid => DB.verificacao(vid))
+      .filter(Boolean)
+      .map(v => DB.veiculo(v.veiculo_id))
+      .filter(Boolean);
+    const cls = o.tipo === 'Adulteração' ? 'err' : 'warn';
+    const badgeCls = cls === 'err' ? 'badge-err' : 'badge-warn';
+    const txtColor = cls === 'err' ? 'var(--co-800)' : 'var(--am-800)';
+    const marca = veics[0] ? veics[0].marca : '—';
+    return `
+      <div class="cluster-card ${cls}" onclick="selectNode('${o.id}')">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <span style="font-size:12px;font-weight:700;color:${txtColor}">${o.numero}</span>
+          <span class="badge ${badgeCls}" style="font-size:9px">${o.verif_ids.length} verif.</span>
+        </div>
+        <div style="font-size:10px;color:var(--text-m);margin-top:3px">${marca} · ${o.tipo} · ${o.unidade}</div>
+      </div>`;
+  }).join('');
+}
+
+// ── Conexões recentes (verificações err/warn) ─────────────
+function renderConnList() {
+  const recent = DB.verificacoes_recentes(5, 'err').concat(DB.verificacoes_recentes(3,'warn'));
+  document.getElementById('conn-list').innerHTML = recent.slice(0,6).map(v => {
+    const vei = DB.veiculo(v.veiculo_id);
+    const und = DB.unidade(v.unidade_id);
+    return `
+      <div class="conn-item" onclick="selectNode('${v.veiculo_id}')">
+        <div class="conn-dot" style="background:${v.status==='err'?'var(--co-400)':'var(--am-400)'}"></div>
+        <div>
+          <div class="conn-label">${vei ? vei.marca+' '+vei.modelo.split(' ')[0] : '—'} · ${vei?.placa||'—'}</div>
+          <div class="conn-meta">Score ${v.score} · ${und?.nome||'—'}</div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// ── Mapa base sob o grafo ─────────────────────────────────
+function initMapa() {
+  const { lat, lng, zoom } = DB.mapa;
+  document.getElementById('map-iframe').src =
+    `https://www.google.com/maps?q=${lat},${lng}&z=${zoom}&output=embed`;
+}
+
+window.addEventListener('resize', buildGraph);
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    initMapa();
+    buildGraph();
+    renderClusters();
+    renderConnList();
+  }, 80);
+});
 </script>
 </body>
 </html>
