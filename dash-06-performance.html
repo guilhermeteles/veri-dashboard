@@ -6,6 +6,7 @@
 <title>V3R1 · Performance</title>
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap"></noscript>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased}
 :root{
@@ -24,68 +25,103 @@ body::-webkit-scrollbar-track{background:transparent}
 body::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
 .page{padding:20px 24px}
 
-.kpi-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:18px}
-.kpi-card{background:var(--surface);border-radius:14px;padding:14px 16px;box-shadow:var(--sh-card);border:1px solid var(--border);border-top:3px solid var(--border)}
-.kpi-card.blue{border-top-color:var(--pri-400)}.kpi-card.green{border-top-color:var(--em-400)}
-.kpi-card.amber{border-top-color:var(--am-400)}.kpi-card.red{border-top-color:var(--co-400)}
-.kpi-card.purple{border-top-color:#7c3aed}
-.kpi-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-s);margin-bottom:6px}
-.kpi-value{font-family:var(--font-d);font-size:24px;font-weight:800;color:var(--text-h);line-height:1}
-.kpi-change{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;margin-top:6px;padding:2px 7px;border-radius:9999px}
+/* KPIs */
+.kpi-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:20px}
+.kpi-card{background:var(--surface);border-radius:14px;padding:16px 18px;box-shadow:var(--sh-card);border:1px solid var(--border);border-top:3px solid var(--border);position:relative;overflow:hidden}
+.kpi-card::after{content:'';position:absolute;right:-12px;bottom:-12px;width:64px;height:64px;border-radius:50%;opacity:.04}
+.kpi-card.blue{border-top-color:var(--pri-400)}.kpi-card.blue::after{background:var(--pri-400)}
+.kpi-card.green{border-top-color:var(--em-400)}.kpi-card.green::after{background:var(--em-400)}
+.kpi-card.amber{border-top-color:var(--am-400)}.kpi-card.amber::after{background:var(--am-400)}
+.kpi-card.red{border-top-color:var(--co-400)}.kpi-card.red::after{background:var(--co-400)}
+.kpi-card.purple{border-top-color:#7c3aed}.kpi-card.purple::after{background:#7c3aed}
+.kpi-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-s);margin-bottom:8px}
+.kpi-value{font-family:var(--font-d);font-size:26px;font-weight:800;color:var(--text-h);line-height:1}
+.kpi-change{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;margin-top:8px;padding:2px 8px;border-radius:9999px}
 .kpi-change.up{background:var(--em-50);color:var(--em)}
 .kpi-change.up-bad{background:var(--co-50);color:var(--co-400)}
 .kpi-change.down-good{background:var(--em-50);color:var(--em)}
 
+/* Layout */
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
-.panel{background:var(--surface);border-radius:14px;border:1px solid var(--border);box-shadow:var(--sh-card);overflow:hidden}
-.panel-header{padding:14px 16px 0;display:flex;align-items:center;justify-content:space-between}
-.panel-title{font-family:var(--font-d);font-size:12px;font-weight:800;color:var(--text-h)}
-.panel-subtitle{font-size:10px;color:var(--text-s);margin-top:2px}
-.panel-body{padding:12px 16px 16px}
+.grid-60-40{display:grid;grid-template-columns:1.5fr 1fr;gap:16px;margin-bottom:16px}
 
+/* Panels */
+.panel{background:var(--surface);border-radius:14px;border:1px solid var(--border);box-shadow:var(--sh-card);overflow:hidden;display:flex;flex-direction:column}
+.panel-header{padding:16px 18px 0;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.panel-title{font-family:var(--font-d);font-size:13px;font-weight:800;color:var(--text-h)}
+.panel-subtitle{font-size:10px;color:var(--text-s);margin-top:2px}
+.panel-body{padding:14px 18px 18px;flex:1;display:flex;flex-direction:column;min-height:0}
+
+/* Chart containers */
+.chart-wrap{position:relative;flex:1;min-height:0}
+.chart-wrap canvas{width:100%!important}
+
+/* Legend pills */
+.chart-legend{display:flex;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+.legend-pill{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-s);font-weight:500}
+.legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.legend-line{width:16px;height:2px;border-radius:2px;flex-shrink:0}
+
+/* Donut */
+.donut-wrap{display:flex;align-items:center;gap:20px;flex:1}
+.donut-chart-wrap{width:140px;height:140px;flex-shrink:0;position:relative}
+.donut-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
+.donut-center-val{font-family:var(--font-d);font-size:20px;font-weight:800;color:var(--text-h)}
+.donut-center-lbl{font-size:9px;color:var(--text-s);font-weight:600;margin-top:1px}
+.donut-legend{display:flex;flex-direction:column;gap:10px;flex:1}
+.leg-item{display:flex;align-items:center;gap:8px}
+.leg-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.leg-label{font-size:12px;color:var(--text-m);flex:1}
+.leg-val{font-size:12px;font-weight:700;color:var(--text-h)}
+.leg-pct{font-size:10px;font-weight:400;color:var(--text-s)}
+
+/* Ranking */
+.rank-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--sur-low)}
+.rank-row:last-child{border-bottom:none}
+.rank-num{font-family:var(--font-d);font-size:14px;font-weight:800;color:var(--text-s);min-width:22px}
+.rank-avatar{width:34px;height:34px;border-radius:10px;background:var(--pri-50);display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-size:11px;font-weight:800;color:var(--pri-800);flex-shrink:0}
+.rank-info{flex:1;min-width:0}
+.rank-name{font-size:12px;font-weight:700;color:var(--text-h)}
+.rank-sub{font-size:10px;color:var(--text-s);margin-top:1px}
+.rank-val{font-family:var(--font-d);font-size:16px;font-weight:800;color:var(--text-h);text-align:right}
+.rank-val-lbl{font-size:9px;color:var(--text-s);text-align:right;margin-top:1px}
+.progress-bar{height:4px;background:var(--sur-high);border-radius:2px;overflow:hidden;margin-top:5px}
+.progress-fill{height:100%;border-radius:2px;transition:width .4s ease}
+
+/* Heatmap */
+.heatmap-shell{display:flex;gap:10px;flex:1;min-height:0}
+.hm-day-labels{display:flex;flex-direction:column;padding-top:24px;gap:0;flex-shrink:0;width:28px}
+.hm-day-labels span{flex:1;display:flex;align-items:center;font-family:var(--font-m);font-size:9px;color:var(--text-s)}
+.hm-right{display:flex;flex-direction:column;flex:1;min-width:0;min-height:0}
+.hm-hour-labels{display:flex;margin-bottom:4px;padding-left:0}
+.hm-hour-labels span{flex:1;text-align:center;font-family:var(--font-m);font-size:9px;color:var(--text-s)}
+.hm-grid{display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(7,1fr);gap:3px;flex:1;min-height:0}
+.hm-cell{border-radius:4px;cursor:pointer;transition:opacity .15s;min-height:0}
+.hm-cell:hover{filter:brightness(1.15);outline:1.5px solid rgba(92,102,212,.4)}
+.hm-footer{display:flex;align-items:center;gap:6px;margin-top:10px;justify-content:flex-end}
+
+/* Etapas */
+.etapa-item{display:flex;flex-direction:column;gap:5px;padding:10px 0;border-bottom:1px solid var(--sur-low)}
+.etapa-item:last-child{border-bottom:none;padding-bottom:0}
+.etapa-header{display:flex;align-items:center;justify-content:space-between}
+.etapa-label{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--text-b);font-weight:500}
+.etapa-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.etapa-dur{font-family:var(--font-m);font-size:12px;font-weight:700;color:var(--text-h)}
+.etapa-bar{height:6px;background:var(--sur-high);border-radius:3px;overflow:hidden;margin-top:2px}
+.etapa-fill{height:100%;border-radius:3px}
+.etapa-total{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--pri-50);border-radius:10px;border:1px solid var(--pri-100);margin-top:10px}
+
+/* Badges */
 .badge{display:inline-flex;align-items:center;gap:4px;font-family:var(--font-b);font-size:10px;font-weight:700;padding:2px 8px;border-radius:9999px}
 .badge-ok{background:var(--em-50);color:var(--em);border:1px solid rgba(22,136,33,.15)}
 .badge-warn{background:var(--am-50);color:var(--am-800);border:1px solid rgba(196,140,20,.2)}
 .badge-err{background:var(--co-50);color:var(--co-800);border:1px solid rgba(229,34,7,.15)}
+
 .mono-sm{font-family:var(--font-m);font-size:9px;color:var(--text-s)}
 .mono{font-family:var(--font-m);font-size:11px;color:var(--text-m)}
 
-.btn-secondary{background:var(--sur-mid);border:1px solid var(--border);border-radius:9999px;padding:6px 12px;font-size:11px;font-weight:600;color:var(--text-b);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.btn-secondary{background:var(--sur-mid);border:1px solid var(--border);border-radius:9999px;padding:6px 14px;font-size:11px;font-weight:600;color:var(--text-b);cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:background .15s}
 .btn-secondary:hover{background:var(--sur-high)}
-
-/* Donut */
-.donut-wrap{display:flex;align-items:center;gap:20px}
-.donut-legend{display:flex;flex-direction:column;gap:8px;flex:1}
-.leg-item{display:flex;align-items:center;gap:8px}
-.leg-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-.leg-label{font-size:11px;color:var(--text-m);flex:1}
-.leg-val{font-size:11px;font-weight:700;color:var(--text-h)}
-
-/* Rank */
-.rank-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--sur-low)}
-.rank-row:last-child{border-bottom:none}
-.rank-num{font-family:var(--font-d);font-size:13px;font-weight:800;color:var(--text-s);min-width:20px}
-.rank-avatar{width:32px;height:32px;border-radius:9px;background:var(--pri-50);display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-size:10px;font-weight:800;color:var(--pri-800);flex-shrink:0}
-.rank-info{flex:1;min-width:0}
-.rank-name{font-size:12px;font-weight:700;color:var(--text-h)}
-.rank-sub{font-size:10px;color:var(--text-s);margin-top:1px}
-.rank-val{font-family:var(--font-d);font-size:15px;font-weight:800;color:var(--text-h)}
-.progress-bar{height:4px;background:var(--sur-high);border-radius:2px;overflow:hidden;margin-top:4px}
-.progress-fill{height:100%;border-radius:2px}
-
-/* Table */
-.data-table{width:100%;border-collapse:collapse}
-.data-table thead th{font-size:10px;font-weight:700;color:var(--text-s);text-align:left;text-transform:uppercase;letter-spacing:.7px;padding:8px 10px;background:var(--sur-low);border-bottom:1px solid var(--border)}
-.data-table tbody td{font-size:11px;color:var(--text-b);padding:8px 10px;border-bottom:1px solid var(--sur-low)}
-.data-table tbody tr:last-child td{border-bottom:none}
-
-/* Heatmap */
-.hm-cell{border-radius:3px;cursor:pointer;transition:opacity .15s}
-.hm-cell:hover{opacity:.7!important}
-
-/* Etapa de tempo */
-.etapa-row{display:flex;flex-direction:column;gap:4px;margin-bottom:14px}
-.etapa-row:last-child{margin-bottom:0}
 
 /* Footer */
 .footer{display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid var(--sur-high);margin-top:4px}
@@ -97,81 +133,115 @@ body::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
   <!-- KPIs -->
   <div id="kpi-grid" class="kpi-grid"></div>
 
-  <!-- Linha 1: linha chart + donut -->
+  <!-- Linha 1: line chart + donut -->
   <div class="grid-2">
     <div class="panel">
       <div class="panel-header">
-        <div><div class="panel-title">Volume de verificações</div><div class="panel-subtitle">Últimos 30 dias</div></div>
-        <div style="display:flex;gap:8px">
-          <span style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text-s)"><span style="display:inline-block;width:10px;height:3px;border-radius:2px;background:var(--pri-400)"></span>Verificações</span>
-          <span style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text-s)"><span style="display:inline-block;width:10px;height:3px;border-radius:2px;background:var(--co-400)"></span>Divergências</span>
+        <div>
+          <div class="panel-title">Volume de verificações</div>
+          <div class="panel-subtitle">Últimos 30 dias</div>
+        </div>
+        <div class="chart-legend">
+          <div class="legend-pill"><div class="legend-line" style="background:#5c66d4"></div>Verificações</div>
+          <div class="legend-pill"><div class="legend-line" style="background:#E52207;opacity:.7"></div>Divergências</div>
         </div>
       </div>
       <div class="panel-body">
-        <svg id="lineChart" viewBox="0 0 460 100" xmlns="http://www.w3.org/2000/svg" style="width:100%;overflow:visible"></svg>
-        <div id="line-labels" style="display:flex;justify-content:space-between;margin-top:4px"></div>
+        <div class="chart-wrap" style="height:160px">
+          <canvas id="lineChart"></canvas>
+        </div>
       </div>
     </div>
 
     <div class="panel">
-      <div class="panel-header"><div><div class="panel-title">Distribuição de resultados</div><div class="panel-subtitle" id="donut-sub"></div></div></div>
-      <div class="panel-body">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">Distribuição de resultados</div>
+          <div class="panel-subtitle" id="donut-sub"></div>
+        </div>
+      </div>
+      <div class="panel-body" style="justify-content:center">
         <div class="donut-wrap">
-          <svg id="donutSvg" width="120" height="120" viewBox="0 0 42 42" style="flex-shrink:0"></svg>
+          <div class="donut-chart-wrap">
+            <canvas id="donutChart"></canvas>
+            <div class="donut-center">
+              <div class="donut-center-val" id="donut-pct"></div>
+              <div class="donut-center-lbl">aprovação</div>
+            </div>
+          </div>
           <div class="donut-legend" id="donut-legend"></div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Linha 2: ranking agentes + por unidade -->
+  <!-- Linha 2: ranking + barras por unidade -->
   <div class="grid-2">
     <div class="panel">
       <div class="panel-header">
-        <div><div class="panel-title">Ranking de agentes</div><div class="panel-subtitle">Por volume · 30 dias</div></div>
+        <div>
+          <div class="panel-title">Ranking de agentes</div>
+          <div class="panel-subtitle">Por volume · 30 dias</div>
+        </div>
         <button class="btn-secondary" onclick="goTo('busca')">Ver todos →</button>
       </div>
-      <div class="panel-body" id="ranking-agentes"></div>
+      <div class="panel-body">
+        <div id="ranking-agentes"></div>
+      </div>
     </div>
 
     <div class="panel">
-      <div class="panel-header"><div><div class="panel-title">Por unidade operacional</div><div class="panel-subtitle">Volume e taxa de divergência</div></div></div>
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">Por unidade operacional</div>
+          <div class="panel-subtitle">Volume e taxa de divergência</div>
+        </div>
+      </div>
       <div class="panel-body">
-        <svg id="barChart" viewBox="0 0 380 130" xmlns="http://www.w3.org/2000/svg" style="width:100%"></svg>
-        <div style="margin-top:10px">
-          <table class="data-table" id="unidade-table"></table>
+        <div class="chart-wrap" style="height:180px">
+          <canvas id="barChart"></canvas>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Linha 3: heatmap + tempo médio por etapa -->
-  <div class="grid-2">
+  <!-- Linha 3: heatmap + etapas -->
+  <div class="grid-60-40">
     <div class="panel">
-      <div class="panel-header"><div><div class="panel-title">Atividade por dia/hora</div><div class="panel-subtitle">Heatmap de verificações · 30 dias</div></div></div>
-      <div class="panel-body">
-        <div style="display:flex;gap:8px;align-items:flex-start">
-          <div style="display:flex;flex-direction:column;gap:6px;padding-top:22px" id="hm-day-labels"></div>
-          <div style="flex:1">
-            <div style="display:flex;gap:4px;margin-bottom:4px" id="hm-hour-labels"></div>
-            <div id="heatmap"></div>
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">Atividade por dia/hora</div>
+          <div class="panel-subtitle">Heatmap de verificações · 30 dias</div>
+        </div>
+      </div>
+      <div class="panel-body" style="min-height:200px">
+        <div class="heatmap-shell">
+          <div class="hm-day-labels" id="hm-day-labels"></div>
+          <div class="hm-right">
+            <div class="hm-hour-labels" id="hm-hour-labels"></div>
+            <div class="hm-grid" id="hm-grid"></div>
           </div>
         </div>
-        <div style="display:flex;align-items:center;gap:8px;margin-top:10px;justify-content:flex-end">
+        <div class="hm-footer">
           <span class="mono-sm">Menos</span>
-          <div style="width:12px;height:12px;border-radius:3px;background:var(--pri-50)"></div>
-          <div style="width:12px;height:12px;border-radius:3px;background:var(--pri-100)"></div>
-          <div style="width:12px;height:12px;border-radius:3px;background:rgba(92,102,212,.4)"></div>
-          <div style="width:12px;height:12px;border-radius:3px;background:var(--pri-400)"></div>
-          <div style="width:12px;height:12px;border-radius:3px;background:var(--pri-800)"></div>
+          <div style="width:10px;height:10px;border-radius:3px;background:var(--pri-50);border:1px solid var(--border)"></div>
+          <div style="width:10px;height:10px;border-radius:3px;background:rgba(92,102,212,.2)"></div>
+          <div style="width:10px;height:10px;border-radius:3px;background:rgba(92,102,212,.45)"></div>
+          <div style="width:10px;height:10px;border-radius:3px;background:var(--pri-400)"></div>
+          <div style="width:10px;height:10px;border-radius:3px;background:var(--pri-800)"></div>
           <span class="mono-sm">Mais</span>
         </div>
       </div>
     </div>
 
     <div class="panel">
-      <div class="panel-header"><div><div class="panel-title">Tempo médio por etapa</div><div class="panel-subtitle">Média dos últimos 30 dias</div></div></div>
-      <div class="panel-body" id="etapas-body"></div>
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">Tempo médio por etapa</div>
+          <div class="panel-subtitle">Média dos últimos 30 dias</div>
+        </div>
+      </div>
+      <div class="panel-body" id="etapas-body" style="justify-content:space-between"></div>
     </div>
   </div>
 
@@ -191,16 +261,51 @@ function goTo(r) {
   } catch(e) { window.postMessage({ goTo: r }, '*'); }
 }
 
-// ── KPIs ────────────────────────────────────────────────
+// ── Chart.js defaults ────────────────────────────────────
+Chart.defaults.font.family = "'DM Sans', sans-serif";
+Chart.defaults.color = '#767682';
+Chart.defaults.plugins.legend.display = false;
+Chart.defaults.plugins.tooltip.backgroundColor = '#181c21';
+Chart.defaults.plugins.tooltip.titleColor = '#fff';
+Chart.defaults.plugins.tooltip.bodyColor = 'rgba(255,255,255,.7)';
+Chart.defaults.plugins.tooltip.padding = 10;
+Chart.defaults.plugins.tooltip.cornerRadius = 8;
+Chart.defaults.plugins.tooltip.displayColors = true;
+Chart.defaults.plugins.tooltip.boxWidth = 8;
+Chart.defaults.plugins.tooltip.boxHeight = 8;
+
+// ── Série simulada seeded ────────────────────────────────
+function serie(base, variance, seed) {
+  const pts = [];
+  let v = base;
+  for (let i = 0; i < 30; i++) {
+    const r = Math.sin(seed + i * 2.3) * variance;
+    v = Math.max(1, Math.round(v + r));
+    pts.push(v);
+  }
+  return pts;
+}
+
+// ── Labels dos últimos 30 dias ───────────────────────────
+function last30Labels() {
+  const now = new Date();
+  return Array.from({length:30}, (_,i) => {
+    const d = new Date(now);
+    d.setDate(d.getDate() - (29 - i));
+    return d.toLocaleDateString('pt-BR', {day:'2-digit', month:'2-digit'});
+  });
+}
+
+// ── KPIs ─────────────────────────────────────────────────
 function renderKpis() {
   const tots = DB.totais();
   const pctAprov = (100 - parseFloat(tots.pct_diverg)).toFixed(1);
   const kpis = [
     { label:'Total verificações', value: tots.verificacoes.toLocaleString('pt-BR'), change:'↑ 12% vs. mês ant.', ct:'up',        color:'blue'   },
-    { label:'Taxa aprovação',      value: pctAprov+'%',                              change:'↑ 0,4%',            ct:'up',        color:'green'  },
-    { label:'Divergências',        value: tots.err,                                  change:'↑ 4 vs. mês ant.',  ct:'up-bad',    color:'red'    },
-    { label:'Tempo médio',         value: '3m42s',                                   change:'↓ 18s',             ct:'down-good', color:'amber'  },
-    { label:'Agentes ativos',      value: DB.agentes.length,                         change:'↑ 3',               ct:'up',        color:'purple' },
+    { label:'Taxa aprovação',     value: pctAprov+'%',                               change:'↑ 0,4%',            ct:'up',        color:'green'  },
+    { label:'Divergências',       value: tots.err,                                   change:'↑ 4 vs. mês ant.',  ct:'up-bad',    color:'red'    },
+    { label:'Tempo médio',        value: '3m42s',                                    change:'↓ 18s',             ct:'down-good', color:'amber'  },
+    { label:'Agentes ativos',     value: DB.agentes.length,                          change:'↑ 3',               ct:'up',        color:'purple' },
   ];
   document.getElementById('kpi-grid').innerHTML = kpis.map(k => `
     <div class="kpi-card ${k.color}">
@@ -210,193 +315,245 @@ function renderKpis() {
     </div>`).join('');
 }
 
-// ── Line chart: dados simulados de 30 dias ───────────────
+// ── Line chart ───────────────────────────────────────────
 function renderLineChart() {
-  // Distribui as verificações do DB ao longo de 30 dias simulados
   const total = DB.verificacoes.length;
-  const errs  = DB.verificacoes.filter(v => v.status==='err').length;
-  // gera série de 30 pontos com variação aleatória seeded
-  function serie(base, variance, seed) {
-    const pts = [];
-    let v = base;
-    for (let i = 0; i < 30; i++) {
-      const r = Math.sin(seed + i * 2.3) * variance;
-      v = Math.max(1, Math.round(v + r));
-      pts.push(v);
-    }
-    return pts;
-  }
+  const errs  = DB.verificacoes.filter(v => v.status === 'err').length;
   const verif  = serie(total * 0.7, total * 0.15, 1.1);
-  const diverg = serie(errs * 0.7, errs * 0.3, 2.3);
+  const diverg = serie(errs * 0.7,  errs  * 0.3,  2.3);
+  const labels = last30Labels();
 
-  const W=460, H=100, pad=10;
-  const mx = Math.max(...verif);
-  const pts1 = verif.map((v,i) => [pad+i*(W-2*pad)/(verif.length-1), H-pad-(v/mx)*(H-2*pad)]);
-  const pts2 = diverg.map((v,i) => [pad+i*(W-2*pad)/(diverg.length-1), H-pad-(v/mx)*(H-2*pad)]);
-  const line = pts => pts.map((p,i) => (i?'L':'M')+p[0]+' '+p[1]).join(' ');
-  const area = pts => 'M'+pts[0][0]+' '+H+' '+pts.map(p=>'L'+p[0]+' '+p[1]).join(' ')+' L'+pts[pts.length-1][0]+' '+H+' Z';
-
-  const svg = document.getElementById('lineChart');
-  [0.25,0.5,0.75,1].forEach(f => {
-    const y = pad+(1-f)*(H-2*pad);
-    svg.insertAdjacentHTML('beforeend',`<line x1="${pad}" y1="${y}" x2="${W-pad}" y2="${y}" stroke="var(--sur-high)" stroke-width="0.5"/>`);
+  new Chart(document.getElementById('lineChart'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'Verificações',
+          data: verif,
+          borderColor: '#5c66d4',
+          backgroundColor: (ctx) => {
+            const g = ctx.chart.ctx.createLinearGradient(0, 0, 0, ctx.chart.height);
+            g.addColorStop(0, 'rgba(92,102,212,.18)');
+            g.addColorStop(1, 'rgba(92,102,212,0)');
+            return g;
+          },
+          borderWidth: 2,
+          pointRadius: 0,
+          pointHoverRadius: 4,
+          pointHoverBackgroundColor: '#5c66d4',
+          tension: 0.4,
+          fill: true,
+        },
+        {
+          label: 'Divergências',
+          data: diverg,
+          borderColor: '#E52207',
+          backgroundColor: (ctx) => {
+            const g = ctx.chart.ctx.createLinearGradient(0, 0, 0, ctx.chart.height);
+            g.addColorStop(0, 'rgba(229,34,7,.1)');
+            g.addColorStop(1, 'rgba(229,34,7,0)');
+            return g;
+          },
+          borderWidth: 1.5,
+          borderDash: [4, 3],
+          pointRadius: 0,
+          pointHoverRadius: 4,
+          pointHoverBackgroundColor: '#E52207',
+          tension: 0.4,
+          fill: true,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: {
+            maxTicksLimit: 6,
+            font: { family: "'JetBrains Mono', monospace", size: 9 },
+            color: '#767682',
+          },
+          border: { display: false },
+        },
+        y: {
+          grid: { color: '#e6e8f0', lineWidth: 1 },
+          ticks: {
+            font: { family: "'JetBrains Mono', monospace", size: 9 },
+            color: '#767682',
+            maxTicksLimit: 5,
+          },
+          border: { display: false, dash: [4, 4] },
+        },
+      },
+      plugins: {
+        tooltip: {
+          callbacks: {
+            title: (items) => items[0].label,
+          },
+        },
+      },
+    },
   });
-  svg.insertAdjacentHTML('beforeend',`
-    <defs>
-      <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--pri-400)" stop-opacity=".2"/><stop offset="1" stop-color="var(--pri-400)" stop-opacity="0"/></linearGradient>
-      <linearGradient id="g2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--co-400)" stop-opacity=".15"/><stop offset="1" stop-color="var(--co-400)" stop-opacity="0"/></linearGradient>
-    </defs>
-    <path d="${area(pts1)}" fill="url(#g1)"/>
-    <path d="${line(pts1)}" fill="none" stroke="var(--pri-400)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="${area(pts2)}" fill="url(#g2)"/>
-    <path d="${line(pts2)}" fill="none" stroke="var(--co-400)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4,2"/>
-  `);
-
-  // labels
-  const now = new Date();
-  const labels = [29, 22, 15, 7, 0].map(d => {
-    const dt = new Date(now); dt.setDate(dt.getDate()-d);
-    return dt.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'});
-  });
-  document.getElementById('line-labels').innerHTML = labels.map(l => `<span class="mono-sm">${l}</span>`).join('');
 }
 
 // ── Donut ────────────────────────────────────────────────
 function renderDonut() {
-  const tots = DB.totais();
+  const tots  = DB.totais();
   const total = tots.verificacoes;
-  const pctOk   = (tots.ok/total*100).toFixed(1);
-  const pctWarn = (tots.warn/total*100).toFixed(1);
-  const pctErr  = (tots.err/total*100).toFixed(1);
-  const pctAprov = ((tots.ok+tots.warn)/total*100).toFixed(1);
-  const circ = 2*Math.PI*15.9;
+  const pctOk   = (tots.ok   / total * 100).toFixed(1);
+  const pctWarn = (tots.warn / total * 100).toFixed(1);
+  const pctErr  = (tots.err  / total * 100).toFixed(1);
+  const pctAprov = ((tots.ok + tots.warn) / total * 100).toFixed(1);
 
-  // calcula dasharray para cada segmento
-  const fOk   = tots.ok/total;
-  const fWarn = tots.warn/total;
-  const fErr  = tots.err/total;
-  const dOk   = (fOk*circ).toFixed(1);
-  const dWarn = (fWarn*circ).toFixed(1);
-  const dErr  = (fErr*circ).toFixed(1);
-  const offset = (circ*0.25).toFixed(1);
-  const offWarn = (circ*(0.25-fOk)).toFixed(1);
-  const offErr  = (circ*(0.25-fOk-fWarn)).toFixed(1);
+  document.getElementById('donut-sub').textContent  = `30 dias · ${total.toLocaleString('pt-BR')} verificações`;
+  document.getElementById('donut-pct').textContent  = pctAprov + '%';
 
-  document.getElementById('donut-sub').textContent = `30 dias · ${total.toLocaleString('pt-BR')} verificações`;
-  document.getElementById('donutSvg').innerHTML = `
-    <circle cx="21" cy="21" r="15.9" fill="none" stroke="var(--sur-high)" stroke-width="5"/>
-    <circle cx="21" cy="21" r="15.9" fill="none" stroke="var(--em-400)" stroke-width="5"
-      stroke-dasharray="${dOk} ${(circ-parseFloat(dOk)).toFixed(1)}"
-      stroke-dashoffset="${offset}" stroke-linecap="round"/>
-    <circle cx="21" cy="21" r="15.9" fill="none" stroke="var(--am-400)" stroke-width="5"
-      stroke-dasharray="${dWarn} ${(circ-parseFloat(dWarn)).toFixed(1)}"
-      stroke-dashoffset="${offWarn}" stroke-linecap="round"/>
-    <circle cx="21" cy="21" r="15.9" fill="none" stroke="var(--co-400)" stroke-width="5"
-      stroke-dasharray="${dErr} ${(circ-parseFloat(dErr)).toFixed(1)}"
-      stroke-dashoffset="${offErr}" stroke-linecap="round"/>
-    <text x="21" y="19" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="5.5" font-weight="800" fill="var(--text-h)">${pctAprov}%</text>
-    <text x="21" y="25" text-anchor="middle" font-family="DM Sans" font-size="3.5" fill="var(--text-s)">aprovação</text>
-  `;
+  new Chart(document.getElementById('donutChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Compatível', 'Atenção', 'Divergente'],
+      datasets: [{
+        data: [tots.ok, tots.warn, tots.err],
+        backgroundColor: ['#1a9e27', '#C48C14', '#E52207'],
+        borderWidth: 0,
+        hoverOffset: 6,
+      }],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '72%',
+      plugins: {
+        tooltip: {
+          callbacks: {
+            label: (ctx) => ` ${ctx.label}: ${ctx.raw} (${(ctx.raw/total*100).toFixed(1)}%)`,
+          },
+        },
+      },
+    },
+  });
+
   document.getElementById('donut-legend').innerHTML = [
-    {color:'var(--em-400)', label:'Compatível',  n:tots.ok,   pct:pctOk,   valColor:'var(--em)'},
-    {color:'var(--am-400)', label:'Atenção',     n:tots.warn, pct:pctWarn, valColor:'var(--am-800)'},
-    {color:'var(--co-400)', label:'Divergente',  n:tots.err,  pct:pctErr,  valColor:'var(--co-800)'},
+    { color:'#1a9e27', label:'Compatível', n:tots.ok,   pct:pctOk,   valColor:'var(--em)'     },
+    { color:'#C48C14', label:'Atenção',    n:tots.warn, pct:pctWarn, valColor:'var(--am-800)'  },
+    { color:'#E52207', label:'Divergente', n:tots.err,  pct:pctErr,  valColor:'var(--co-800)'  },
   ].map(l => `
     <div class="leg-item">
       <div class="leg-dot" style="background:${l.color}"></div>
       <span class="leg-label">${l.label}</span>
-      <span class="leg-val" style="color:${l.valColor}">${l.n} <span style="font-size:10px;font-weight:400;color:var(--text-s)">(${l.pct}%)</span></span>
+      <span class="leg-val" style="color:${l.valColor}">${l.n} <span class="leg-pct">(${l.pct}%)</span></span>
     </div>`).join('');
 }
 
 // ── Ranking agentes ──────────────────────────────────────
 function renderRanking() {
-  const sorted = [...DB.agentes].sort((a,b) => b.total_verif - a.total_verif);
-  const max = sorted[0].total_verif;
+  const sorted = [...DB.agentes].sort((a, b) => b.total_verif - a.total_verif);
+  const max    = sorted[0].total_verif;
   document.getElementById('ranking-agentes').innerHTML = sorted.map((a, i) => {
-    const pct = Math.round(a.total_verif/max*100);
-    const barColor = a.aprovacao >= 96 ? 'var(--em-400)' : a.aprovacao >= 92 ? 'var(--pri-400)' : 'var(--am-400)';
-    const numColor = i===0 ? 'var(--am-400)' : 'var(--text-s)';
-    const und = DB.unidades.find(u => u.id===a.unidade_id);
+    const pct      = Math.round(a.total_verif / max * 100);
+    const barColor = a.aprovacao >= 96 ? '#1a9e27' : a.aprovacao >= 92 ? '#5c66d4' : '#C48C14';
+    const numColor = i === 0 ? '#C48C14' : i === 1 ? '#767682' : i === 2 ? '#c07830' : 'var(--text-s)';
+    const und      = DB.unidades.find(u => u.id === a.unidade_id);
     return `
       <div class="rank-row">
-        <span class="rank-num" style="color:${numColor}">${i+1}</span>
+        <span class="rank-num" style="color:${numColor}">${i + 1}</span>
         <div class="rank-avatar">${a.iniciais}</div>
         <div class="rank-info">
           <div class="rank-name">${a.nome}</div>
-          <div class="rank-sub">${und?.nome||'—'} · ${a.aprovacao}% aprovação</div>
-          <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${barColor}"></div></div>
+          <div class="rank-sub">${und?.nome || '—'} · ${a.aprovacao}% aprovação</div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width:${pct}%;background:${barColor}"></div>
+          </div>
         </div>
-        <div style="text-align:right">
+        <div>
           <div class="rank-val">${a.total_verif}</div>
-          <span class="mono-sm">verif.</span>
+          <div class="rank-val-lbl">verif.</div>
         </div>
       </div>`;
   }).join('');
 }
 
-// ── Por unidade: bar chart + tabela ─────────────────────
+// ── Bar chart por unidade ────────────────────────────────
 function renderUnidades() {
   const TOTAL_MAP = {
     'UND-01':412,'UND-02':331,'UND-03':287,'UND-04':217,
     'UND-05':89, 'UND-06':112,'UND-07':76, 'UND-08':58,'UND-09':44,'UND-10':32,
   };
-  // Só as 4 maiores
-  const top4 = DB.unidades
-    .map(u => ({ ...u, total: TOTAL_MAP[u.id]||50 }))
-    .sort((a,b) => b.total - a.total)
-    .slice(0,4);
+  const top5 = DB.unidades
+    .map(u => ({ ...u, total: TOTAL_MAP[u.id] || 50 }))
+    .sort((a, b) => b.total - a.total)
+    .slice(0, 5);
 
-  // Bar chart SVG
-  const mx = top4[0].total + 50;
-  const W=380, H=130, pad=32;
-  const bw=(W-2*pad)/top4.length*0.6, gap=(W-2*pad)/top4.length;
-  const svg = document.getElementById('barChart');
-  [0,0.25,0.5,0.75,1].forEach(f => {
-    const y = H-pad-(f*(H-pad-10));
-    svg.insertAdjacentHTML('beforeend',
-      `<line x1="${pad}" y1="${y}" x2="${W-10}" y2="${y}" stroke="var(--sur-high)" stroke-width="0.5"/>
-       <text x="${pad-4}" y="${y+3}" text-anchor="end" font-family="JetBrains Mono" font-size="7" fill="var(--text-s)">${Math.round(f*mx)}</text>`);
-  });
-  const colors = ['var(--pri-400)','var(--pri-600)','var(--am-400)','var(--co-400)'];
-  top4.forEach((u,i) => {
-    const x = pad+i*gap+(gap-bw)/2;
-    const bh = (u.total/mx)*(H-pad-10);
-    const y = H-pad-bh;
-    svg.insertAdjacentHTML('beforeend',`
-      <rect x="${x}" y="${y}" width="${bw}" height="${bh}" rx="4" fill="${colors[i]}" opacity="0.75"/>
-      <text x="${x+bw/2}" y="${y-4}" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="8" font-weight="800" fill="var(--text-h)">${u.total}</text>
-      <text x="${x+bw/2}" y="${H-pad+12}" text-anchor="middle" font-family="DM Sans" font-size="8" fill="var(--text-m)">${u.nome.split(' ')[0]}</text>
-    `);
-  });
+  const taxaColor = t => t >= 7 ? '#E52207' : t >= 4 ? '#C48C14' : '#1a9e27';
 
-  // Tabela
-  const taxaBadge = t => t>=7?'badge-err':t>=4?'badge-warn':'badge-ok';
-  document.getElementById('unidade-table').innerHTML = `
-    <thead><tr>
-      <th>Unidade</th><th>Verif.</th><th>Compat.</th><th>Diverg.</th><th>Taxa</th>
-    </tr></thead>
-    <tbody>
-      ${top4.map(u => {
-        const diverg = Math.round(u.total * u.taxa_diverg/100);
-        const compat = u.total - diverg - Math.round(u.total*.07);
-        return `<tr>
-          <td><strong>${u.nome}</strong></td>
-          <td>${u.total}</td>
-          <td style="color:var(--em);font-weight:700">${compat}</td>
-          <td style="color:var(--co-800);font-weight:700">${diverg}</td>
-          <td><span class="badge ${taxaBadge(u.taxa_diverg)}" style="font-size:9px">${u.taxa_diverg.toFixed(1)}%</span></td>
-        </tr>`;
-      }).join('')}
-    </tbody>`;
+  new Chart(document.getElementById('barChart'), {
+    type: 'bar',
+    data: {
+      labels: top5.map(u => u.nome.split(' ')[0]),
+      datasets: [
+        {
+          label: 'Verificações',
+          data: top5.map(u => u.total),
+          backgroundColor: top5.map(u => taxaColor(u.taxa_diverg) + '22'),
+          borderColor:     top5.map(u => taxaColor(u.taxa_diverg)),
+          borderWidth: 1.5,
+          borderRadius: 6,
+          borderSkipped: false,
+        },
+        {
+          label: 'Divergentes',
+          data: top5.map(u => Math.round(u.total * u.taxa_diverg / 100)),
+          backgroundColor: top5.map(u => taxaColor(u.taxa_diverg) + '88'),
+          borderColor:     top5.map(u => taxaColor(u.taxa_diverg)),
+          borderWidth: 1.5,
+          borderRadius: 6,
+          borderSkipped: false,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: { font: { family: "'DM Sans', sans-serif", size: 10 }, color: '#595c7c' },
+          border: { display: false },
+        },
+        y: {
+          grid: { color: '#e6e8f0' },
+          ticks: { font: { family: "'JetBrains Mono', monospace", size: 9 }, color: '#767682', maxTicksLimit: 5 },
+          border: { display: false },
+        },
+      },
+      plugins: {
+        legend: { display: true, position: 'top', align: 'end',
+          labels: { boxWidth: 8, boxHeight: 8, borderRadius: 4, usePointStyle: true, pointStyle: 'circle',
+            font: { family: "'DM Sans', sans-serif", size: 10 }, color: '#595c7c', padding: 12 },
+        },
+        tooltip: {
+          callbacks: {
+            afterBody: (items) => {
+              const u = top5[items[0].dataIndex];
+              return [`Taxa: ${u.taxa_diverg.toFixed(1)}%`];
+            },
+          },
+        },
+      },
+    },
+  });
 }
 
 // ── Heatmap ──────────────────────────────────────────────
 function renderHeatmap() {
   const dias  = ['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'];
   const horas = ['6h','8h','10h','12h','14h','16h','18h','20h'];
-  // padrão derivado de verificações por hora (simulado com base no total)
-  const heat = [
+  const heat  = [
     [1,3,7,8,9,6,4,1],
     [2,5,9,10,10,8,5,2],
     [1,4,8,9,8,7,3,1],
@@ -406,61 +563,73 @@ function renderHeatmap() {
     [0,0,1,1,1,0,0,0],
   ];
 
-  document.getElementById('hm-day-labels').innerHTML = dias.map(d =>
-    `<span class="mono-sm" style="line-height:13px">${d}</span>`).join('');
-  document.getElementById('hm-hour-labels').innerHTML = horas.map(h =>
-    `<span class="mono-sm" style="width:26px;text-align:center">${h}</span>`).join('');
+  document.getElementById('hm-day-labels').innerHTML =
+    dias.map(d => `<span>${d}</span>`).join('');
 
-  let html = '<div style="display:flex;flex-direction:column;gap:4px">';
-  heat.forEach(row => {
-    html += '<div style="display:flex;gap:4px">';
-    row.forEach(v => {
-      const opa = v===0 ? 0 : (0.06 + v/10*0.94).toFixed(2);
-      html += `<div class="hm-cell" style="width:26px;height:13px;background:var(--pri-800);opacity:${opa}" title="${v} verificações"></div>`;
+  document.getElementById('hm-hour-labels').innerHTML =
+    horas.map(h => `<span>${h}</span>`).join('');
+
+  const grid = document.getElementById('hm-grid');
+  grid.innerHTML = '';
+  heat.forEach((row, ri) => {
+    row.forEach((v, ci) => {
+      const cell = document.createElement('div');
+      cell.className = 'hm-cell';
+      cell.title = `${dias[ri]} ${horas[ci]}: ${v} verificações`;
+      if (v === 0) {
+        cell.style.background = 'var(--sur-low)';
+        cell.style.opacity = '1';
+      } else {
+        const alpha = (0.12 + (v / 10) * 0.88).toFixed(2);
+        cell.style.background = `rgba(37,45,122,${alpha})`;
+      }
+      grid.appendChild(cell);
     });
-    html += '</div>';
   });
-  html += '</div>';
-  document.getElementById('heatmap').innerHTML = html;
 }
 
-// ── Tempo médio por etapa ────────────────────────────────
+// ── Etapas ───────────────────────────────────────────────
 function renderEtapas() {
   const etapas = [
-    { label:'Login → Câmera',                      dur:'0m22s', pct:10,  color:'var(--pri-400)' },
-    { label:'Captura placa',                        dur:'0m38s', pct:18,  color:'var(--pri-400)' },
-    { label:'Captura assistida (chassi/VIN/vidros)',dur:'1m54s', pct:52,  color:'var(--em-400)'  },
-    { label:'Revisão final',                        dur:'0m45s', pct:21,  color:'var(--am-400)'  },
-    { label:'Assinatura',                           dur:'0m03s', pct:2,   color:'var(--co-400)'  },
+    { label:'Login → Câmera',         dur:'0m22s', pct:10, color:'#5c66d4' },
+    { label:'Captura placa',           dur:'0m38s', pct:18, color:'#5c66d4' },
+    { label:'Captura assistida',       dur:'1m54s', pct:52, color:'#1a9e27' },
+    { label:'Revisão final',           dur:'0m45s', pct:21, color:'#C48C14' },
+    { label:'Assinatura',              dur:'0m03s', pct:2,  color:'#E52207' },
   ];
+
   document.getElementById('etapas-body').innerHTML = `
-    <div style="display:flex;flex-direction:column;gap:14px">
-      ${etapas.map(e => `
-        <div class="etapa-row">
-          <div style="display:flex;justify-content:space-between;margin-bottom:4px">
-            <div style="display:flex;align-items:center;gap:6px">
-              <span style="width:8px;height:8px;border-radius:50%;background:${e.color};display:inline-block"></span>
-              <span style="font-size:12px;color:var(--text-b)">${e.label}</span>
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:space-between">
+      <div>
+        ${etapas.map(e => `
+          <div class="etapa-item">
+            <div class="etapa-header">
+              <div class="etapa-label">
+                <div class="etapa-dot" style="background:${e.color}"></div>
+                ${e.label}
+              </div>
+              <span class="etapa-dur">${e.dur}</span>
             </div>
-            <span style="font-family:var(--font-m);font-size:11px;font-weight:700;color:var(--text-h)">${e.dur}</span>
-          </div>
-          <div style="height:7px;background:var(--sur-high);border-radius:3px;overflow:hidden">
-            <div style="width:${e.pct}%;height:100%;border-radius:3px;background:${e.color}"></div>
-          </div>
-        </div>`).join('')}
-      <div style="display:flex;justify-content:space-between;padding:10px 12px;background:var(--pri-50);border-radius:10px;border:1px solid var(--pri-100)">
+            <div class="etapa-bar">
+              <div class="etapa-fill" style="width:${e.pct}%;background:${e.color}"></div>
+            </div>
+          </div>`).join('')}
+      </div>
+      <div class="etapa-total">
         <span style="font-size:12px;font-weight:700;color:var(--pri-800)">Total médio</span>
-        <span style="font-family:var(--font-m);font-size:13px;font-weight:800;color:var(--pri-800)">3m42s</span>
+        <span style="font-family:var(--font-m);font-size:14px;font-weight:800;color:var(--pri-800)">3m42s</span>
       </div>
     </div>`;
 }
 
+// ── Tick ─────────────────────────────────────────────────
 function tick() {
-  const t = new Date().toTimeString().slice(0,8);
+  const t = new Date().toTimeString().slice(0, 8);
   const f = document.getElementById('fbar');
   if (f) f.innerHTML = `LAST_SYNC: ${t} · <span style="color:var(--em-400)">ONLINE</span>`;
 }
 
+// ── Init ─────────────────────────────────────────────────
 function render() {
   renderKpis();
   renderLineChart();
