@@ -361,7 +361,7 @@ function drawDetalhe(ctx,w,h){
   for(let i=0;i<4;i++){const c=i===0?'#e52207':i===1?'#c48c14':'#1a9e27';ctx.fillStyle=c;ctx.beginPath();ctx.arc(145,65+i*12,3,0,Math.PI*2);ctx.fill();ctx.fillStyle='rgba(255,255,255,.2)';ctx.fillRect(151,63+i*12,40,2);}
   // actions
   ctx.fillStyle='rgba(92,102,212,.4)';ctx.beginPath();ctx.roundRect(40,112,w-50,14,9999);ctx.fill();
-  ctx.fillStyle='rgba(255,255,255,.7)';ctx.font='bold 7px sans-serif';ctx.textAlign='center';ctx.fillText('Assinar laudo',40+(w-50)/2,121);ctx.textAlign='left';
+  ctx.fillStyle='rgba(255,255,255,.7)';ctx.font='bold 7px sans-serif';ctx.textAlign='center';ctx.fillText('Assinar relatório',40+(w-50)/2,121);ctx.textAlign='left';
 }
 
 function drawPerformance(ctx,w,h){
